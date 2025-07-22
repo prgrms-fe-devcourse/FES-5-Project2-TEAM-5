@@ -1,8 +1,9 @@
 import { useId } from 'react';
+import { Link } from 'react-router-dom';
 import { FaGithub } from 'react-icons/fa';
 import logo from '@/assets/logo.png';
 import S from './style.module.css';
-import AuthLayout from '../components/AuthLayout';
+import { AuthInput, AuthLayout } from '../components';
 
 const Login = () => {
   const rememberId = useId();
@@ -16,21 +17,21 @@ const Login = () => {
       </h1>
       <form className={S.form}>
         <div className={S.inputGroup}>
-          <label htmlFor={emailId} className="sr-only">
-            Email
-          </label>
-          <input type="email" name="email" id={emailId} placeholder="Email" required />
-          <label htmlFor={pwdId} className="sr-only">
-            Password
-          </label>
-          <input type="password" name="password" id={pwdId} placeholder="Password" required />
+          <AuthInput id={emailId} label="Email" placeholder="Email" name="email" type="email" />
+          <AuthInput
+            id={pwdId}
+            label="Password"
+            placeholder="Password"
+            name="password"
+            type="password"
+          />
         </div>
         <div className={S.formOptions}>
           <label htmlFor={rememberId}>
             <input className={S.checkboxInput} type="checkbox" name="" id={rememberId} />
             remember me
           </label>
-          <a href="#">register</a>
+          <Link to="/register">register</Link>
         </div>
 
         <div className={S.buttonGroup}>

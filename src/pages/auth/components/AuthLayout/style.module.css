@@ -24,7 +24,7 @@
   border: 1px solid var(--gray-100);
   background: var(--background);
 
-  padding: 0 70px;
+  padding: 50px 70px;
 
   display: flex;
   flex-direction: column;
