@@ -8,7 +8,7 @@ import DiaryPage from './pages/diary/DiaryMain';
 import DiaryFormPage from './pages/diary/DiaryForm';
 import DiaryList from './pages/feed-diaries/DiaryList';
 
-
+import UserList from './pages/users/UserList';
 function App() {
   return (
     <BrowserRouter>
@@ -19,6 +19,7 @@ function App() {
         <Route path="/diary" element={<DiaryPage />} />
         <Route path="/diary/form" element={<DiaryFormPage />} />
         <Route path="/feed-diaries" element={<DiaryList />} />
+        <Route path="/users" element={<UserList />} />
       </Routes>
     </BrowserRouter>
   );
