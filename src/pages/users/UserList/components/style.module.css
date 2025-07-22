@@ -1,0 +1,54 @@
+.card {
+  border: none;
+  background-color: white;
+  border-radius: var(--radius-3);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  padding: 40px 0;
+
+  .profile {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: var(--space-5);
+  }
+
+  .userInfo {
+    margin-bottom: var(--space-5);
+    height: 44px;
+    .userName {
+      font-size: var(--text-lg);
+      font-weight: 500;
+      margin-bottom: var(--space-1);
+    }
+    .userEmail {
+      font-size: var(--text-base);
+      font-weight: 400;
+      color: #bfbfbf;
+    }
+  }
+
+  .userButton {
+    width: 120px;
+    height: 36px;
+    background-color: var(--secondary);
+    border: none;
+    border-radius: var(--radius-2);
+    color: white;
+    font-size: var(--text-lg);
+    font-weight: 400;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-2);
+
+    .arrowIcon {
+      width: 16px;
+      height: 20px;
+    }
+  }
+}
