@@ -1,6 +1,13 @@
 @import './reset.css';
 
+/* 폰트 */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+
 :root {
+  /* 폰트 */
+  --font-main: 'Pretendard Variable', sans-serif;
+  --font-accent: 'Urbanist', sans-serif;
   /* 색상 */
   --primary: #6b8a47;
   --secondary: #a7c584;
@@ -53,4 +60,9 @@
   --text-3xl: 1.5rem; /* 24px */
   --text-4xl: 1.75rem; /* 28px */
   --text-5xl: 2rem; /* 32px */
+}
+
+/*  전역 설정 */
+body {
+  font-family: var(--font-main);
 }
