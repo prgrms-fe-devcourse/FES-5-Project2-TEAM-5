@@ -46,7 +46,7 @@
     height: 45px;
     color: #fff;
     font-size: var(--text-lg);
-    background-color: var(--secondary);
+    background-color: var(--primary);
     border-radius: var(--radius-1);
 
     &:active {
