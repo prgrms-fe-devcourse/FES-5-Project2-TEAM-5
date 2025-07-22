@@ -15,7 +15,7 @@ interface Props {
   user: User;
 }
 
-function UserCard({ user }: Props) {
+const UserCard = ({ user }: Props) => {
   const { name, email, profile_image } = user;
   return (
     <article className={S.card}>
@@ -35,5 +35,5 @@ function UserCard({ user }: Props) {
       </button>
     </article>
   );
-}
+};
 export default UserCard;

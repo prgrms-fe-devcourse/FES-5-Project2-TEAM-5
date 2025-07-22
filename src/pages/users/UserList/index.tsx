@@ -3,7 +3,7 @@ import S from './style.module.css';
 import UserCard from './components/UserCard';
 import { IoSearch } from 'react-icons/io5';
 
-function UserList() {
+const UserList = () => {
   const searchId = useId();
 
   interface User {
@@ -148,5 +148,5 @@ function UserList() {
       </section>
     </main>
   );
-}
+};
 export default UserList;
