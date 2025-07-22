@@ -1,14 +1,16 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './styles/global.css';
 
 import { Toaster } from 'react-hot-toast';
-
+import UserList from './pages/users/UserList';
 function App() {
   return (
-    <>
-      <div>
-        <Toaster /> {/* react-hot-toast */}
-      </div>
-    </>
+    <BrowserRouter>
+      <Toaster /> {/* react-hot-toast */}
+      <Routes>
+        <Route path="/users" element={<UserList />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
