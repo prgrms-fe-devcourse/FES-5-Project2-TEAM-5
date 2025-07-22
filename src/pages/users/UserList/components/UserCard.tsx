@@ -1,6 +1,6 @@
 import S from './style.module.css';
 import defaultProfile from '../assets/default_profile.svg';
-import { FaArrowRightLong } from 'react-icons/fa6';
+import { GrFormNextLink } from 'react-icons/gr';
 
 const default_image = defaultProfile;
 
@@ -31,7 +31,7 @@ const UserCard = ({ user }: Props) => {
       </div>
       <button type="button" className={S.userButton} aria-label={`${name}의 상세 페이지 보러가기`}>
         보러가기
-        <FaArrowRightLong className={S.arrowIcon} />
+        <GrFormNextLink className={S.arrowIcon} />
       </button>
     </article>
   );
