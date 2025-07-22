@@ -2,26 +2,33 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './styles/global.css';
 
 import { Toaster } from 'react-hot-toast';
-import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
-import DiaryPage from './pages/diary/DiaryMain';
-import DiaryFormPage from './pages/diary/DiaryForm';
-import DiaryList from './pages/feed-diaries/DiaryList';
-import UserPage from './pages/users/UserList';
-import Header from './shared/components/Header';
+
+// 감정분석 페이지
+import SelectDiary from './pages/SelectDiary';
+import EmotionAndQuest from './pages/EmotionAndQuest';
+import QuestSelect from './pages/QuestSelect';
 
 function App() {
   return (
     <BrowserRouter>
-      <Toaster position="top-center" toastOptions={{ duration: 4000 }} /> {/* react-hot-toast */}
-      <Header />
+      <Toaster /> {/* react-hot-toast */}
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/diary" element={<DiaryPage />} />
-        <Route path="/diary/form" element={<DiaryFormPage />} />
-        <Route path="/feed-diaries" element={<DiaryList />} />
-        <Route path="/users" element={<UserPage />} />
+        {/* 테스트용: / 경로에서 세 가지 페이지 모두 렌더링 */}
+        <Route
+          path="/"
+          element={
+            <div>
+              <SelectDiary />
+              {/* <EmotionAndQuest /> */}
+              {/* <QuestSelect /> */}
+            </div>
+          }
+        />
+
+        {/* 감정분석 플로우 */}
+        <Route path="/analysis/select-diary" element={<SelectDiary />} />
+        <Route path="/analysis/emotion-and-quest" element={<EmotionAndQuest />} />
+        <Route path="/analysis/quest-select" element={<QuestSelect />} />
       </Routes>
     </BrowserRouter>
   );
