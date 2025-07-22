@@ -1,14 +1,19 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './styles/global.css';
 
 import { Toaster } from 'react-hot-toast';
+import Login from './pages/auth/Login';
+import Register from './pages/auth/Register';
 
 function App() {
   return (
-    <>
-      <div>
-        <Toaster /> {/* react-hot-toast */}
-      </div>
-    </>
+    <BrowserRouter>
+      <Toaster /> {/* react-hot-toast */}
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
