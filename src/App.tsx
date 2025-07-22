@@ -5,7 +5,7 @@ import { Toaster } from 'react-hot-toast';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import DiaryPage from './pages/Diary/diaryMain';
-
+import UserList from './pages/users/UserList';
 function App() {
   return (
     <BrowserRouter>
@@ -13,7 +13,8 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-         <Route path="/diary" element={<DiaryPage />} />
+        <Route path="/diary" element={<DiaryPage />} />
+        <Route path="/users" element={<UserList />} />
       </Routes>
     </BrowserRouter>
   );
