@@ -8,7 +8,8 @@ import Register from './pages/auth/Register';
 function App() {
   return (
     <BrowserRouter>
-      <Toaster /> {/* react-hot-toast */}
+      <Toaster position="top-center" reverseOrder={true} toastOptions={{ duration: 3000 }} />
+      {/* react-hot-toast */}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
