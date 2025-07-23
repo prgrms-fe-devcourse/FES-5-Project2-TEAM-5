@@ -34,9 +34,10 @@
   gap: var(--space-3);
 
   .errorMessage {
+    height: var(--space-3);
     text-align: center;
     color: #ff3b30;
-    font-size: var(--text-lg);
+    font-size: var(--text-sm);
     font-weight: 600;
   }
 

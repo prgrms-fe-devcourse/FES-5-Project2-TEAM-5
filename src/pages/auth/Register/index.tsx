@@ -1,7 +1,8 @@
 import { useId, useState } from 'react';
 import S from './style.module.css';
 import { AuthInput, AuthLayout, FlowerProfile } from '../components';
-import { toastUtils } from '@/shared/utils/toastUtils';
+import { useForm } from './hook';
+import supabase from '@/shared/supabase/supabase';
 
 const Register = () => {
   const profileId = useId();
@@ -10,34 +11,64 @@ const Register = () => {
   const pwdId = useId();
   const confirmPwdID = useId();
 
-  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const { error, formData, onChange, validateAll } = useForm({
+    email: '',
+    confirmPassword: '',
+    name: '',
+    password: '',
+  });
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
     if (file) {
-      if (profileImage) {
-        URL.revokeObjectURL(profileImage);
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview);
       }
 
       const imageUrl = URL.createObjectURL(file);
-      setProfileImage(imageUrl);
+      setImagePreview(imageUrl);
+      setImageFile(file);
     }
   };
 
-  const handleClick = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    toastUtils.success({ message: '하이', title: 'hello' });
-    // toastUtils.error({ message: '하이', title: 'hello' });
-    // toastUtils.info({ message: '하이', title: 'hello' });
+
+    if (!validateAll()) return false;
+    const { data: authData, error: signupError } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+    });
+    if (signupError || !authData.user) {
+      alert('회원가입 실패');
+      return;
+    }
+
+    const userId = authData.user.id;
+
+    if (imageFile) {
+      const fileExt = imageFile?.name.split('.').pop();
+      const filePath = `${userId}.${fileExt}`;
+      const { data: storageData, error: storageError } = await supabase.storage
+        .from('profile')
+        .upload(filePath, imageFile!, { cacheControl: '3600', upsert: true });
+
+      if (storageError) return alert('이미지 저장 실패');
+
+      console.log('storageData', storageData);
+      console.log('storageError', storageError);
+    }
   };
 
   return (
     <AuthLayout>
       <label htmlFor={profileId} className={S.profile}>
         <div className={S.defaultImage}>
-          {profileImage ? (
-            <img src={profileImage} alt="프로필 미리보기" className={S.previewImage} />
+          {imagePreview ? (
+            <img src={imagePreview} alt="프로필 미리보기" className={S.previewImage} />
           ) : (
             <FlowerProfile />
           )}
@@ -52,14 +83,15 @@ const Register = () => {
         onChange={handleProfileImageChange}
         hidden
       />
-      <form className={S.form} onSubmit={handleClick}>
+      <form className={S.form}>
         <AuthInput id={emailId} label="이메일" name="email" type="email" placeholder="이메일" />
         <AuthInput
           id={nicknameId}
           label="닉네임"
-          name="nickname"
+          name="name"
           type="text"
           placeholder="닉네임"
+          onChange={onChange}
         />
         <AuthInput
           id={pwdId}
@@ -67,6 +99,7 @@ const Register = () => {
           name="password"
           type="password"
           placeholder="비밀번호"
+          onChange={onChange}
         />
         <AuthInput
           id={confirmPwdID}
@@ -74,8 +107,9 @@ const Register = () => {
           name="confirmPassword"
           type="password"
           placeholder="비밀번호 확인"
+          onChange={onChange}
         />
-        <span className={S.errorMessage}>에러 표시 할 곳</span>
+        <div className={S.errorMessage}>{error && <span>{error}</span>}</div>
         <button type="submit" className={S.registerButton}>
           signup
         </button>
