@@ -23,7 +23,7 @@ export const toastUtils = {
           secondary: '#fff',
         },
         style: {
-          width: '575px',
+          width: '400px',
           border: '3px solid #409EFF',
         },
       },
@@ -43,7 +43,7 @@ export const toastUtils = {
           secondary: '#fff',
         },
         style: {
-          width: '575px',
+          width: '400px',
           border: '3px solid #FF4D4F',
         },
       },

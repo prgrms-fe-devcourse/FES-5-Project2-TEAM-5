@@ -27,7 +27,9 @@ const Register = () => {
 
   const handleClick = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    toastUtils.error({ message: '하이', title: 'hello' });
+    toastUtils.success({ message: '하이', title: 'hello' });
+    // toastUtils.error({ message: '하이', title: 'hello' });
+    // toastUtils.info({ message: '하이', title: 'hello' });
   };
 
   return (
