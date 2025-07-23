@@ -1,0 +1,81 @@
+.diaryItem{
+  position: relative;
+  border-radius: var(--radius-2);
+  border: 1px solid var(--gray-100);
+  background: white;
+  /* box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05); */
+  padding: 25px;
+  min-height: 120px;
+  user-select: none;
+  cursor: pointer;
+
+  .radioBtn {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--gray-100);
+    border-radius: 50%;
+    background-color: white;
+    cursor: pointer;
+    margin-right: 12px;
+    transition: all 0.2s ease;
+  }
+
+  /* 선택된 상태 */
+  .radioBtn:checked {
+    border-color: #22C55E;
+    background-color: #22C55E;
+  }
+
+  /* 체크 아이콘 (기본 숨김) */
+  .checkIcon {
+    position: absolute;
+    top: 28px;
+    right: 37px;
+    color: white;
+    font-size: 20px;
+    display: none;
+    pointer-events: none;
+  }
+
+  /* 선택됐을 때만 표시 */
+  .radioBtn:checked + .checkIcon {
+    display: block;
+  }
+
+  .textContent{
+    .date{
+      color: var(--gray-600);
+      font-size: var(--text-base);
+      font-weight: 400;
+      margin-bottom: var(--space-1);
+      line-height: 20px;
+    }
+
+    h3{
+      color: var(--gray-900);
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      margin-bottom: var(--space-3);
+      line-height: 28px;
+    }
+
+    .content{
+      color: var(--gray-700);
+      font-size: var(--text-lg);
+      font-weight: 400;
+      line-height: 26px;
+      /* max-width: 700px; */
+    }
+  }
+}
+
+.diaryItem:has(input[type="radio"]:checked) {
+  border: 1px solid #22C55E;
+  /* box-shadow: 0px 0px 0px 4px #DCFCE7,
+              0px 4px 6px -1px rgba(0, 0, 0, 0.10),
+              0px 2px 4px -2px rgba(0, 0, 0, 0.10); */
+}

@@ -1,7 +1,8 @@
-// import Buttons from './components/Buttons';
-// import DiaryList from './components/DiaryList';
-import { GrFormCheckmark, GrFormNextLink } from "react-icons/gr";
 import S from './style.module.css'
+import NextPageButton from "./components/NextPageButton";
+import DiaryList from "./components/DiaryList";
+import DiaryItem from './components/DiaryItem';
+// import L from './DiaryLayout.module.css'
 
 function SelectDiary() {
 
@@ -32,29 +33,9 @@ function SelectDiary() {
         <h2>일기 선택</h2>
         <p>감정분석을 하고 싶은 일기를 선택해주세요.</p>
       </section>
-
-      <section aria-label='일기 목록' className={S.diaryList}>
-        {
-          diaries.map((diary)=>(
-            <label key={diary.id} htmlFor={`diary-${diary.id}`} className={S.diaryItem}>
-              <input type="radio" name="diary" id={`diary-${diary.id}`} className={S.radioBtn} />
-              <GrFormCheckmark className={S.checkIcon} />
-              <div className={S.textContent}>
-                <p className={S.date}>{diary.date}</p>
-                <h3>{diary.title}</h3>
-                <p className={S.content}>{diary.content}</p>
-              </div>
-            </label>
-          ))
-        }
-        <button type='button' className={S.loadMore}>이전 일기 불러오기</button>
-      </section>
-
-      <section aria-label='페이지 이동' className={S.nextPage}>
-        <button type="button">다음으로
-          <GrFormNextLink className={S.nextIcon} size={28} />
-        </button>
-      </section>
+      <DiaryList diaries={diaries} />
+      {/* <DiaryItem diary={diaries[1]} /> */}
+      <NextPageButton />
     </main>
   )
 }
