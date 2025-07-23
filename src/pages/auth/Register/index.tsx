@@ -1,6 +1,7 @@
 import { useId, useState } from 'react';
 import S from './style.module.css';
 import { AuthInput, AuthLayout, FlowerProfile } from '../components';
+import { toastUtils } from '@/shared/utils/toastUtils';
 
 const Register = () => {
   const profileId = useId();
@@ -24,6 +25,13 @@ const Register = () => {
     }
   };
 
+  const handleClick = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    toastUtils.success({ message: '하이', title: 'hello' });
+    // toastUtils.error({ message: '하이', title: 'hello' });
+    // toastUtils.info({ message: '하이', title: 'hello' });
+  };
+
   return (
     <AuthLayout>
       <label htmlFor={profileId} className={S.profile}>
@@ -44,7 +52,7 @@ const Register = () => {
         onChange={handleProfileImageChange}
         hidden
       />
-      <form className={S.form}>
+      <form className={S.form} onSubmit={handleClick}>
         <AuthInput id={emailId} label="이메일" name="email" type="email" placeholder="이메일" />
         <AuthInput
           id={nicknameId}

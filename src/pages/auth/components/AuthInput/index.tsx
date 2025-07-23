@@ -24,6 +24,7 @@ const AuthInput = ({ id, label, name, type, placeholder, onChange, value }: Prop
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        autoComplete="off"
         required
       />
     </>
