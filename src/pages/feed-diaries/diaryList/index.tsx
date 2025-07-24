@@ -11,7 +11,7 @@ import surpriseImg from './assets/surprise.png';
 import peaceImg from './assets/peace.png';
 import expectationImg from './assets/expectation.png';
 
-interface Diary {
+export interface Diary {
   id: string;
   user_id: string;
   title: string;
@@ -19,7 +19,7 @@ interface Diary {
   diary_image: string | null;
   emotion_main_id: number;
   is_public: string;
-  create_at: string;
+  created_at: string;
   updated_at: string;
   is_drafted: string;
 }
@@ -34,7 +34,7 @@ const diaries: Diary[] = [
     diary_image: 'https://picsum.photos/seed/diary1/600/400',
     emotion_main_id: 2,
     is_public: 'true',
-    create_at: '2025-07-20T09:15:00Z',
+    created_at: '2025-07-20T09:15:00Z',
     updated_at: '2025-07-20T09:15:00Z',
     is_drafted: 'false',
   },
@@ -47,7 +47,7 @@ const diaries: Diary[] = [
     diary_image: 'https://picsum.photos/seed/diary2/600/400',
     emotion_main_id: 5,
     is_public: 'false',
-    create_at: '2025-07-19T14:42:00Z',
+    created_at: '2025-07-19T14:42:00Z',
     updated_at: '2025-07-19T14:45:00Z',
     is_drafted: 'false',
   },
@@ -60,7 +60,7 @@ const diaries: Diary[] = [
     diary_image: 'https://picsum.photos/seed/diary3/600/400',
     emotion_main_id: 1,
     is_public: 'true',
-    create_at: '2025-07-18T11:00:00Z',
+    created_at: '2025-07-18T11:00:00Z',
     updated_at: '2025-07-18T11:30:00Z',
     is_drafted: 'false',
   },
@@ -73,7 +73,7 @@ const diaries: Diary[] = [
     diary_image: null,
     emotion_main_id: 3,
     is_public: 'false',
-    create_at: '2025-07-21T01:12:00Z',
+    created_at: '2025-07-21T01:12:00Z',
     updated_at: '2025-07-21T01:12:00Z',
     is_drafted: 'true',
   },
@@ -86,7 +86,7 @@ const diaries: Diary[] = [
     diary_image: 'https://picsum.photos/seed/diary4/600/400',
     emotion_main_id: 4,
     is_public: 'true',
-    create_at: '2025-07-17T22:00:00Z',
+    created_at: '2025-07-17T22:00:00Z',
     updated_at: '2025-07-17T22:00:00Z',
     is_drafted: 'false',
   },
@@ -99,7 +99,7 @@ const diaries: Diary[] = [
     diary_image: 'https://picsum.photos/seed/diary1/600/400',
     emotion_main_id: 2,
     is_public: 'true',
-    create_at: '2025-07-20T09:15:00Z',
+    created_at: '2025-07-20T09:15:00Z',
     updated_at: '2025-07-20T09:15:00Z',
     is_drafted: 'false',
   },
