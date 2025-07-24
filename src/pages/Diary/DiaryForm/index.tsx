@@ -7,8 +7,10 @@ import Emotion4 from '/src/assets/icon_anxiety.svg';
 import Emotion5 from '/src/assets/icon_surprise.svg';
 import Emotion6 from '/src/assets/icon_peace.svg';
 import Emotion7 from '/src/assets/icon_expect.svg';
-import { useId, useState } from 'react';
-import { GrCheckbox, GrCheckboxSelected } from 'react-icons/gr';
+import { useEffect, useId, useState } from 'react';
+import { useUploadImage } from '@/shared/hooks';
+import { BsCheckSquare, BsCheckSquareFill } from 'react-icons/bs';
+import { CgClose } from 'react-icons/cg';
 
 interface Props {
   emotion: string;
@@ -24,6 +26,14 @@ function DiaryFormPage() {
   const contentId = useId();
   const imageId = useId();
   const tagId = useId();
+  const { onChange: handleImageChange, imageFile } = useUploadImage();
+
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      image: imageFile,
+    }));
+  }, [imageFile]);
 
   const [formData, setFormData] = useState<Props>({
     emotion: '',
@@ -135,9 +145,9 @@ function DiaryFormPage() {
                     onChange={handleChange}
                   />
                   {selected === 'public' ? (
-                    <GrCheckboxSelected className={S.active} />
+                    <BsCheckSquareFill className={S.active} size={24} />
                   ) : (
-                    <GrCheckbox className={S.unactive} />
+                    <BsCheckSquare className={S.unactive} size={24} />
                   )}
                   <span>공개</span>
                 </label>
@@ -151,9 +161,9 @@ function DiaryFormPage() {
                     onChange={handleChange}
                   />
                   {selected === 'private' ? (
-                    <GrCheckboxSelected className={S.active} />
+                    <BsCheckSquareFill className={S.active} size={24} />
                   ) : (
-                    <GrCheckbox className={S.unactive} />
+                    <BsCheckSquare className={S.unactive} size={24} />
                   )}
                   <span>비공개</span>
                 </label>
@@ -165,8 +175,14 @@ function DiaryFormPage() {
               <label htmlFor={imageId} className={S.itemTitle}>
                 이미지
               </label>
-              <div className="">
-                <input type="file" accept="image/*" id={imageId} className="sr-only" />
+              <div className={S.fileAttachBox}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  id={imageId}
+                  className="sr-only"
+                  onChange={handleImageChange}
+                />
                 <button
                   type="button"
                   onClick={() => document.getElementById(imageId)?.click()}
@@ -174,6 +190,24 @@ function DiaryFormPage() {
                 >
                   이미지 첨부
                 </button>
+                {!formData.image && <p className={S.placeholderText}>이미지를 첨부해 주세요</p>}
+                {formData.image && (
+                  <div className={S.fileInfo}>
+                    <p className={S.fileName}>{formData.image.name}</p>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          image: null,
+                        }))
+                      }
+                      className={S.deleteButton}
+                    >
+                      <CgClose className={S.deleteIcon} size={24} />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 

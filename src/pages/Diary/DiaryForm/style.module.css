@@ -8,6 +8,9 @@ textarea {
   font-size: var(--text-lg);
   font-family: var(--font-main);
 }
+textarea {
+  resize: vertical;
+}
 input[type='text']::placeholder {
   color: var(--gray-200);
 }
@@ -112,16 +115,45 @@ textarea::placeholder {
     color: var(--gray-100);
   }
 }
-.uploadButton {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100px;
-  height: 35px;
-  background-color: var(--primary);
+.fileAttachBox {
+  position: relative;
+  height: 50px;
+  background-color: white;
+  border: 1px solid var(--gray-100);
   border-radius: var(--radius-2);
-  color: white;
-  cursor: pointer;
+  .uploadButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 35px;
+    margin: 6px 0 0 18px;
+    background-color: var(--primary);
+    border-radius: var(--radius-2);
+    color: white;
+    cursor: pointer;
+  }
+  .placeholderText {
+    color: var(--gray-200);
+    position: absolute;
+    left: 127px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .fileInfo {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 127px;
+    top: 50%;
+    transform: translateY(-50%);
+    > button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+  }
 }
 .buttonGroup {
   display: flex;
