@@ -1,15 +1,10 @@
 import S from './style.module.css';
 import default_image from '../../assets/default_image.svg';
+import type { Emotion } from '../..';
 const user = {
   name: '홍길동',
   image: default_image,
 };
-
-interface Emotion {
-  id: number;
-  name: string;
-  URL: string;
-}
 
 interface Props {
   emotion: Emotion;

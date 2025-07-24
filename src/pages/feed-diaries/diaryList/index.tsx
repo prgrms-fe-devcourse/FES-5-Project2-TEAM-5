@@ -24,6 +24,13 @@ export interface Diary {
   is_drafted: string;
 }
 
+export interface Emotion {
+  id: number;
+  name: string;
+  URL: string;
+}
+
+// 임시데이터
 const diaries: Diary[] = [
   {
     id: 'f3a2a2d4-bb6a-4433-9a12-1b1b36c60c77',
@@ -105,11 +112,6 @@ const diaries: Diary[] = [
   },
 ];
 
-const breakpointColumns = {
-  default: 2,
-  768: 1,
-};
-
 const emotions = [
   { id: 1, name: '기쁨', URL: joyImg },
   { id: 2, name: '슬픔', URL: sadnessImg },
@@ -119,6 +121,11 @@ const emotions = [
   { id: 6, name: '평온', URL: peaceImg },
   { id: 7, name: '기대', URL: expectationImg },
 ];
+
+const breakpointColumns = {
+  default: 2,
+  768: 1,
+};
 
 const DiaryList = () => {
   return (
