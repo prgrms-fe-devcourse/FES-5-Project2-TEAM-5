@@ -1,14 +1,21 @@
 import { useId } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FaGithub } from 'react-icons/fa';
 import logo from '@/assets/logo.png';
 import S from './style.module.css';
 import { AuthInput, AuthLayout } from '../components';
+import { useForm } from '@/shared/hooks';
+import type { LoginForm } from './utils/type';
 
 const Login = () => {
+  const location = useLocation();
   const rememberId = useId();
   const emailId = useId();
   const pwdId = useId();
+  const userEmail = (location.state?.email as string) ?? '';
+  const { formData, onChange } = useForm<LoginForm>({
+    initialData: { email: userEmail, password: '' },
+  });
 
   return (
     <AuthLayout>
@@ -17,13 +24,23 @@ const Login = () => {
       </h1>
       <form className={S.form}>
         <div className={S.inputGroup}>
-          <AuthInput id={emailId} label="Email" placeholder="Email" name="email" type="email" />
+          <AuthInput
+            id={emailId}
+            label="Email"
+            placeholder="Email"
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={onChange}
+          />
           <AuthInput
             id={pwdId}
             label="Password"
             placeholder="Password"
             name="password"
             type="password"
+            value={formData.password}
+            onChange={onChange}
           />
         </div>
         <div className={S.formOptions}>
