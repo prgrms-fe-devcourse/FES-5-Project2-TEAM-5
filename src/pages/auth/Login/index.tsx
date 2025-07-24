@@ -1,28 +1,56 @@
-import { useId } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { FaGithub } from 'react-icons/fa';
 import logo from '@/assets/logo.png';
-import S from './style.module.css';
-import { AuthInput, AuthLayout } from '../components';
 import { useForm } from '@/shared/hooks';
+import { toastUtils } from '@/shared/utils/toastUtils';
+import { useEffect, useId } from 'react';
+import { FaGithub } from 'react-icons/fa';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { AuthInput, AuthLayout } from '../components';
+import S from './style.module.css';
+import { login } from './utils/helper';
 import type { LoginForm } from './utils/type';
+import { useRememberMe } from './hook/useRememberMe';
 
 const Login = () => {
   const location = useLocation();
   const rememberId = useId();
   const emailId = useId();
   const pwdId = useId();
-  const userEmail = (location.state?.email as string) ?? '';
-  const { formData, onChange } = useForm<LoginForm>({
+  const navigate = useNavigate();
+
+  const { checked, handleRememberMe, storedValue, toggleChecked } = useRememberMe();
+
+  const userEmail = (location.state?.email as string) ?? storedValue;
+  const { formData, onChange, setFormData } = useForm<LoginForm>({
     initialData: { email: userEmail, password: '' },
   });
+
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, email: userEmail }));
+  }, [userEmail, setFormData]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const { email, password } = formData;
+      await login({ email, password });
+
+      toastUtils.success({ title: '로그인 성공', message: '로그인에 성공했습니다!' });
+
+      handleRememberMe(email);
+
+      navigate('/home');
+    } catch (error) {
+      console.error(`로그인 실패 : ${error}`);
+    }
+  };
 
   return (
     <AuthLayout>
       <h1 className={S.logo}>
         <img src={logo} alt="" /> <span>Seediary</span>
       </h1>
-      <form className={S.form}>
+      <form className={S.form} onSubmit={handleSubmit}>
         <div className={S.inputGroup}>
           <AuthInput
             id={emailId}
@@ -45,7 +73,15 @@ const Login = () => {
         </div>
         <div className={S.formOptions}>
           <label htmlFor={rememberId}>
-            <input className={S.checkboxInput} type="checkbox" name="" id={rememberId} />
+            <input
+              className={S.checkboxInput}
+              type="checkbox"
+              name="remember"
+              id={rememberId}
+              checked={checked}
+              onChange={toggleChecked}
+              aria-label="아이디 기억하기"
+            />
             remember me
           </label>
           <Link to="/register">register</Link>
