@@ -1,9 +1,10 @@
-import type { IRegisterForm, RegisterValidationType } from './type';
+import type { ValidationType } from '@/shared/types/validation';
+import type { RegisterForm } from './type';
 
 const EMAIL_REGEX = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
 const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d])[^\s]{8,}$/;
 
-export const registerValidator: RegisterValidationType<IRegisterForm> = {
+export const registerValidator: ValidationType<RegisterForm> = {
   name: (value: string): string => {
     if (!value.trim()) return '닉네임을 입력해주세요.';
     if (!(value.length >= 2)) return '닉네임은 최소 2글자 이상 작성해주세요.';
@@ -20,6 +21,8 @@ export const registerValidator: RegisterValidationType<IRegisterForm> = {
     return '';
   },
   confirmPassword: (value: string, values?: { password: string }): string => {
+    console.log('password : ', value);
+    console.log('confirmPassword : ', values?.password);
     if (!value.trim()) return '비밀번호 확인을 입력해주세요.';
 
     if (values && value !== values.password) {
