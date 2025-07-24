@@ -5,7 +5,7 @@ import { Toaster } from 'react-hot-toast';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import DiaryPage from './pages/Diary/diaryMain';
-import DiaryList from './pages/feed-diaries/diaryList';
+import DiaryList from './pages/feed-diaries/DiaryList';
 
 function App() {
   return (
