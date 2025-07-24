@@ -15,6 +15,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  gap: var(--space-1);
 
   .inputGroup {
     display: flex;
@@ -27,7 +28,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-8);
 
     label {
       display: flex;
@@ -46,6 +47,7 @@
     a {
       color: var(--gray-300);
       font-size: var(--text-base);
+      text-decoration: underline;
     }
   }
 
