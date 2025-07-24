@@ -7,6 +7,8 @@ import { customStyles } from './customStyle';
 import type { Emotion } from '../..';
 import EmotionSelectItem from '../EmotionSelectItem';
 
+import { AiOutlineClose } from 'react-icons/ai';
+
 const animatedComponents = makeAnimated();
 
 interface Props {
@@ -38,6 +40,7 @@ const EmotionSelectBox = ({ emotions }: Props) => {
           <EmotionSelectItem key={emotion.id} emotion={emotion} />
         ))}
       </ul>
+      {selectedEmotions.length > 1 && <AiOutlineClose />}
     </div>
   );
 };
