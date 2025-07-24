@@ -21,18 +21,6 @@ export const customStyles: StylesConfig<Emotion, true> = {
     width: '100px',
     backgroundColor: '#A7C584',
   }),
-  multiValue: (provided) => ({
-    ...provided,
-    backgroundColor: 'transparent',
-  }),
-  multiValueLabel: (provided) => ({
-    ...provided,
-    color: 'white',
-  }),
-  input: (provided) => ({
-    ...provided,
-    color: 'white',
-  }),
   dropdownIndicator: (provided) => ({
     ...provided,
     color: 'white',
@@ -52,11 +40,5 @@ export const customStyles: StylesConfig<Emotion, true> = {
   indicatorSeparator: (provided) => ({
     ...provided,
     display: 'none',
-  }),
-  valueContainer: (provided) => ({
-    ...provided,
-    flexWrap: 'nowrap',
-    overflowX: 'auto',
-    maxWidth: '100%',
   }),
 };
