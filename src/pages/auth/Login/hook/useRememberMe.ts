@@ -1,4 +1,4 @@
-import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
+import { useLocalStorage } from '@/shared/hooks';
 import { useState } from 'react';
 
 const SEEDIARY_KEY = 'seediary_remembered_user';
