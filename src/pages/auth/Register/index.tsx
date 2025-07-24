@@ -1,65 +1,119 @@
-import { useId, useState } from 'react';
-import S from './style.module.css';
-import { AuthInput, AuthLayout, FlowerProfile } from '../components';
+import { useForm, useUploadImage } from '@/shared/hooks';
 import { toastUtils } from '@/shared/utils/toastUtils';
+import { useId, useRef } from 'react';
+import { IoChevronBackOutline } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
+import defaultProfile from '../assets/profile.svg';
+import { AuthInput, AuthLayout } from '../components';
+import S from './style.module.css';
+import { createAuthAccount, insertUser, uploadAndGetPublicUrl } from './utils/helper';
+import type { RegisterForm } from './utils/type';
+import { registerValidator } from './utils/validator';
 
 const Register = () => {
   const profileId = useId();
   const emailId = useId();
   const nicknameId = useId();
   const pwdId = useId();
-  const confirmPwdID = useId();
+  const confirmPwdId = useId();
+  const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const { error, formData, onChange, validateAll } = useForm<RegisterForm>({
+    initialData: {
+      email: '',
+      confirmPassword: '',
+      name: '',
+      password: '',
+    },
+    validator: registerValidator,
+  });
 
-  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const { imageFile, imagePreview, onChange: onChangePreview } = useUploadImage();
 
-    if (file) {
-      if (profileImage) {
-        URL.revokeObjectURL(profileImage);
-      }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-      const imageUrl = URL.createObjectURL(file);
-      setProfileImage(imageUrl);
+    if (!validateAll()) return false;
+    try {
+      const { email, name, password } = formData;
+      const userId = await createAuthAccount({ email, password });
+      const publicUrl = imageFile ? await uploadAndGetPublicUrl({ file: imageFile, userId }) : null;
+      await insertUser({ id: userId, name, profile_image: publicUrl });
+      toastUtils.success({ title: '화원가입 성공', message: 'Seediary에 오신 걸 환영합니다!' });
+
+      navigate('/login', {
+        state: {
+          email,
+        },
+      });
+    } catch (error) {
+      console.error(`회원가입 실패 : ${error}`);
     }
   };
 
-  const handleClick = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    toastUtils.success({ message: '하이', title: 'hello' });
-    // toastUtils.error({ message: '하이', title: 'hello' });
-    // toastUtils.info({ message: '하이', title: 'hello' });
+  const handleSelectProfile = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      fileInputRef.current?.click();
+    }
+  };
+
+  const handleBack = () => {
+    navigate('/login');
   };
 
   return (
     <AuthLayout>
-      <label htmlFor={profileId} className={S.profile}>
+      <IoChevronBackOutline
+        role="button"
+        tabIndex={1}
+        className={S.backButton}
+        onClick={handleBack}
+        aria-label="로그인 페이지로 가기"
+      />
+      <label
+        htmlFor={profileId}
+        className={S.profile}
+        onKeyDown={handleSelectProfile}
+        tabIndex={0}
+        role="button"
+        aria-label="프로필 이미지 선택"
+      >
         <div className={S.defaultImage}>
-          {profileImage ? (
-            <img src={profileImage} alt="프로필 미리보기" className={S.previewImage} />
+          {imagePreview ? (
+            <img src={imagePreview} alt="프로필 미리보기" className={S.previewImage} />
           ) : (
-            <FlowerProfile />
+            <img src={defaultProfile} />
           )}
         </div>
         <span>프로필 이미지</span>
       </label>
       <input
+        ref={fileInputRef}
         type="file"
         name="profile"
         id={profileId}
         accept="image/*"
-        onChange={handleProfileImageChange}
+        onChange={onChangePreview}
         hidden
       />
-      <form className={S.form} onSubmit={handleClick}>
-        <AuthInput id={emailId} label="이메일" name="email" type="email" placeholder="이메일" />
+      <form className={S.form} onSubmit={handleSubmit}>
+        <AuthInput
+          id={emailId}
+          label="이메일"
+          name="email"
+          type="email"
+          placeholder="이메일"
+          onChange={onChange}
+        />
         <AuthInput
           id={nicknameId}
           label="닉네임"
-          name="nickname"
+          name="name"
           type="text"
           placeholder="닉네임"
+          onChange={onChange}
         />
         <AuthInput
           id={pwdId}
@@ -67,15 +121,17 @@ const Register = () => {
           name="password"
           type="password"
           placeholder="비밀번호"
+          onChange={onChange}
         />
         <AuthInput
-          id={confirmPwdID}
+          id={confirmPwdId}
           label="비밀번호 확인"
           name="confirmPassword"
           type="password"
           placeholder="비밀번호 확인"
+          onChange={onChange}
         />
-        <span className={S.errorMessage}>에러 표시 할 곳</span>
+        <div className={S.errorMessage}>{error && <span>{error}</span>}</div>
         <button type="submit" className={S.registerButton}>
           signup
         </button>
