@@ -1,0 +1,75 @@
+.container {
+  position: sticky;
+  max-width: 1280px;
+  height: 80px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  color: var(--gray-950);
+  font-family: var(--font-accent);
+
+  .logo {
+    display: flex;
+    align-items: center;
+
+    > div {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: var(--text-5xl);
+      height: fit-content;
+    }
+  }
+
+  .menuList {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+
+    > li {
+      cursor: pointer;
+      transition: all 0.3s;
+
+      a {
+        display: block;
+        padding: 8px 4px;
+
+        &:hover {
+          color: var(--point);
+          font-weight: 700;
+          text-decoration: underline;
+        }
+
+        &:focus-visible {
+          color: var(--point);
+          font-weight: 700;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .authMenu {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+
+    .authButton {
+      font-family: var(--font-accent);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: var(--space-2);
+      width: 100px;
+      padding: 8px 20px;
+      border: 1px solid var(--gray-950);
+      background-color: inherit;
+      border-radius: var(--radius-6);
+      cursor: pointer;
+
+      &:focus-visible {
+        outline: 4px solid var(--point);
+      }
+    }
+  }
+}

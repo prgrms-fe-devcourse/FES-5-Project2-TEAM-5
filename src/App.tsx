@@ -8,11 +8,13 @@ import DiaryPage from './pages/diary/DiaryMain';
 import DiaryFormPage from './pages/diary/DiaryForm';
 import DiaryList from './pages/feed-diaries/DiaryList';
 import UserPage from './pages/users/UserList';
+import Header from './shared/components/Header';
 
 function App() {
   return (
     <BrowserRouter>
       <Toaster position="top-center" toastOptions={{ duration: 4000 }} /> {/* react-hot-toast */}
+      <Header />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
