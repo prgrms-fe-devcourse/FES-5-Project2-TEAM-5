@@ -1,0 +1,88 @@
+/* 달력 커스텀 */
+.react-calendar {
+  width: 100%;
+  border: 0;
+  * {
+    font-family: var(--font-accent);
+    font-size: var(--text-lg);
+  }
+}
+.react-calendar button {
+  border-radius: var(--radius-2);
+}
+.react-calendar__navigation {
+  align-items: center;
+}
+.react-calendar__navigation__label__labelText {
+  position: relative;
+  display: inline-block;
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  color: var(--primary);
+}
+.react-calendar__navigation__label__labelText::after {
+  content: '';
+  display: inline-block;
+  width: 100%;
+  height: 2px;
+  background-color: var(--primary);
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+}
+.react-calendar__navigation {
+  height: 36px;
+  margin-bottom: 50px;
+}
+.react-calendar__tile {
+  padding: var(--space-4) var(--space-3);
+  color: var(--gray-900);
+}
+.react-calendar__month-view__weekdays {
+  font-weight: 500;
+  color: var(--gray-200);
+  text-transform: none;
+  abbr {
+    text-decoration: none;
+  }
+}
+.react-calendar__navigation button {
+  font-size: var(--text-5xl);
+  padding: 0;
+}
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: var(--gray-100);
+}
+.react-calendar__navigation button:disabled,
+.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus {
+  background-color: white;
+}
+.react-calendar__year-view .react-calendar__tile,
+.react-calendar__decade-view .react-calendar__tile,
+.react-calendar__century-view .react-calendar__tile {
+  padding: 1.5em 0.5em;
+}
+.react-calendar__tile:enabled:hover {
+  background: transparent url('../pages/diary/assets/diary_select.svg') no-repeat center
+    center/contain;
+}
+.react-calendar__tile:enabled:focus {
+  background: transparent url('../pages/diary/assets/diary_select.svg') no-repeat center
+    center/contain;
+}
+.react-calendar__tile--active {
+  background: transparent url('../pages/diary/assets/diary_select.svg') no-repeat center
+    center/contain;
+}
+.react-calendar__tile--now {
+  background: transparent url('../pages/diary/assets/diary_today.svg') no-repeat center
+    center/contain;
+  color: white;
+}
+.react-calendar__tile--now:enabled:hover {
+  background: transparent url('../pages/diary/assets/diary_today.svg') no-repeat center
+    center/contain;
+}
+
+/* 식물성장 프로그레스 커스텀 */

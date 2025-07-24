@@ -90,6 +90,7 @@ video {
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
+  box-sizing: border-box;
 }
 /* HTML5 display-role reset for older browsers */
 article,
@@ -107,6 +108,21 @@ section {
 }
 body {
   line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a {
+  font-size: 100%;
+  color: inherit;
+  line-height: 1.2;
+  text-decoration: none;
+}
+a:active,
+a:focus,
+a:hover {
+  outline: 0;
+  text-decoration: none;
+  color: inherit;
 }
 ol,
 ul {
@@ -126,4 +142,25 @@ q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+}
+input[type='text'],
+textarea,
+input[type='button'],
+input[type='submit'],
+button,
+input[type='search'] {
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  font-size: inherit;
+  background: none;
+}
+select:focus,
+input:focus,
+textarea:focus,
+button:focus {
+  outline: none;
 }
