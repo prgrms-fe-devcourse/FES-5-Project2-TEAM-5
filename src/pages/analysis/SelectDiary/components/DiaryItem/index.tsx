@@ -1,6 +1,6 @@
 import { GrFormCheckmark } from 'react-icons/gr'
-import S from './DiaryItem.module.css'
-import type { Diary } from '../types';
+import S from './style.module.css'
+import type { Diary } from '../../types';
 
 
 function DiaryItem({ diary }: { diary: Diary }) {

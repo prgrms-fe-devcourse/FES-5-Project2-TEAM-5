@@ -1,5 +1,5 @@
 import { GrFormNextLink } from 'react-icons/gr'
-import S from './NextPageButton.module.css'
+import S from './style.module.css'
 
 function NextPageButton() {
   return (

@@ -4,9 +4,9 @@ import './styles/global.css';
 import { Toaster } from 'react-hot-toast';
 
 // 감정분석 페이지
-import SelectDiary from './pages/SelectDiary';
-import EmotionAndQuest from './pages/EmotionAndQuest';
-import QuestSelect from './pages/QuestSelect';
+import SelectDiary from './pages/analysis/SelectDiary/index';
+import EmotionAndQuest from './pages/analysis/EmotionAndQuest/index';
+import SelectQuest from './pages/analysis/SelectQuest/index';
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
           path="/"
           element={
             <div>
-              <SelectDiary />
+              {/* <SelectDiary /> */}
               {/* <EmotionAndQuest /> */}
               {/* <QuestSelect /> */}
             </div>
@@ -28,7 +28,7 @@ function App() {
         {/* 감정분석 플로우 */}
         <Route path="/analysis/select-diary" element={<SelectDiary />} />
         <Route path="/analysis/emotion-and-quest" element={<EmotionAndQuest />} />
-        <Route path="/analysis/quest-select" element={<QuestSelect />} />
+        <Route path="/analysis/quest-select" element={<SelectQuest />} />
       </Routes>
     </BrowserRouter>
   );

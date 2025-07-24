@@ -1,6 +1,6 @@
-import S from './DiaryList.module.css'
-import type { Diary } from '../types'
-import DiaryItem from './DiaryItem'
+import S from './style.module.css'
+import type { Diary } from '../../types'
+import DiaryItem from '../DiaryItem/index'
 
 function DiaryList({ diaries }: { diaries: Diary[] }) {
   return (
