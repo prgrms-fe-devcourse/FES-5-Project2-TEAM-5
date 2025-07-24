@@ -10,7 +10,6 @@ import {
   Title,
 } from 'chart.js';
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, Title);
-
 import Emotion1 from '/src/assets/icon_joy.svg';
 import Emotion2 from '/src/assets/icon_sad.svg';
 import Emotion3 from '/src/assets/icon_anger.svg';
