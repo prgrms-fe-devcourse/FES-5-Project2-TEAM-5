@@ -1,4 +1,4 @@
-import logo from '@/assets/logo.png';
+import logo from '@/assets/logo.svg';
 import { useForm } from '@/shared/hooks';
 import { toastUtils } from '@/shared/utils/toastUtils';
 import { useEffect, useId } from 'react';
