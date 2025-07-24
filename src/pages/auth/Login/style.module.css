@@ -41,6 +41,10 @@
         width: 18px;
         height: 18px;
         accent-color: var(--primary);
+
+        &:focus-visible {
+          outline: 2px solid var(--point);
+        }
       }
     }
 
@@ -66,6 +70,9 @@
 
       &:active {
         scale: 0.97;
+      }
+      &:focus-visible {
+        outline: 2px solid var(--point);
       }
     }
 
