@@ -62,7 +62,7 @@
   --text-5xl: 2rem; /* 32px */
 }
 
-*:focus {
+*:focus-visible {
   outline: 4px solid var(--point);
 }
 
