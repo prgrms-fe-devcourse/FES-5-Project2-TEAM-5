@@ -1,0 +1,29 @@
+.searchBox {
+  width: 1280px;
+  height: 52px;
+  padding: 0 var(--space-4);
+  background-color: white;
+  border: 1px solid var(--gray-100);
+  color: var(--gray-200);
+  border-radius: 36px;
+  font-size: var(--text-lg);
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-7);
+
+  .searchIcon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .searchInput {
+    border: none;
+    flex: 1;
+  }
+
+  .searchInput:focus {
+    outline: none;
+  }
+}

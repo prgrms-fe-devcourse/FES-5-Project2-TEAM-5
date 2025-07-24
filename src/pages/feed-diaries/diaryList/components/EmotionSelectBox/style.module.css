@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+
+  .selectedList {
+    display: flex;
+    gap: var(--space-4);
+  }
+  .selectedEmotion {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-lg);
+    font-weight: 500;
+  }
+  .deleteIcon {
+    width: 12px;
+    height: 12px;
+  }
+}
