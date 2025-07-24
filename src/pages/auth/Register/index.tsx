@@ -1,12 +1,11 @@
 import { useId, useRef } from 'react';
 import S from './style.module.css';
 import { AuthInput, AuthLayout, FlowerProfile } from '../components';
-import { toastUtils } from '@/shared/utils/toastUtils';
-import { createAuthAccount, insertUser, uploadAndGetPublicUrl } from './utils/helper';
-import { useNavigate } from 'react-router-dom';
-import { registerValidator } from './utils/validator';
 import { useForm, useUploadImage } from '@/shared/hooks';
-import type { RegisterForm } from './utils/type';
+import { registerValidator } from './utils/validator';
+import { createAuthAccount, insertUser, uploadAndGetPublicUrl } from './utils/helper';
+import { toastUtils } from '@/shared/utils/toastUtils';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const profileId = useId();
@@ -14,28 +13,31 @@ const Register = () => {
   const nicknameId = useId();
   const pwdId = useId();
   const confirmPwdId = useId();
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const { error, formData, onChange, validateAll } = useForm<RegisterForm>({
-    initialData: { email: '', confirmPassword: '', name: '', password: '' },
+  const { error, formData, onChange, validateAll } = useForm({
+    initialData: {
+      email: '',
+      confirmPassword: '',
+      name: '',
+      password: '',
+    },
     validator: registerValidator,
   });
-  const { imageFile, imagePreview, onChange: onPreviewChange } = useUploadImage();
+
+  const { imageFile, imagePreview, onChange: onChangePreview } = useUploadImage();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!validateAll()) return false;
-
     try {
-      const { email, password, name } = formData;
+      const { email, name, password } = formData;
       const userId = await createAuthAccount({ email, password });
       const publicUrl = imageFile ? await uploadAndGetPublicUrl({ file: imageFile, userId }) : null;
-
-      insertUser({ id: userId, name: name, profile_image: publicUrl });
-
-      toastUtils.success({ title: '회원가입 성공!', message: 'Seediary에 오신 걸 환영합니다!' });
+      await insertUser({ id: userId, name, profile_image: publicUrl });
+      toastUtils.success({ title: '화원가입 성공', message: 'Seediary에 오신 걸 환영합니다!' });
 
       navigate('/login', {
         state: {
@@ -43,7 +45,7 @@ const Register = () => {
         },
       });
     } catch (error) {
-      console.error(`회원가입 실패 :  ${error}`);
+      console.error(`회원가입 실패 : ${error}`);
     }
   };
 
@@ -79,11 +81,18 @@ const Register = () => {
         name="profile"
         id={profileId}
         accept="image/*"
-        onChange={onPreviewChange}
+        onChange={onChangePreview}
         hidden
       />
-      <form className={S.form}>
-        <AuthInput id={emailId} label="이메일" name="email" type="email" placeholder="이메일" />
+      <form className={S.form} onSubmit={handleSubmit}>
+        <AuthInput
+          id={emailId}
+          label="이메일"
+          name="email"
+          type="email"
+          placeholder="이메일"
+          onChange={onChange}
+        />
         <AuthInput
           id={nicknameId}
           label="닉네임"
