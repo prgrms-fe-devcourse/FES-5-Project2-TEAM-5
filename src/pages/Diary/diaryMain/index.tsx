@@ -1,20 +1,17 @@
-import S from './style.module.css';
-import { BsPlusLg } from 'react-icons/bs';
+import DiaryBanner from './components/DiaryBanner';
 import DiaryCalender from './components/DiaryCalender';
-import DiaryPlant from './components/DiaryPlant';
 import DiaryEmotionChart from './components/DiaryEmotionChart';
 import DiaryList from './components/DiaryList';
+import DiaryPlant from './components/DiaryPlant';
 import DiaryWeather from './components/DiaryWeather';
-import DiaryBanner from './components/DiaryBanner';
+import S from './style.module.css';
+import { BsPlusLg } from 'react-icons/bs';
 
 function DiaryPage() {
   return (
     <>
       {/* 날씨 연동 배너 이미지 영역 */}
-      <section className={S.section01}>
-        <h2>Welcome to the Seediary</h2>
-        <DiaryWeather />
-      </section>
+      <DiaryWeather />
 
       {/* 일기 통계 영역 */}
       <section className={S.section02}>

@@ -64,25 +64,25 @@
   padding: 1.5em 0.5em;
 }
 .react-calendar__tile:enabled:hover {
-  background: transparent url('../pages/diary/assets/diary_select.svg') no-repeat center
-    center/contain;
+  background: transparent url('../pages/diary/assets/diary_select.svg') no-repeat center 42%/40px
+    auto;
 }
 .react-calendar__tile:enabled:focus {
-  background: transparent url('../pages/diary/assets/diary_select.svg') no-repeat center
-    center/contain;
+  background: transparent url('../pages/diary/assets/diary_select.svg') no-repeat center 42%/40px
+    auto;
 }
 .react-calendar__tile--active {
-  background: transparent url('../pages/diary/assets/diary_select.svg') no-repeat center
-    center/contain;
+  background: transparent url('../pages/diary/assets/diary_select.svg') no-repeat center 42%/40px
+    auto;
 }
 .react-calendar__tile--now {
-  background: transparent url('../pages/diary/assets/diary_today.svg') no-repeat center
-    center/contain;
+  background: transparent url('../pages/diary/assets/diary_today.svg') no-repeat center 42%/40px
+    auto;
   color: white;
 }
 .react-calendar__tile--now:enabled:hover {
-  background: transparent url('../pages/diary/assets/diary_today.svg') no-repeat center
-    center/contain;
+  background: transparent url('../pages/diary/assets/diary_today.svg') no-repeat center 42%/40px
+    auto;
 }
 
 /* 식물성장 프로그레스 커스텀 */
