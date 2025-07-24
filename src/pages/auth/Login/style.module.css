@@ -1,0 +1,82 @@
+.logo {
+  color: var(--gray-900);
+  font-size: var(--text-5xl);
+  display: flex;
+  align-items: center;
+
+  margin-bottom: 30px;
+
+  span {
+    color: var(--gray-900);
+    font-size: var(--text-5xl);
+  }
+}
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-1);
+  }
+
+  .formOptions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-6);
+
+    label {
+      display: flex;
+      gap: var(--space-1);
+      align-items: center;
+      font-size: var(--text-base);
+      color: var(--gray-300);
+
+      .checkboxInput {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--primary);
+      }
+    }
+
+    a {
+      color: var(--gray-300);
+      font-size: var(--text-base);
+    }
+  }
+
+  .buttonGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+
+    button {
+      border: none;
+      width: 100%;
+      height: 45px;
+      color: #fff;
+      font-size: var(--text-lg);
+      border-radius: var(--radius-1);
+
+      &:active {
+        scale: 0.97;
+      }
+    }
+
+    .loginButton {
+      background-color: var(--primary);
+    }
+
+    .githubButton {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: var(--space-3);
+      background-color: #000;
+    }
+  }
+}
