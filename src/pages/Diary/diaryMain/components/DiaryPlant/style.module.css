@@ -1,0 +1,16 @@
+.plantWrap {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto;
+  img {
+    width: 68px;
+  }
+  .percent {
+    font-size: var(--text-xl);
+    font-weight: 500;
+    font-family: var(--font-accent);
+    margin-top: var(--space-1);
+    margin-left: var(--space-1);
+  }
+}

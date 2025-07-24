@@ -1,0 +1,36 @@
+.diaryContents {
+  flex: 1;
+  color: var(--gray-900);
+  > span {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-lg);
+    img {
+      width: 24px;
+    }
+  }
+  .title {
+    padding: var(--space-3) 0;
+    font-size: var(--text-xl);
+    font-weight: 500;
+  }
+}
+.tagList {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-1);
+  gap: var(--space-2);
+  li {
+    font-size: var(--text-lg);
+  }
+}
+.empathy {
+  font-size: var(--text-base);
+  color: var(--gray-300);
+  margin-bottom: var(--space-3);
+}
+.date {
+  font-size: var(--text-base);
+  color: var(--gray-300);
+}
