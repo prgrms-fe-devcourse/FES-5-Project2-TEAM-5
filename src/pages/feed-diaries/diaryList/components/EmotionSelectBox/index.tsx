@@ -90,7 +90,7 @@ const EmotionSelectBox = ({ emotions }: Props) => {
         closeMenuOnSelect={false}
         controlShouldRenderValue={false}
         onChange={(s) => setSelectedEmotions(s as Emotion[])}
-        placeholder="감정 선택"
+        placeholder="감정"
         styles={customStyles}
       />
 
