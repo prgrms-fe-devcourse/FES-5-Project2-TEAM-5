@@ -1,11 +1,14 @@
-import { useId, useRef } from 'react';
-import S from './style.module.css';
-import { AuthInput, AuthLayout, FlowerProfile } from '../components';
 import { useForm, useUploadImage } from '@/shared/hooks';
-import { registerValidator } from './utils/validator';
-import { createAuthAccount, insertUser, uploadAndGetPublicUrl } from './utils/helper';
 import { toastUtils } from '@/shared/utils/toastUtils';
+import { useId, useRef } from 'react';
+import { IoChevronBackOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
+import defaultProfile from '../assets/profile.svg';
+import { AuthInput, AuthLayout } from '../components';
+import S from './style.module.css';
+import { createAuthAccount, insertUser, uploadAndGetPublicUrl } from './utils/helper';
+import type { RegisterForm } from './utils/type';
+import { registerValidator } from './utils/validator';
 
 const Register = () => {
   const profileId = useId();
@@ -16,7 +19,7 @@ const Register = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const { error, formData, onChange, validateAll } = useForm({
+  const { error, formData, onChange, validateAll } = useForm<RegisterForm>({
     initialData: {
       email: '',
       confirmPassword: '',
@@ -56,8 +59,19 @@ const Register = () => {
     }
   };
 
+  const handleBack = () => {
+    navigate('/login');
+  };
+
   return (
     <AuthLayout>
+      <IoChevronBackOutline
+        role="button"
+        tabIndex={1}
+        className={S.backButton}
+        onClick={handleBack}
+        aria-label="로그인 페이지로 가기"
+      />
       <label
         htmlFor={profileId}
         className={S.profile}
@@ -70,7 +84,7 @@ const Register = () => {
           {imagePreview ? (
             <img src={imagePreview} alt="프로필 미리보기" className={S.previewImage} />
           ) : (
-            <FlowerProfile />
+            <img src={defaultProfile} />
           )}
         </div>
         <span>프로필 이미지</span>

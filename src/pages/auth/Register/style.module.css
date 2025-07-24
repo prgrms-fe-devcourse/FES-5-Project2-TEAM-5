@@ -1,3 +1,19 @@
+.backButton {
+  position: absolute;
+  top: 30px;
+  left: 40px;
+  width: 25px;
+  height: 25px;
+  transition: left 0.5s;
+  cursor: pointer;
+  color: var(--secondary);
+
+  &:hover {
+    left: 35px;
+    color: var(--primary);
+  }
+}
+
 .profile {
   display: flex;
   flex-direction: column;
