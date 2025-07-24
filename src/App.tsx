@@ -4,15 +4,17 @@ import './styles/global.css';
 import { Toaster } from 'react-hot-toast';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import DiaryPage from './pages/Diary/diaryMain';
 import DiaryList from './pages/feed-diaries/diaryList';
 
 function App() {
   return (
     <BrowserRouter>
-      <Toaster /> {/* react-hot-toast */}
+      <Toaster position="top-center" toastOptions={{ duration: 4000 }} /> {/* react-hot-toast */}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/diary" element={<DiaryPage />} />
         <Route path="/feed-diaries" element={<DiaryList />} />
       </Routes>
     </BrowserRouter>
