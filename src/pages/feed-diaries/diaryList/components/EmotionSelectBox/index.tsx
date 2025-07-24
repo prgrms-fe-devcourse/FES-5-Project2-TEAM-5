@@ -1,13 +1,11 @@
 import Select from 'react-select';
-import makeAnimated from 'react-select/animated';
 import S from './style.module.css';
+import makeAnimated from 'react-select/animated';
 import { useState } from 'react';
-
-import { customStyles } from './customStyle';
 import type { Emotion } from '../..';
-import EmotionSelectItem from '../EmotionSelectItem';
-
 import { AiOutlineClose } from 'react-icons/ai';
+import EmotionSelectItem from '../EmotionSelectItem';
+import { CustomOption, CustomPlaceholder, customStyles } from './customStyle';
 
 const animatedComponents = makeAnimated();
 
@@ -18,11 +16,19 @@ interface Props {
 const EmotionSelectBox = ({ emotions }: Props) => {
   const [selectedEmotions, setSelectedEmotions] = useState<Emotion[]>([]);
 
+  const handleAllDelete = () => {
+    setSelectedEmotions([]);
+  };
+
   return (
     <div className={S.container}>
       <Select<Emotion, true>
         isSearchable={false}
-        components={animatedComponents}
+        components={{
+          ...animatedComponents,
+          Option: CustomOption,
+          Placeholder: CustomPlaceholder,
+        }}
         options={emotions}
         getOptionLabel={(e) => e.name}
         getOptionValue={(e) => String(e.id)}
@@ -30,9 +36,9 @@ const EmotionSelectBox = ({ emotions }: Props) => {
         closeMenuOnSelect={false}
         controlShouldRenderValue={false}
         onChange={(s) => setSelectedEmotions(s as Emotion[])}
-        placeholder="감정"
         styles={customStyles}
         isClearable={false}
+        value={selectedEmotions}
       />
 
       <ul className={S.selectedList}>
@@ -40,7 +46,9 @@ const EmotionSelectBox = ({ emotions }: Props) => {
           <EmotionSelectItem key={emotion.id} emotion={emotion} />
         ))}
       </ul>
-      {selectedEmotions.length > 1 && <AiOutlineClose />}
+      {selectedEmotions.length > 1 && (
+        <AiOutlineClose className={S.allSelectedDelete} onClick={handleAllDelete} />
+      )}
     </div>
   );
 };

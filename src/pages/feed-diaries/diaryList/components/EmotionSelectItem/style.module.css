@@ -5,7 +5,7 @@
   gap: var(--space-2);
   font-size: var(--text-lg);
   font-weight: 400;
-  background-color: var(--secondary);
+  background-color: var(--primary);
   border-radius: var(--radius-6);
   width: 92px;
   height: 38px;
@@ -15,4 +15,5 @@
   width: 12px;
   height: 12px;
   color: white;
+  cursor: pointer;
 }
