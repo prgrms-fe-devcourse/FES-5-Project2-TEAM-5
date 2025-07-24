@@ -1,71 +1,69 @@
-import { useId, useState } from 'react';
+import { useId, useRef } from 'react';
 import S from './style.module.css';
 import { AuthInput, AuthLayout, FlowerProfile } from '../components';
-import { useForm } from './hook';
-import supabase from '@/shared/supabase/supabase';
+import { toastUtils } from '@/shared/utils/toastUtils';
+import { createAuthAccount, insertUser, uploadAndGetPublicUrl } from './utils/helper';
+import { useNavigate } from 'react-router-dom';
+import { registerValidator } from './utils/validator';
+import { useForm, useUploadImage } from '@/shared/hooks';
+import type { RegisterForm } from './utils/type';
 
 const Register = () => {
   const profileId = useId();
   const emailId = useId();
   const nicknameId = useId();
   const pwdId = useId();
-  const confirmPwdID = useId();
+  const confirmPwdId = useId();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const navigate = useNavigate();
 
-  const { error, formData, onChange, validateAll } = useForm({
-    email: '',
-    confirmPassword: '',
-    name: '',
-    password: '',
+  const { error, formData, onChange, validateAll } = useForm<RegisterForm>({
+    initialData: { email: '', confirmPassword: '', name: '', password: '' },
+    validator: registerValidator,
   });
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-
-  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-
-    if (file) {
-      if (imagePreview) {
-        URL.revokeObjectURL(imagePreview);
-      }
-
-      const imageUrl = URL.createObjectURL(file);
-      setImagePreview(imageUrl);
-      setImageFile(file);
-    }
-  };
+  const { imageFile, imagePreview, onChange: onPreviewChange } = useUploadImage();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!validateAll()) return false;
-    const { data: authData, error: signupError } = await supabase.auth.signUp({
-      email: formData.email,
-      password: formData.password,
-    });
-    if (signupError || !authData.user) {
-      alert('회원가입 실패');
-      return;
+
+    try {
+      const { email, password, name } = formData;
+      const userId = await createAuthAccount({ email, password });
+      const publicUrl = imageFile ? await uploadAndGetPublicUrl({ file: imageFile, userId }) : null;
+
+      insertUser({ id: userId, name: name, profile_image: publicUrl });
+
+      toastUtils.success({ title: '회원가입 성공!', message: 'Seediary에 오신 걸 환영합니다!' });
+
+      navigate('/login', {
+        state: {
+          email,
+        },
+      });
+    } catch (error) {
+      console.error(`회원가입 실패 :  ${error}`);
     }
+  };
 
-    const userId = authData.user.id;
-
-    if (imageFile) {
-      const fileExt = imageFile?.name.split('.').pop();
-      const filePath = `${userId}.${fileExt}`;
-      const { data: storageData, error: storageError } = await supabase.storage
-        .from('profile')
-        .upload(filePath, imageFile!, { cacheControl: '3600', upsert: true });
-
-      if (storageError) return alert('이미지 저장 실패');
-
-      console.log('storageData', storageData);
-      console.log('storageError', storageError);
+  const handleSelectProfile = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      fileInputRef.current?.click();
     }
   };
 
   return (
     <AuthLayout>
-      <label htmlFor={profileId} className={S.profile}>
+      <label
+        htmlFor={profileId}
+        className={S.profile}
+        onKeyDown={handleSelectProfile}
+        tabIndex={0}
+        role="button"
+        aria-label="프로필 이미지 선택"
+      >
         <div className={S.defaultImage}>
           {imagePreview ? (
             <img src={imagePreview} alt="프로필 미리보기" className={S.previewImage} />
@@ -76,11 +74,12 @@ const Register = () => {
         <span>프로필 이미지</span>
       </label>
       <input
+        ref={fileInputRef}
         type="file"
         name="profile"
         id={profileId}
         accept="image/*"
-        onChange={handleProfileImageChange}
+        onChange={onPreviewChange}
         hidden
       />
       <form className={S.form}>
@@ -102,7 +101,7 @@ const Register = () => {
           onChange={onChange}
         />
         <AuthInput
-          id={confirmPwdID}
+          id={confirmPwdId}
           label="비밀번호 확인"
           name="confirmPassword"
           type="password"
