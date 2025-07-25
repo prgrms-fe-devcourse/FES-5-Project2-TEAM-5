@@ -9,6 +9,7 @@ import DiaryFormPage from './pages/diary/DiaryForm';
 import DiaryList from './pages/feed-diaries/DiaryList';
 import UserPage from './pages/users/UserList';
 import Header from './shared/components/Header';
+import DiaryDetailPage from './pages/diary/DiaryDetail';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/diary" element={<DiaryPage />} />
         <Route path="/diary/form" element={<DiaryFormPage />} />
+        <Route path="/diary/detail" element={<DiaryDetailPage />} />
         <Route path="/feed-diaries" element={<DiaryList />} />
         <Route path="/users" element={<UserPage />} />
       </Routes>

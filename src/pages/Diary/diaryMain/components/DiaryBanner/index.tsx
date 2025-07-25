@@ -1,7 +1,7 @@
 import S from './style.module.css';
 import { BsArrowRight } from 'react-icons/bs';
 
-function DiaryBanner() {
+const DiaryBanner = () => {
   return (
     <div className={S.banner}>
       <p>
@@ -15,5 +15,5 @@ function DiaryBanner() {
       </button>
     </div>
   );
-}
+};
 export default DiaryBanner;
