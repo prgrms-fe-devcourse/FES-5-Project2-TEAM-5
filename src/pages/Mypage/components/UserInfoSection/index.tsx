@@ -12,12 +12,13 @@ const UserInfoSection = () => {
       <div className={S.profileSection}>
         <img
           src={userInfo?.profile_image ? userInfo.profile_image : defaultProfile}
-          alt="사용자 프로필"
+          alt={userInfo?.name ? `${userInfo.name}님의 프로필 사진` : '기본 프로필 사진'}
+          loading="lazy"
         />
       </div>
       <div className={S.info}>
         <span className={S.username}>{userInfo?.name}</span>
-        <span>Sophia.miller@email.com</span>
+        <span>{userInfo?.email}</span>
         <span>
           Joined on {formatToReadableDate(userInfo?.created_at || '')} | Today's mood:{' '}
           <strong className={S.userMood}>Happy</strong>
