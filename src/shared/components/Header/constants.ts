@@ -21,8 +21,8 @@ export const MENU_LIST: MenuList[] = [
     label: '커뮤니티 일기장',
   },
   {
-    name: 'Subscriber List',
-    path: '/subscriber',
+    name: 'User List',
+    path: '/users',
     label: '유저 리스트',
   },
 ];
