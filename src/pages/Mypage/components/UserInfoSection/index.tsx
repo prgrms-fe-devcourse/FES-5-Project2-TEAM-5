@@ -1,7 +1,7 @@
 import S from './style.module.css';
-import defaultProfile from '../../assets/defaultProfile.svg';
+import defaultProfile from '@/assets/defaultProfile.svg';
 import { useUser } from '@/shared/hooks/useUser';
-import { formatToReadableDate } from '../../utils/helper';
+import { formatToReadableDate } from '@/shared/utils/formatter/date';
 
 const UserInfoSection = () => {
   const { userInfo } = useUser();

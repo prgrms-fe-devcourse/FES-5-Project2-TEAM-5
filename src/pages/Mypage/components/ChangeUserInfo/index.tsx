@@ -1,6 +1,6 @@
 import { useId, useRef } from 'react';
 import S from './style.module.css';
-import defaultProfile from '../../assets/defaultProfile.svg';
+import defaultProfile from '@/assets/defaultProfile.svg';
 
 const ChangeUserInfo = () => {
   const profileId = useId();
