@@ -159,9 +159,3 @@ input[type='search'] {
   font-size: inherit;
   background: none;
 }
-select:focus,
-input:focus,
-textarea:focus,
-button:focus {
-  outline: none;
-}
