@@ -105,6 +105,7 @@ const DiaryFormPage = () => {
               </label>
               <input
                 type="text"
+                className={S.customInput}
                 id={titleId}
                 name="title"
                 value={formData.title}
@@ -121,6 +122,7 @@ const DiaryFormPage = () => {
               </label>
               <textarea
                 id={contentId}
+                className={S.customTextarea}
                 name="content"
                 value={formData.content}
                 placeholder="내용을 입력해 주세요"
@@ -218,6 +220,7 @@ const DiaryFormPage = () => {
               </label>
               <input
                 type="text"
+                className={S.customInput}
                 id={tagId}
                 placeholder="태그를 입력해 주세요"
                 onChange={handleChange}
