@@ -1,5 +1,5 @@
 import S from './style.module.css';
-import IconExpect from '../../../assets/icon_expect.png';
+import IconExpect from '/src/assets/icon_expect.svg';
 import ThumbImage from '../../../assets/@thumb.png';
 import DiaryItem from '../DiaryItem';
 

@@ -10,14 +10,13 @@ import {
   Title,
 } from 'chart.js';
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, Title);
-
-import Emotion1 from '../../../assets/icon_joy.png';
-import Emotion2 from '../../../assets/icon_sad.png';
-import Emotion3 from '../../../assets/icon_anger.png';
-import Emotion4 from '../../../assets/icon_anxiety.png';
-import Emotion5 from '../../../assets/icon_surprise.png';
-import Emotion6 from '../../../assets/icon_peace.png';
-import Emotion7 from '../../../assets/icon_expect.png';
+import Emotion1 from '/src/assets/icon_joy.svg';
+import Emotion2 from '/src/assets/icon_sad.svg';
+import Emotion3 from '/src/assets/icon_anger.svg';
+import Emotion4 from '/src/assets/icon_anxiety.svg';
+import Emotion5 from '/src/assets/icon_surprise.svg';
+import Emotion6 from '/src/assets/icon_peace.svg';
+import Emotion7 from '/src/assets/icon_expect.svg';
 
 const emotionImages = [Emotion1, Emotion2, Emotion3, Emotion4, Emotion5, Emotion6, Emotion7];
 const emotionLabels = ['행복', '기대', '슬픔', '분노', '불안', '놀람', '평온'];
@@ -76,7 +75,7 @@ function DiaryEmotionChart({ data }: Props) {
           display: false,
         },
         afterFit: function (scale: any) {
-          scale.height = 50;
+          scale.height = 60;
         },
       },
       y: {
@@ -108,9 +107,9 @@ function DiaryEmotionChart({ data }: Props) {
       if (loadedEmotionImages.length === emotionImages.length) {
         scales.x.ticks.forEach((_: any, idx: number) => {
           const x = scales.x.getPixelForTick(idx);
-          const y = chartArea.bottom + 20;
+          const y = chartArea.bottom + 10;
 
-          ctx.drawImage(loadedEmotionImages[idx], x - 15, y, 30, 30);
+          ctx.drawImage(loadedEmotionImages[idx], x - 21, y, 42, 46);
         });
       }
     },
