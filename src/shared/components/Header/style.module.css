@@ -1,8 +1,7 @@
 .container {
   position: sticky;
-  max-width: 1280px;
   height: 80px;
-  margin: 0 auto;
+  margin-inline: 100px;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   color: var(--gray-950);
@@ -12,7 +11,8 @@
     display: flex;
     align-items: center;
 
-    > div {
+    > button {
+      font-family: var(--font-accent);
       display: flex;
       align-items: center;
       cursor: pointer;
@@ -31,6 +31,7 @@
       transition: all 0.3s;
 
       a {
+        font-size: var(--text-xl);
         display: block;
         padding: 8px 4px;
 
@@ -61,15 +62,78 @@
       align-items: center;
       gap: var(--space-2);
       width: 100px;
-      padding: 8px 20px;
-      border: 1px solid var(--gray-950);
+      padding: 8px 12px;
+      color: #fff;
       background-color: inherit;
-      border-radius: var(--radius-6);
+      color: black;
+      border: 1px solid var(--gray-950);
+      border-radius: var(--radius-3);
       cursor: pointer;
 
       &:focus-visible {
         outline: 4px solid var(--point);
       }
     }
+  }
+}
+
+.buttonGroup {
+  display: flex;
+  gap: var(--space-2);
+
+  .mypageButton {
+    position: relative;
+    display: inline-block;
+  }
+  /* 툴팁  */
+  .mypageButton::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    background-color: var(--gray-50);
+    bottom: -30px;
+    left: -40%;
+    border-radius: var(--radius-1);
+    padding: 4px 12px;
+    white-space: nowrap;
+    transition: opacity 0.5s ease;
+    visibility: hidden;
+    font-size: var(--text-sm);
+    opacity: 0;
+  }
+  .mypageButton:hover::after {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .profileImage {
+    display: flex;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .bellButton {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-inline: 0;
+    color: var(--gray-950);
+
+    .notificationBadge {
+      position: absolute;
+      background-color: var(--point);
+      top: 5px;
+      right: 3px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+  }
+
+  svg {
+    stroke-width: 1.2; /* 더 얇게 */
+    cursor: pointer;
   }
 }
