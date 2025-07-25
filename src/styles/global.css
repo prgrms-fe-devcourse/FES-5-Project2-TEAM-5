@@ -69,6 +69,7 @@
 /*  전역 설정 */
 body {
   font-family: var(--font-main);
+  background-color: #f9fafb;
 }
 
 /* sr-only 클래스 (변수 없이 직접 정의) */
