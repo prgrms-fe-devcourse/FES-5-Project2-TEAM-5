@@ -1,5 +1,6 @@
 .container {
   position: absolute;
+  z-index: 999;
   width: 100vw;
   padding-inline: 100px;
   margin: auto;
