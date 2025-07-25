@@ -1,7 +1,7 @@
+import type { DbUser } from '@/shared/supabase/dbUser';
 import { useMemo } from 'react';
-import type { User } from '..';
 
-export const useUserSearch = (users: User[], searchTerm: string) => {
+export const useUserSearch = (users: DbUser[], searchTerm: string) => {
   const filteredUsers = useMemo(() => {
     if (!searchTerm.trim()) return users;
 
@@ -10,7 +10,7 @@ export const useUserSearch = (users: User[], searchTerm: string) => {
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase()),
     );
-  }, [searchTerm]);
+  }, [searchTerm, users]);
 
   return {
     filteredUsers,

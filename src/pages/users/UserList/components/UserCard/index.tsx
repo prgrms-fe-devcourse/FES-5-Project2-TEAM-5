@@ -1,13 +1,13 @@
 import S from './style.module.css';
 import default_profile from '../../assets/default_profile.svg';
 import { GrFormNextLink } from 'react-icons/gr';
-import type { User } from '../..';
 import { useNavigate } from 'react-router-dom';
+import type { DbUser } from '@/shared/supabase/dbUser';
 
 const default_image = default_profile;
 
 interface Props {
-  user: User;
+  user: DbUser;
 }
 
 const UserCard = ({ user }: Props) => {
