@@ -1,0 +1,19 @@
+.container {
+  background-color: var(--background);
+  font-family: var(--font-main);
+  color: #303030;
+}
+
+.header {
+  max-width: 1280px;
+  margin: 0 auto 40px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 80px;
+
+  .title {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+  }
+}
