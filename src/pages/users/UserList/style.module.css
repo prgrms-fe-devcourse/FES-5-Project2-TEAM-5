@@ -6,12 +6,10 @@
 
 .header {
   max-width: 1280px;
-  margin: 0 auto 40px auto;
+  margin: 40px auto 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 80px;
-
   .title {
     font-size: var(--text-3xl);
     font-weight: 700;
