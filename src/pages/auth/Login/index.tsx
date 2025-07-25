@@ -80,6 +80,12 @@ const Login = () => {
               id={rememberId}
               checked={checked}
               onChange={toggleChecked}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  toggleChecked();
+                }
+              }}
               aria-label="아이디 기억하기"
             />
             remember me

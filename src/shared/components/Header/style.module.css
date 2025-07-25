@@ -1,0 +1,139 @@
+.container {
+  position: sticky;
+  height: 80px;
+  margin-inline: 100px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  color: var(--gray-950);
+  font-family: var(--font-accent);
+
+  .logo {
+    display: flex;
+    align-items: center;
+
+    > button {
+      font-family: var(--font-accent);
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: var(--text-5xl);
+      height: fit-content;
+    }
+  }
+
+  .menuList {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+
+    > li {
+      cursor: pointer;
+      transition: all 0.3s;
+
+      a {
+        font-size: var(--text-xl);
+        display: block;
+        padding: 8px 4px;
+
+        &:hover {
+          color: var(--point);
+          font-weight: 700;
+          text-decoration: underline;
+        }
+
+        &:focus-visible {
+          color: var(--point);
+          font-weight: 700;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .authMenu {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+
+    .authButton {
+      font-family: var(--font-accent);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: var(--space-2);
+      width: 100px;
+      padding: 8px 12px;
+      color: #fff;
+      background-color: inherit;
+      color: black;
+      border: 1px solid var(--gray-950);
+      border-radius: var(--radius-3);
+      cursor: pointer;
+
+      &:focus-visible {
+        outline: 4px solid var(--point);
+      }
+    }
+  }
+}
+
+.buttonGroup {
+  display: flex;
+  gap: var(--space-2);
+
+  .mypageButton {
+    position: relative;
+    display: inline-block;
+  }
+  /* 툴팁  */
+  .mypageButton::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    background-color: var(--gray-50);
+    bottom: -30px;
+    left: -40%;
+    border-radius: var(--radius-1);
+    padding: 4px 12px;
+    white-space: nowrap;
+    transition: opacity 0.5s ease;
+    visibility: hidden;
+    font-size: var(--text-sm);
+    opacity: 0;
+  }
+  .mypageButton:hover::after {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .profileImage {
+    display: flex;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .bellButton {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-inline: 0;
+    color: var(--gray-950);
+
+    .notificationBadge {
+      position: absolute;
+      background-color: var(--point);
+      top: 5px;
+      right: 3px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+  }
+
+  svg {
+    stroke-width: 1.2; /* 더 얇게 */
+    cursor: pointer;
+  }
+}
