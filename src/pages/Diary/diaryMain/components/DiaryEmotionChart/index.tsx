@@ -25,7 +25,7 @@ interface Props {
   data: number[];
 }
 
-function DiaryEmotionChart({ data }: Props) {
+const DiaryEmotionChart = ({ data }: Props) => {
   const chartRef = useRef<any>(null);
   const [loadedEmotionImages, setLoadedEmotionImages] = useState<HTMLImageElement[]>([]);
 
@@ -130,6 +130,6 @@ function DiaryEmotionChart({ data }: Props) {
       )}
     </div>
   );
-}
+};
 
 export default DiaryEmotionChart;
