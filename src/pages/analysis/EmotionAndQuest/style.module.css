@@ -205,8 +205,11 @@
     img{
       margin-bottom: var(--space-4);
       border-radius: var(--radius-1);
-      width: 100%;
       aspect-ratio: 386 / 160;
+      width: 386px;
+      height: auto;
+      max-width: 100%;
+      object-fit: cover;
     }
   }
 
