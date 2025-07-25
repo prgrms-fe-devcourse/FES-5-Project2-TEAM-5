@@ -60,6 +60,7 @@ export const uploadAndGetPublicUrl = async (params: {
 export const insertUser = async (params: {
   id: string;
   name: string;
+  email: string;
   profile_image: string | null;
 }): Promise<void> => {
   const { error } = await supabase.from('users').insert(params);
