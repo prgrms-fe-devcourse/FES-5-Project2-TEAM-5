@@ -2,6 +2,7 @@ import S from './style.module.css';
 import default_profile from '../../assets/default_profile.svg';
 import { GrFormNextLink } from 'react-icons/gr';
 import type { User } from '../..';
+import { useNavigate } from 'react-router-dom';
 
 const default_image = default_profile;
 
@@ -10,7 +11,14 @@ interface Props {
 }
 
 const UserCard = ({ user }: Props) => {
-  const { name, email, profile_image } = user;
+  const { id, name, email, profile_image } = user;
+  const navigate = useNavigate();
+
+  const handleUserDetail = () => {
+    const slug = id;
+    navigate(`/users/${slug}`);
+  };
+
   return (
     <article className={S.card}>
       {profile_image ? (
@@ -23,7 +31,12 @@ const UserCard = ({ user }: Props) => {
         <p className={S.userName}>{name}</p>
         <p className={S.userEmail}>{email}</p>
       </div>
-      <button type="button" className={S.userButton} aria-label={`${name}의 상세 페이지 보러가기`}>
+      <button
+        type="button"
+        className={S.userButton}
+        aria-label={`${name}의 상세 페이지 보러가기`}
+        onClick={handleUserDetail}
+      >
         보러가기
         <GrFormNextLink className={S.arrowIcon} />
       </button>
