@@ -198,6 +198,7 @@ const DiaryDetailPage = () => {
                 <div className={S.commentPrompt}>
                   <input
                     type="text"
+                    className={S.customInput}
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="응원과 공감의 글을 보내 주세요"
