@@ -1,15 +1,9 @@
 import S from './style.module.css';
-import defaultProfile from '../assets/default_profile.svg';
+import default_profile from '../../assets/default_profile.svg';
 import { GrFormNextLink } from 'react-icons/gr';
+import type { User } from '../..';
 
-const default_image = defaultProfile;
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  profile_image: string | null;
-}
+const default_image = default_profile;
 
 interface Props {
   user: User;
