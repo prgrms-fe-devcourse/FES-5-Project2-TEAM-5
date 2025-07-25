@@ -1,0 +1,27 @@
+.navTab {
+  width: 1280px;
+  display: flex;
+  justify-content: start;
+  border-bottom: 1px solid var(--gray-300);
+
+  .tab {
+    display: flex;
+    gap: 32px;
+
+    color: var(--gray-300);
+    font-weight: 700;
+    line-height: 21px;
+    font-size: var(--text-2xl);
+
+    > li {
+      padding-block: 13px;
+      border-bottom: 3px solid var(--gray-300);
+      cursor: pointer;
+    }
+
+    .isActive {
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+    }
+  }
+}

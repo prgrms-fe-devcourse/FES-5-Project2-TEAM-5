@@ -1,0 +1,11 @@
+.contents {
+  width: 1280px;
+
+  .diaryList {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-block: 50px;
+  }
+}
