@@ -39,7 +39,7 @@ const Register = () => {
       const { email, name, password } = formData;
       const userId = await createAuthAccount({ email, password });
       const publicUrl = imageFile ? await uploadAndGetPublicUrl({ file: imageFile, userId }) : null;
-      await insertUser({ id: userId, name, profile_image: publicUrl });
+      await insertUser({ id: userId, name, email, profile_image: publicUrl });
       toastUtils.success({ title: '화원가입 성공', message: 'Seediary에 오신 걸 환영합니다!' });
 
       navigate('/login', {
