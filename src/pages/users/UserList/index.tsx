@@ -1,6 +1,9 @@
 import S from './style.module.css';
 import UserList from './components/UserList';
 import SearchBox from './components/SearchBox';
+import { useUserSearch } from './hooks/useUserSearch';
+import { useMemo, useState } from 'react';
+import { debounce } from './utils/debounce';
 
 export interface User {
   id: number;
@@ -109,14 +112,25 @@ const users: User[] = [
 ];
 
 const UserPage = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const { filteredUsers } = useUserSearch(users, searchTerm);
+
+  const handleSearch = useMemo(
+    () =>
+      debounce((value: string) => {
+        // console.log('확인:', value);
+        setSearchTerm(value);
+      }),
+    [],
+  );
+
   return (
-    // <Header />
     <main className={S.container}>
       <header className={S.header}>
         <h2 className={S.title}>함께하는 사람들</h2>
-        <SearchBox />
+        <SearchBox onSearch={handleSearch} />
       </header>
-      <UserList users={users} />
+      <UserList users={filteredUsers} />
     </main>
   );
 };
