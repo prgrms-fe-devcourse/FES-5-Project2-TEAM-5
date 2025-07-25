@@ -49,3 +49,12 @@ export const emotionSubs = [
   { id: 11, emotion_main_id: 4, name: "공포" },
   { id: 12, emotion_main_id: 5, name: "경악" },
 ];
+
+// 퀘스트
+export const quests  = [
+  { id: 1, emotion_main_id: 1, title: "행복한 순간 기록하기", content: "오늘 하루 중 가장 행복했던 순간을 기록해 보세요.", image_url: "../public/auth/auth_back.png" },
+  { id: 2, emotion_main_id: 2, title: "슬픈 일 털어내기", content: "최근에 슬펐던 일을 적고 마음을 정리해요.", image_url: "../public/auth/auth_back.png" },
+  { id: 3, emotion_main_id: 3, title: "분노 조절 연습", content: "화를 느낄 때 어떻게 대처했는지 써 봅시다.", image_url: "../public/auth/auth_back.png" },
+  { id: 4, emotion_main_id: 3, title: "두려움 마주하기", content: "최근 두려웠던 상황을 솔직히 적어보세요.", image_url: "../public/auth/auth_back.png" },
+  { id: 5, emotion_main_id: 4, title: "놀란 경험 공유", content: "놀랐던 경험과 그 이유를 적어주세요.", image_url: "../public/auth/auth_back.png" },
+];

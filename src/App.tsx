@@ -19,8 +19,8 @@ function App() {
           element={
             <div>
               {/* <SelectDiary /> */}
-              {/* <EmotionAndQuest /> */}
-              {/* <QuestSelect /> */}
+              <EmotionAndQuest />
+              {/* <SelectQuest /> */}
             </div>
           }
         />

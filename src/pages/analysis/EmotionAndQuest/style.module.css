@@ -13,6 +13,7 @@
 
 }
 
+/* 선택한 일기 영역 */
 .diarySection{
   margin-bottom: 60px;
 
@@ -38,6 +39,7 @@
   }
 }
 
+/* 감정 선택 영역 */
 .emotionSection{
   margin-bottom: 60px;
 
@@ -70,6 +72,7 @@
   
 }
 
+/* 감정 이유 영역 */
 .reasonSection{
   margin-bottom: 60px;
 
@@ -85,6 +88,7 @@
     resize: none;
     border-radius: var(--radius-2);
     border: 1px solid var(--gray-100);
+    background-color: #fff;
 
     font-family: var(--font-main);
     color: var(--gray-700);
@@ -94,7 +98,8 @@
   }
 }
 
-.questSection{
+/* 퀘스트 수락 여부 */
+.decisionSection{
   text-align: center;
 
   h3{
@@ -132,4 +137,96 @@
       color: #fff;
     }
   }
+}
+
+/* 완료 버튼 */
+.submitSection{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  button{
+    /* max-width: 100px; */
+    padding: 12px 32px;
+    border-radius: var(--radius-2);
+    line-height: var(--space-6);
+    font-weight: 700;
+    font-size: var(--text-lg);
+    cursor: pointer;
+  }
+
+  .submit{
+    border: 1px solid var(--secondary);
+    background-color: var(--secondary);
+    color: #fff;
+  } 
+}
+
+/* 퀘스트 목록 영역 */
+.questSection{
+  margin-bottom: 60px;
+
+  h3{
+    margin-bottom: var(--space-4);
+  }
+
+  .questList{
+    display: flex;
+    gap: var(--space-6);
+    /* flex-wrap: wrap; */
+  }
+
+  .questCard{
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-6);
+    border: 1px solid var(--gray-100);
+    border-radius: var(--radius-2);
+    background-color: #fff;
+
+    h4{
+      margin-bottom: var(--space-2);
+
+      color: var(--gray-900, #303030);
+      font-size: var(--text-xl);
+      font-weight: 700;
+      line-height: var(--space-7);
+    }
+
+    p{
+      margin-bottom: var(--space-4);
+
+      color: var(--gray-700);
+      font-size: var(--text-base);
+      font-weight: 400;
+      line-height: var(--space-5);
+    }
+
+    img{
+      margin-bottom: var(--space-4);
+      border-radius: var(--radius-1);
+      width: 100%;
+      aspect-ratio: 386 / 160;
+    }
+  }
+
+}
+
+.cardButton{
+
+  align-self: flex-end;
+  max-width: 78px;
+  font-size: var(--text-lg);
+  font-weight: 400;
+  line-height: var(--space-6);
+  color: #fff;
+  background-color: var(--secondary);
+  border-radius: var(--radius-6);
+  padding: 8px 24px;
+
+  cursor: pointer;
+}
+
+.cardButton.selected{
+  background-color: var(--primary);
 }
