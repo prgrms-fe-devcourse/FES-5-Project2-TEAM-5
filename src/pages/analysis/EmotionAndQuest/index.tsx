@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { diaries, emotionMains, emotionSubs, quests } from '../../../dummyData'
+import { diaries, emotionMains, emotionSubs, quests } from '../dummyData'
 import S from './style.module.css'
 
 function EmotionAndQuest() {
