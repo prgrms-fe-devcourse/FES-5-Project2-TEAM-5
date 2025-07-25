@@ -1,0 +1,32 @@
+
+body {
+  background-color: var(--background);
+}
+
+.container{
+  max-width: 896px;
+  margin: 60px auto;
+
+  .intro{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 40px;
+
+    h2{
+      color: var(--gray-900);
+      font-size: var(--text-4xl);
+      font-weight: 700;
+      line-height: 36px;
+      margin-bottom: var(--space-2);
+    }
+
+    p{
+      color: var(--gray-700);
+      font-size: var(--text-lg);
+      font-weight: 400;
+      line-height: 24px;
+    }
+  }
+}

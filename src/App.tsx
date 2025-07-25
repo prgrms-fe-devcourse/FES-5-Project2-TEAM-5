@@ -10,6 +10,8 @@ import DiaryList from './pages/feed-diaries/DiaryList';
 import UserPage from './pages/users/UserList';
 import Header from './shared/components/Header';
 import DiaryDetailPage from './pages/diary/DiaryDetail';
+import SelectDiary from './pages/analysis/SelectDiary';
+import EmotionAndQuest from './pages/analysis/EmotionAndQuest';
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
         <Route path="/diary/detail" element={<DiaryDetailPage />} />
         <Route path="/feed-diaries" element={<DiaryList />} />
         <Route path="/users" element={<UserPage />} />
+        <Route path="/analysis/select-diary" element={<SelectDiary />} />
+        <Route path="/analysis/emotion-and-quest" element={<EmotionAndQuest />} />
       </Routes>
     </BrowserRouter>
   );
