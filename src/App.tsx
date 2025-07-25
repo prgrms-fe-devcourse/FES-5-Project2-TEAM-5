@@ -6,6 +6,8 @@ import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import DiaryPage from './pages/diary/DiaryMain';
 import DiaryFormPage from './pages/diary/DiaryForm';
+import DiaryList from './pages/feed-diaries/DiaryList';
+
 
 function App() {
   return (
@@ -16,6 +18,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/diary" element={<DiaryPage />} />
         <Route path="/diary/form" element={<DiaryFormPage />} />
+        <Route path="/feed-diaries" element={<DiaryList />} />
       </Routes>
     </BrowserRouter>
   );
