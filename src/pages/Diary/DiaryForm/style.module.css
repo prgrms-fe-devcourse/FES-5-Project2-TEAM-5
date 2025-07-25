@@ -1,25 +1,26 @@
-input[type='text'],
-textarea {
-  min-height: 50px;
-  background-color: white;
-  border: 1px solid var(--gray-100);
-  border-radius: var(--radius-2);
-  padding: var(--space-4);
-  font-size: var(--text-lg);
-  font-family: var(--font-main);
-}
-textarea {
-  resize: vertical;
-}
-input[type='text']::placeholder {
-  color: var(--gray-200);
-}
-textarea::placeholder {
-  color: var(--gray-200);
-}
 .container {
   background-color: var(--background);
   color: var(--gray-900);
+  input[type='text'],
+  textarea {
+    width: 100%;
+    min-height: 50px;
+    background-color: white;
+    border: 1px solid var(--gray-100);
+    border-radius: var(--radius-2);
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-lg);
+    font-family: var(--font-main);
+  }
+  textarea {
+    resize: vertical;
+  }
+  input[type='text']::placeholder {
+    color: var(--gray-200);
+  }
+  textarea::placeholder {
+    color: var(--gray-200);
+  }
 }
 .pageTitle {
   position: relative;
@@ -163,23 +164,23 @@ textarea::placeholder {
   margin-top: 50px;
   border-top: 1px solid var(--gray-100);
   button {
-    min-width: 130px;
+    min-width: 110px;
     height: 44px;
     border-radius: var(--radius-2);
     font-size: var(--text-xl);
     cursor: pointer;
   }
-  .cancel {
+  .bgGrayBtn {
     margin-right: auto;
     background-color: var(--gray-100);
     color: var(--gray-900);
   }
-  .temporary {
+  .lineBtn {
     background-color: white;
     color: var(--primary);
     border: 1px solid var(--primary);
   }
-  .save {
+  .bgPrimaryBtn {
     background-color: var(--primary);
     color: white;
   }

@@ -8,7 +8,7 @@ interface Props {
   target: number;
 }
 
-function DiaryPlant({ target }: Props) {
+const DiaryPlant = ({ target }: Props) => {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
@@ -49,6 +49,6 @@ function DiaryPlant({ target }: Props) {
       </CircularProgressbarWithChildren>
     </div>
   );
-}
+};
 
 export default DiaryPlant;

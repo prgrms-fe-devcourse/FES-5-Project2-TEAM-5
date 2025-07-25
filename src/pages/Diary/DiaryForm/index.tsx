@@ -21,7 +21,7 @@ interface Props {
   tags?: string[];
 }
 
-function DiaryFormPage() {
+const DiaryFormPage = () => {
   const titleId = useId();
   const contentId = useId();
   const imageId = useId();
@@ -228,19 +228,19 @@ function DiaryFormPage() {
 
         {/* 버튼 */}
         <div className={S.buttonGroup}>
-          <button type="button" className={S.cancel}>
+          <button type="button" className={S.bgGrayBtn}>
             취소
           </button>
-          <button type="submit" className={S.temporary}>
+          <button type="submit" className={S.lineBtn}>
             임시 저장
           </button>
-          <button type="submit" className={S.save}>
+          <button type="submit" className={S.bgPrimaryBtn}>
             저장
           </button>
         </div>
       </div>
     </main>
   );
-}
+};
 
 export default DiaryFormPage;

@@ -1,7 +1,7 @@
 import S from './style.module.css';
 import WeatherImage from '../../../assets/@weather_cloud.png';
 
-function DiaryWeather() {
+const DiaryWeather = () => {
   return (
     <section className={S.section01}>
       <h2>Welcome to the Seediary</h2>
@@ -11,5 +11,5 @@ function DiaryWeather() {
       </figure>
     </section>
   );
-}
+};
 export default DiaryWeather;

@@ -7,7 +7,7 @@ import DiaryWeather from './components/DiaryWeather';
 import S from './style.module.css';
 import { BsPlusLg } from 'react-icons/bs';
 
-function DiaryPage() {
+const DiaryPage = () => {
   return (
     <main className={S.container}>
       {/* 날씨 연동 배너 이미지 영역 */}
@@ -53,5 +53,5 @@ function DiaryPage() {
       </section>
     </main>
   );
-}
+};
 export default DiaryPage;
