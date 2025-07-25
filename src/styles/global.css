@@ -69,6 +69,7 @@
 /*  전역 설정 */
 body {
   font-family: var(--font-main);
+  color: var(--gray-900);
   background-color: #f9fafb;
 }
 
