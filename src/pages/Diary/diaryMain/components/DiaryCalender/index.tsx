@@ -3,7 +3,7 @@ import 'react-calendar/dist/Calendar.css';
 import '../../../../../styles/custom.css';
 import CalendarImg from '../../../assets/calendar_img.svg';
 
-function DiaryCalender() {
+const DiaryCalender = () => {
   return (
     <>
       <figure>
@@ -19,5 +19,5 @@ function DiaryCalender() {
       />
     </>
   );
-}
+};
 export default DiaryCalender;

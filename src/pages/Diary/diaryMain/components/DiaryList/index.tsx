@@ -39,7 +39,7 @@ const diaryEntries: Props[] = [
   },
 ];
 
-function DiaryList() {
+const DiaryList = () => {
   return (
     <ul className={S.diaryList}>
       {diaryEntries.map((entry) => (
@@ -47,6 +47,6 @@ function DiaryList() {
       ))}
     </ul>
   );
-}
+};
 
 export default DiaryList;

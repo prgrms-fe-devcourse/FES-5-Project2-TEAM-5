@@ -12,7 +12,7 @@ interface Props {
   thumbnail?: string;
 }
 
-function DiaryItem({
+const DiaryItem = ({
   emotionIcon,
   emotionText,
   title,
@@ -21,7 +21,7 @@ function DiaryItem({
   comments,
   date,
   thumbnail,
-}: Props) {
+}: Props) => {
   return (
     <li>
       <a href="#">
@@ -48,6 +48,6 @@ function DiaryItem({
       </a>
     </li>
   );
-}
+};
 
 export default DiaryItem;
