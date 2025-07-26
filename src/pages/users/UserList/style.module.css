@@ -1,5 +1,5 @@
 .container {
-  background-color: var(--background);
+  padding-top: 80px;
   font-family: var(--font-main);
   color: #303030;
 }
