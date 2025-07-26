@@ -5,11 +5,11 @@ import { FiUser, FiLogOut, FiBell } from 'react-icons/fi';
 import { PiUserCircleThin } from 'react-icons/pi';
 import { MENU_LIST } from './constants';
 import S from './style.module.css';
-import { useUser } from '@/shared/hooks/useUser';
+import { useUserContext } from '@/shared/context/UserContext';
 
 const Header = () => {
   const navigate = useNavigate();
-  const { logout, isAuth, userInfo } = useUser();
+  const { logout, isAuth, userInfo } = useUserContext();
 
   const handleHome = () => {
     navigate('/home');

@@ -4,11 +4,12 @@ import { IoClose } from 'react-icons/io5';
 import { HiArrowPath } from 'react-icons/hi2';
 import { useEffect, useId, useRef, useState } from 'react';
 import { useUploadImage } from '@/shared/hooks';
-import { useProfileChange } from '../ChangeUserInfo/hooks/useProfileChange';
-import { useUser } from '@/shared/hooks/useUser';
+import { useUserContext } from '@/shared/context/UserContext';
+import { useProfileChange } from '../../hooks/useProfileChange';
+import { toastUtils } from '@/shared/utils/toastUtils';
 
 const ChangeProfile = () => {
-  const { userInfo } = useUser();
+  const { userInfo, updateUserInfo } = useUserContext();
   const profileId = useId();
   const profileRef = useRef<HTMLInputElement | null>(null);
   const [displayImage, setDisplayImage] = useState<string>(defaultProfile);
@@ -16,40 +17,61 @@ const ChangeProfile = () => {
   const { updateProfileImage } = useProfileChange();
 
   useEffect(() => {
-    if (userInfo?.profile_image) {
-      setDisplayImage(userInfo.profile_image);
+    if (imagePreview) {
+      setDisplayImage(imagePreview);
+    } else if (userInfo?.profile_image) {
+      setDisplayImage(userInfo?.profile_image);
     }
-  }, [userInfo?.profile_image]);
+  }, [imagePreview]);
 
-  const handleChangeProfile = async (e: React.PointerEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    if (imageFile) {
-      await updateProfileImage(imageFile);
-    }
-  };
-
-  const handleProfileClick = (e: React.PointerEvent<HTMLLabelElement>) => {
-    e.preventDefault();
-    profileRef?.current?.click();
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      profileRef?.current?.click();
-    }
-  };
-
-  const setDefaultProfile = () => {
+  const resetInputAndImage = () => {
     clearImage();
-    setDisplayImage(defaultProfile);
+    if (profileRef.current) {
+      profileRef.current.value = '';
+    }
   };
 
-  const resetProfile = () => {
-    clearImage();
+  const handleProfileClick = () => {
+    if (profileRef.current) {
+      profileRef.current.click();
+    }
+  };
+
+  const handleProfileKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') handleProfileClick();
+  };
+
+  const handleChangeProfile = async () => {
+    try {
+      if (userInfo) {
+        const updated = await updateProfileImage(imageFile, userInfo);
+        resetInputAndImage();
+        updateUserInfo(updated);
+        toastUtils.success({ title: '성공', message: '프로필 이미지 변경 성공!' });
+      }
+    } catch (error) {
+      toastUtils.error({ title: '실패', message: '프로필 이미지 변경 실패..' });
+    }
+  };
+
+  const setDefaultProfile = async () => {
+    try {
+      if (userInfo) {
+        setDisplayImage(defaultProfile);
+        const updated = await updateProfileImage(null, userInfo);
+        resetInputAndImage();
+        updateUserInfo(updated);
+        toastUtils.info({ title: '변경', message: '기본 프로필 이미지로 변경' });
+      }
+    } catch (error) {
+      toastUtils.error({ title: '실패', message: '본 프로필 이미지로 변경 실패..' });
+    }
+  };
+
+  const revertProfile = () => {
     if (userInfo?.profile_image) {
+      resetInputAndImage();
       setDisplayImage(userInfo.profile_image);
-    } else {
-      setDisplayImage(defaultProfile);
     }
   };
 
@@ -62,9 +84,10 @@ const ChangeProfile = () => {
         tabIndex={0}
         id={profileId}
         onPointerDown={handleProfileClick}
-        onKeyDown={handleKeyDown}
+        onKeyDown={handleProfileKeyDown}
+        aria-label="프로필 선택"
       >
-        <img src={imagePreview || displayImage} alt="프로필" loading="lazy" />
+        <img src={displayImage} alt="프로필" loading="lazy" />
       </label>
       <input
         ref={profileRef}
@@ -80,10 +103,16 @@ const ChangeProfile = () => {
           className={S.profileButton}
           onClick={handleChangeProfile}
           disabled={!imagePreview}
+          aria-label="프로필 변경"
         >
           프로필 변경
         </button>
-        <button className={S.revertBUtton} onPointerDown={resetProfile}>
+        <button
+          className={S.revertBUtton}
+          type="button"
+          onPointerDown={revertProfile}
+          aria-label="기존 프로필로 변경"
+        >
           <HiArrowPath size={24} />
         </button>
       </div>

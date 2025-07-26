@@ -1,7 +1,7 @@
 .contents {
   width: 1280px;
   display: flex;
-  padding: 50px 100px;
+  padding: 50px 100px 100px;
   justify-content: space-around;
 }
 
