@@ -36,5 +36,15 @@
     &:active {
       scale: 0.97;
     }
+
+    /* disabled 상태 스타일 */
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+
+      &:active {
+        scale: 1;
+      }
+    }
   }
 }

@@ -1,11 +1,10 @@
 import S from './style.module.css';
 import defaultProfile from '@/assets/defaultProfile.svg';
-import { useUser } from '@/shared/hooks/useUser';
+import { useUserContext } from '@/shared/context/UserContext';
 import { formatToReadableDate } from '@/shared/utils/formatter/date';
 
 const UserInfoSection = () => {
-  const { userInfo } = useUser();
-
+  const { userInfo } = useUserContext();
   return (
     <section className={S.hero}>
       <h2 className="sr-only">사용자 정보</h2>

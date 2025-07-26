@@ -7,6 +7,19 @@ export const useUser = () => {
   const [user, setUser] = useState<User | null>(null);
   const [userInfo, setUserInfo] = useState<Tables<'users'> | null>(null);
 
+  const getUserData = async () => {
+    if (!user) {
+      setUserInfo(null);
+      return;
+    }
+    const { data, error } = await supabase.from('users').select().eq('id', user.id).single();
+    if (error) {
+      console.error(`사용자 정보 로드 실패 : ${error}`);
+      setUserInfo(null);
+    }
+    setUserInfo(data);
+  };
+
   useEffect(() => {
     const initializeUser = async () => {
       const {
@@ -30,22 +43,12 @@ export const useUser = () => {
   }, []);
 
   useEffect(() => {
-    if (!user) {
-      setUserInfo(null);
-      return;
-    }
-
-    const getUserData = async () => {
-      const { data, error } = await supabase.from('users').select().eq('id', user.id).single();
-      if (error) {
-        console.error(`사용자 정보 로드 실패 : ${error}`);
-        setUserInfo(null);
-      }
-      setUserInfo(data);
-    };
-
     getUserData();
   }, [user]);
+
+  const updateUserInfo = (user: Tables<'users'> | null) => {
+    setUserInfo(user);
+  };
 
   const logout = async (): Promise<void> => {
     const { error } = await supabase.auth.signOut();
@@ -54,5 +57,11 @@ export const useUser = () => {
     }
   };
 
-  return { user, userInfo, isAuth: !!user, logout, profileImage: userInfo?.profile_image };
+  return {
+    user,
+    userInfo,
+    isAuth: !!user,
+    logout,
+    updateUserInfo,
+  };
 };

@@ -1,26 +1,44 @@
-import { useId, useRef } from 'react';
-import S from './style.module.css';
 import supabase from '@/shared/supabase/supabase';
-import { useUser } from '@/shared/hooks/useUser';
 import { toastUtils } from '@/shared/utils/toastUtils';
+import { useId, useState } from 'react';
+import S from './style.module.css';
+import { useUserContext } from '@/shared/context/UserContext';
 
 const ChangeNickname = () => {
-  const { userInfo } = useUser();
   const nicknameId = useId();
-  const nicknameRef = useRef<HTMLInputElement | null>(null);
+  const [nickname, setNickname] = useState<string>('');
+  const { userInfo, updateUserInfo } = useUserContext();
+
+  const isValid = nickname.length >= 2;
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNickname(e.target.value.trim());
+  };
 
   const handleChangeNickname = async () => {
-    if (nicknameRef.current && userInfo) {
-      const value = nicknameRef.current.value;
-      const { error } = await supabase.from('users').update({ name: value }).eq('id', userInfo.id);
+    if (userInfo) {
+      const { data, error } = await supabase
+        .from('users')
+        .update({ name: nickname })
+        .eq('id', userInfo.id)
+        .select()
+        .single();
 
       if (error) {
         toastUtils.error({ title: '실패', message: '닉네임 변경에 실패했습니다.' });
         return;
-      } else {
-        toastUtils.success({ title: '성공', message: '닉네임 변경 성공!' });
-        nicknameRef.current.value = '';
       }
+      toastUtils.success({ title: '성공', message: '닉네임 변경 성공!' });
+      updateUserInfo(data);
+
+      setNickname('');
+    }
+  };
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      // 엔터나 스페이스바
+      e.preventDefault();
+      handleChangeNickname();
     }
   };
 
@@ -31,14 +49,21 @@ const ChangeNickname = () => {
       </label>
       <div className={S.inputSection}>
         <input
-          ref={nicknameRef}
           className={S.nicknameInput}
           type="text"
           name="nickname"
           id={nicknameId}
+          value={nickname}
           placeholder="닉네임 변경"
+          onChange={handleChange}
         />
-        <button type="button" onPointerDown={handleChangeNickname}>
+        <button
+          type="button"
+          onPointerDown={handleChangeNickname}
+          onKeyDown={handleKeyDown}
+          disabled={!isValid}
+          aria-label="닉네임 변경"
+        >
           변경
         </button>
       </div>

@@ -9,7 +9,7 @@ import { useUser } from '@/shared/hooks/useUser';
 
 const Header = () => {
   const navigate = useNavigate();
-  const { logout, isAuth, profileImage } = useUser();
+  const { logout, isAuth, userInfo } = useUser();
 
   const handleHome = () => {
     navigate('/home');
@@ -64,8 +64,8 @@ const Header = () => {
               aria-label="마이페이지 가기"
               data-tooltip="마이페이지"
             >
-              {profileImage ? (
-                <img src={profileImage} alt="" className={S.profileImage} />
+              {userInfo?.profile_image ? (
+                <img src={userInfo.profile_image} alt="" className={S.profileImage} />
               ) : (
                 <PiUserCircleThin size={30} aria-hidden="true" />
               )}

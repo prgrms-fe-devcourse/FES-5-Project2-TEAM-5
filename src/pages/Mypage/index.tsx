@@ -1,10 +1,10 @@
 import { useState } from 'react';
+import ChangeUserInfo from './components/ChangeUserInfo';
 import DiarySection from './components/DiarySection';
+import TabNav from './components/TabNav';
+import UserInfoSection from './components/UserInfoSection';
 import S from './style.module.css';
 import type { TabType } from './utils/type';
-import TabNav from './components/TabNav';
-import ChangeUserInfo from './components/ChangeUserInfo';
-import UserInfoSection from './components/UserInfoSection';
 
 const Mypage = () => {
   const [activeTab, setActiveTab] = useState<TabType>('diary');
