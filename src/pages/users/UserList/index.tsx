@@ -2,7 +2,7 @@ import S from './style.module.css';
 import UserList from './components/UserList';
 import SearchBox from './components/SearchBox';
 import { useUserSearch } from './hooks/useUserSearch';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { debounce } from './utils/debounce';
 import { getAllUserData } from './utils/getAllUserData';
 import type { DbUser } from '@/pages/users/UserList/types/dbUser';
@@ -13,18 +13,17 @@ const UserPage = () => {
   const { filteredUsers } = useUserSearch(users, searchTerm);
 
   useEffect(() => {
-    (async () => {
+    const fetchUsers = async () => {
       const data = await getAllUserData();
       setUsers(data);
-    })();
+    };
+    fetchUsers();
   }, []);
 
-  const handleSearch = useMemo(
-    () =>
-      debounce((value: string) => {
-        // console.log('확인:', value);
-        setSearchTerm(value);
-      }),
+  const handleSearch = useCallback(
+    debounce((value: string) => {
+      setSearchTerm(value);
+    }),
     [],
   );
 

@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { memo, useId } from 'react';
 import S from './style.module.css';
 import { IoSearch } from 'react-icons/io5';
 
@@ -30,4 +30,4 @@ const SearchBox = ({ onSearch }: Props) => {
     </div>
   );
 };
-export default SearchBox;
+export default memo(SearchBox);
