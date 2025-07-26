@@ -6,9 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import defaultProfile from '../assets/profile.svg';
 import { AuthInput, AuthLayout } from '../components';
 import S from './style.module.css';
-import { createAuthAccount, insertUser, uploadAndGetPublicUrl } from './utils/helper';
+import { createAuthAccount, insertUser } from './utils/helper';
 import type { RegisterForm } from './utils/type';
 import { registerValidator } from './utils/validator';
+import { uploadAndGetProfileImageUrl } from '@/shared/helpers/image';
 
 const Register = () => {
   const profileId = useId();
@@ -38,7 +39,9 @@ const Register = () => {
     try {
       const { email, name, password } = formData;
       const userId = await createAuthAccount({ email, password });
-      const publicUrl = imageFile ? await uploadAndGetPublicUrl({ file: imageFile, userId }) : null;
+      const publicUrl = imageFile
+        ? await uploadAndGetProfileImageUrl({ file: imageFile, userId })
+        : null;
       await insertUser({ id: userId, name, email, profile_image: publicUrl });
       toastUtils.success({ title: '화원가입 성공', message: 'Seediary에 오신 걸 환영합니다!' });
 

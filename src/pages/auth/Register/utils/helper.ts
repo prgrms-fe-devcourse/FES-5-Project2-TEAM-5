@@ -1,5 +1,4 @@
 import supabase from '@/shared/supabase/supabase';
-import { getPublicUrl } from '@/shared/utils/supabase/getPublicUrl';
 import { toastUtils } from '@/shared/utils/toastUtils';
 
 export const createAuthAccount = async ({
@@ -24,37 +23,6 @@ export const createAuthAccount = async ({
   }
 
   return data.user.id;
-};
-
-export const uploadProfileImage = async ({
-  file,
-  userId,
-}: {
-  file: File;
-  userId: string;
-}): Promise<string> => {
-  const fileExt = file.name.split('.').pop();
-  const filePath = `${userId}.${fileExt}`;
-  const { data, error } = await supabase.storage
-    .from('profile')
-    .upload(filePath, file, { cacheControl: '3600', upsert: true });
-
-  if (error || !data) {
-    toastUtils.error({ title: '이미지 업로드 실패', message: '이미지 업로드에 실패하였습니다.' });
-    throw error;
-  }
-
-  return data.path;
-};
-
-export const uploadAndGetPublicUrl = async (params: {
-  file: File;
-  userId: string;
-}): Promise<string> => {
-  const filePath = await uploadProfileImage(params);
-  const publicUrl = getPublicUrl({ bucket: 'profile', filePath });
-
-  return publicUrl;
 };
 
 export const insertUser = async (params: {
