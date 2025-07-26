@@ -1,0 +1,40 @@
+.inputLabel {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.inputSection {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 30px;
+
+  .nicknameInput {
+    width: 500px;
+    padding: 16px 50px 16px 16px;
+    background-color: white;
+    border: 1px solid var(--gray-100);
+    border-radius: var(--radius-2);
+    font-size: var(--text-lg);
+  }
+
+  .nicknameInput::placeholder {
+    color: var(--gray-200);
+  }
+
+  > button {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    padding: 6px 10px;
+    background-color: var(--primary);
+    border-radius: var(--radius-2);
+    color: var(--gray-10);
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:active {
+      scale: 0.97;
+    }
+  }
+}
