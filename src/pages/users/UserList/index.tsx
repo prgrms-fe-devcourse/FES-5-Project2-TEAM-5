@@ -5,7 +5,7 @@ import { useUserSearch } from './hooks/useUserSearch';
 import { useEffect, useMemo, useState } from 'react';
 import { debounce } from './utils/debounce';
 import { getAllUserData } from './utils/getAllUserData';
-import type { DbUser } from '@/shared/supabase/dbUser';
+import type { DbUser } from '@/pages/users/UserList/types/dbUser';
 
 const UserPage = () => {
   const [users, setUsers] = useState<DbUser[]>([]);

@@ -1,4 +1,4 @@
-import type { DbUser } from '@/shared/supabase/dbUser';
+import type { DbUser } from '@/pages/users/UserList/types/dbUser';
 import { useMemo } from 'react';
 
 export const useUserSearch = (users: DbUser[], searchTerm: string) => {
