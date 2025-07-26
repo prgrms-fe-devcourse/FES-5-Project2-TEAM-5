@@ -1,0 +1,98 @@
+.container {
+  height: 100vh;
+  background-image: url('/public/home/home_back.png');
+  background-position: center;
+  background-size: cover;
+
+  .overlay {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(7.5px);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+  }
+}
+.form {
+  position: relative;
+  .chat {
+    color: #fff;
+    width: 500px;
+    height: 50px;
+    border-radius: var(--radius-2);
+    padding: var(--space-5);
+    border: 1px solid #fff;
+    background: rgba(217, 217, 217, 0);
+
+    &::placeholder {
+      color: #fff;
+    }
+  }
+
+  .submitButton {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #fff;
+  }
+}
+
+.cardSection {
+  width: 500px;
+  height: 650px;
+  border-radius: var(--radius-6);
+  background: rgba(255, 255, 255, 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+
+  .cardImage {
+    width: 460px;
+    height: 510px;
+    border-radius: var(--radius-6);
+    background-image: url('/public/home/card_image.png');
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .letter {
+    padding: 40px;
+
+    > span {
+      color: #fff;
+      font-family: var(--font-accent);
+      font-size: var(--text-3xl);
+      white-space: nowrap;
+    }
+  }
+}
+
+.chatSection {
+  width: 500px;
+  height: 650px;
+  border-radius: 24px;
+  background: rgba(0, 0, 0, 0.55);
+  position: relative;
+
+  .chatCloseButton {
+    position: absolute;
+    color: #fff;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+    &:hover {
+      scale: 1.2;
+    }
+    &:active {
+      scale: 0.97;
+    }
+  }
+}
