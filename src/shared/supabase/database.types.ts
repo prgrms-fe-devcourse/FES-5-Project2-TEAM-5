@@ -78,7 +78,7 @@ export type Database = {
           emotion_main_id: number
           id: string
           is_drafted: boolean
-          is_public: string
+          is_public: boolean
           title: string
           updated_at: string | null
           user_id: string
@@ -90,7 +90,7 @@ export type Database = {
           emotion_main_id: number
           id?: string
           is_drafted?: boolean
-          is_public: string
+          is_public: boolean
           title: string
           updated_at?: string | null
           user_id: string
@@ -102,7 +102,7 @@ export type Database = {
           emotion_main_id?: number
           id?: string
           is_drafted?: boolean
-          is_public?: string
+          is_public?: boolean
           title?: string
           updated_at?: string | null
           user_id?: string
@@ -409,18 +409,21 @@ export type Database = {
       users: {
         Row: {
           created_at: string
+          email: string
           id: string
           name: string
           profile_image: string | null
         }
         Insert: {
           created_at?: string
+          email?: string
           id: string
           name: string
           profile_image?: string | null
         }
         Update: {
           created_at?: string
+          email?: string
           id?: string
           name?: string
           profile_image?: string | null

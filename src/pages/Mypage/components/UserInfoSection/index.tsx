@@ -1,18 +1,26 @@
 import S from './style.module.css';
-import defaultProfile from '../../assets/defaultProfile.svg';
+import defaultProfile from '@/assets/defaultProfile.svg';
+import { useUserContext } from '@/shared/context/UserContext';
+import { formatToReadableDate } from '@/shared/utils/formatter/date';
 
 const UserInfoSection = () => {
+  const { userInfo } = useUserContext();
   return (
     <section className={S.hero}>
       <h2 className="sr-only">사용자 정보</h2>
       <div className={S.profileSection}>
-        <img src={`${defaultProfile}`} alt="기본 프로필" />
+        <img
+          src={userInfo?.profile_image ? userInfo.profile_image : defaultProfile}
+          alt={userInfo?.name ? `${userInfo.name}님의 프로필 사진` : '기본 프로필 사진'}
+          loading="lazy"
+        />
       </div>
       <div className={S.info}>
-        <span className={S.username}>Sophia</span>
-        <span>Sophia.miller@email.com</span>
+        <span className={S.username}>{userInfo?.name}</span>
+        <span>{userInfo?.email}</span>
         <span>
-          Joined on Jan 15, 2023 | Today's mood: <strong className={S.userMood}>Happy</strong>
+          Joined on {formatToReadableDate(userInfo?.created_at || '')} | Today's mood:{' '}
+          <strong className={S.userMood}>Happy</strong>
         </span>
       </div>
     </section>

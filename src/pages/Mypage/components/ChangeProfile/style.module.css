@@ -1,0 +1,83 @@
+.profileSection {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  padding-top: 50px;
+
+  .closeButton {
+    position: absolute;
+    right: 0;
+    color: #ff3b3080;
+    cursor: pointer;
+
+    &:hover {
+      color: #ff3b30;
+      scale: 1.2;
+    }
+  }
+
+  .profileImage {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    border: 1px solid var(--point);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    > img {
+      width: 300px;
+      height: 300px;
+    }
+  }
+
+  .buttonGroup {
+    display: flex;
+    gap: 8px;
+
+    .profileButton {
+      background-color: var(--primary);
+      border-radius: var(--radius-2);
+      color: var(--gray-10);
+      white-space: nowrap;
+      cursor: pointer;
+
+      &:active {
+        scale: 0.97;
+      }
+      padding: 12px 20px;
+      font-size: var(--text-lg);
+
+      /* disabled 상태 스타일 */
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+
+        &:active {
+          scale: 1;
+        }
+      }
+    }
+
+    .revertBUtton {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-2);
+      background-color: var(--gray-100);
+      cursor: pointer;
+
+      > svg {
+        transition: transform 0.3s ease;
+        &:active {
+          transform: rotate(180deg);
+        }
+      }
+    }
+  }
+}

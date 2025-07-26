@@ -5,11 +5,11 @@ import { FiUser, FiLogOut, FiBell } from 'react-icons/fi';
 import { PiUserCircleThin } from 'react-icons/pi';
 import { MENU_LIST } from './constants';
 import S from './style.module.css';
-import { useUser } from '@/shared/hooks/useUser';
+import { useUserContext } from '@/shared/context/UserContext';
 
 const Header = () => {
   const navigate = useNavigate();
-  const { logout, isAuth, profileImage } = useUser();
+  const { logout, isAuth, userInfo } = useUserContext();
 
   const handleHome = () => {
     navigate('/home');
@@ -64,8 +64,8 @@ const Header = () => {
               aria-label="마이페이지 가기"
               data-tooltip="마이페이지"
             >
-              {profileImage ? (
-                <img src={profileImage} alt="" className={S.profileImage} />
+              {userInfo?.profile_image ? (
+                <img src={userInfo.profile_image} alt="" className={S.profileImage} />
               ) : (
                 <PiUserCircleThin size={30} aria-hidden="true" />
               )}

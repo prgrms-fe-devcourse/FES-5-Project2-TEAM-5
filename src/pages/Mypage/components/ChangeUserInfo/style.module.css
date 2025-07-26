@@ -1,89 +1,14 @@
 .contents {
   width: 1280px;
   display: flex;
-  padding: 50px 100px;
+  padding: 50px 100px 100px;
   justify-content: space-around;
-
-  .inputLabel {
-    display: block;
-    margin-bottom: 10px;
-  }
-
-  .nicknameInput,
-  .passwordInput {
-    width: 500px;
-    padding: 16px 50px 16px 16px;
-    background-color: white;
-    border: 1px solid var(--gray-100);
-    border-radius: var(--radius-2);
-    font-size: var(--text-lg);
-  }
-
-  .nicknameInput,
-  .passwordInput::placeholder {
-    color: var(--gray-200);
-  }
-
-  button {
-    background-color: var(--primary);
-    border-radius: var(--radius-2);
-    color: var(--gray-10);
-    white-space: nowrap;
-    cursor: pointer;
-
-    &:active {
-      scale: 0.97;
-    }
-  }
-}
-
-.profileSection {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-6);
-  padding-top: 50px;
-
-  .profileImage {
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    border: 1px solid var(--point);
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    > img {
-      width: 300px;
-      height: 300px;
-    }
-  }
-
-  .profileButton {
-    padding: 12px 20px;
-    font-size: var(--text-lg);
-  }
 }
 
 .infoSection {
   color: var(--gray-900);
   font-weight: 500;
   font-size: var(--text-lg);
-
-  .inputSection {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 30px;
-
-    > button {
-      position: absolute;
-      top: 50%;
-      right: 10px;
-      transform: translateY(-50%);
-      padding: 6px 10px;
-    }
-  }
 
   > hr {
     border-top: 1px solid var(--border);

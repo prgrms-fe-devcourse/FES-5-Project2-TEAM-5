@@ -30,8 +30,17 @@ export const useUploadImage = () => {
     }
   };
 
+  const clearImage = () => {
+    if (imagePreview) {
+      URL.revokeObjectURL(imagePreview);
+    }
+    setImageFile(null);
+    setImagePreview(null);
+  };
+
   return {
     imagePreview,
+    clearImage,
     onChange: onPreviewChange,
     imageFile,
   };
