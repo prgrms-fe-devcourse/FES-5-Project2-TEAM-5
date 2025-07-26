@@ -8,8 +8,6 @@ interface UserContextType {
   userInfo: Tables<'users'> | null;
   isAuth: boolean;
   logout: () => Promise<void>;
-  profileImage: string | undefined | null;
-  refreshUser: () => Promise<void>;
   updateUserInfo: (user: Tables<'users'> | null) => void;
 }
 

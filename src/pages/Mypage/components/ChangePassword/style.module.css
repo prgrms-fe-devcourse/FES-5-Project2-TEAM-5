@@ -1,0 +1,61 @@
+.inputLabel {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.inputSection {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 30px;
+
+  &:last-child {
+    margin-bottom: var(--space-2);
+  }
+
+  .passwordInput {
+    width: 500px;
+    padding: 16px 50px 16px 16px;
+    background-color: white;
+    border: 1px solid var(--gray-100);
+    border-radius: var(--radius-2);
+    font-size: var(--text-lg);
+  }
+
+  .passwordInput::placeholder {
+    color: var(--gray-200);
+  }
+
+  > button {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    padding: 6px 10px;
+    background-color: var(--primary);
+    border-radius: var(--radius-2);
+    color: var(--gray-10);
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:active {
+      scale: 0.97;
+    }
+
+    /* disabled 상태 스타일 */
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+
+      &:active {
+        scale: 1;
+      }
+    }
+  }
+}
+
+.errorMessage {
+  height: var(--space-3);
+  color: #ff3b30;
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
