@@ -43,3 +43,11 @@
   font-size: var(--text-base);
   color: var(--gray-300);
 }
+
+.thumbImage {
+  width: 220px;
+  height: 132px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: var(--radius-3);
+}

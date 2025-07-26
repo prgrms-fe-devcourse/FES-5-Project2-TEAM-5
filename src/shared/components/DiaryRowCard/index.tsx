@@ -38,7 +38,7 @@ function DiaryRowCard({
         <figure>
           {diary_image && (
             <>
-              <img src={diary_image} alt="" />
+              <img className={S.thumbImage} src={diary_image} alt="" />
               <figcaption className="sr-only">일기 첨부 사진</figcaption>
             </>
           )}

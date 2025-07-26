@@ -1,8 +1,10 @@
 import { useId, useRef } from 'react';
 import S from './style.module.css';
 import defaultProfile from '@/assets/defaultProfile.svg';
+import { useUser } from '@/shared/hooks/useUser';
 
 const ChangeUserInfo = () => {
+  const { profileImage } = useUser();
   const profileId = useId();
   const profileRef = useRef<HTMLInputElement | null>(null);
 
@@ -29,7 +31,7 @@ const ChangeUserInfo = () => {
           onPointerDown={handleProfileClick}
           onKeyDown={handleKeyDown}
         >
-          <img src={defaultProfile} alt="프로필" />
+          <img src={profileImage ?? defaultProfile} alt="프로필" loading="lazy" />
         </label>
         <input ref={profileRef} type="file" name="profile" id={profileId} hidden />
         <button className={S.profileButton}>프로필 변경</button>

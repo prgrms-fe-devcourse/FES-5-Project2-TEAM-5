@@ -13,6 +13,6 @@ export const transformDiaryData = (diaries: SupabaseDiaryResponse[]): DiaryRowEn
       diary.diary_hashtags
         ?.flatMap((dh) => dh.hashtags)
         ?.map((hashtag) => ({ id: hashtag.id, name: hashtag.name })) || [],
-    emotion_mains: diary.emotion_mains?.[0] || { name: '', icon_url: '' },
+    emotion_mains: diary.emotion_mains[0] || diary.emotion_mains,
   }));
 };

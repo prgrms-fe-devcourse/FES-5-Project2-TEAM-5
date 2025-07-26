@@ -22,10 +22,13 @@ const DiarySection = () => {
         setDiaries([]);
         return;
       }
+
       setDiaries(transformDiaryData(data) || []);
     };
     fetchDiary();
   }, []);
+
+  // console.log(diaries.map((d) => d.emotion_mains));
 
   return (
     <section className={S.contents}>

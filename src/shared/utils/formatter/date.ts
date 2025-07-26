@@ -8,8 +8,7 @@ export const formatToReadableDate = (isoDate: string): string | null => {
 
   // 유효한 날짜인지 확인
   if (isNaN(date.getTime())) {
-    console.log('formatToReadableDate - 유효한 날짜가 아님 return null');
-    return null;
+    return '날짜 정보 없음';
   }
 
   return date.toLocaleDateString('en-US', {
