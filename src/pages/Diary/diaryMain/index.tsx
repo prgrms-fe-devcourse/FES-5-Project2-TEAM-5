@@ -1,9 +1,9 @@
+import DiaryWeather from '@/shared/components/DiaryWeather';
 import DiaryBanner from './components/DiaryBanner';
 import DiaryCalender from './components/DiaryCalender';
 import DiaryEmotionChart from './components/DiaryEmotionChart';
 import DiaryList from './components/DiaryList';
 import DiaryPlant from './components/DiaryPlant';
-import DiaryWeather from './components/DiaryWeather';
 import S from './style.module.css';
 import { BsPlusLg } from 'react-icons/bs';
 

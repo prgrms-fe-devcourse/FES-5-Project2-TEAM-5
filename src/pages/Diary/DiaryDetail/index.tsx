@@ -1,11 +1,11 @@
 import S from './style.module.css';
-import DiaryWeather from '../DiaryMain/components/DiaryWeather';
 import { useState } from 'react';
 import { IoArrowUpCircleOutline, IoLockOpenOutline } from 'react-icons/io5';
 import diaryImage from '../assets/@diary_detail_img.png';
 import { BsChat } from 'react-icons/bs';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 import Emotion7 from '/src/assets/icon_expect.svg';
+import DiaryWeather from '@/shared/components/DiaryWeather';
 
 interface Comment {
   id: number;
