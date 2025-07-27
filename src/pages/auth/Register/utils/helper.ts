@@ -1,5 +1,5 @@
-import supabase from '@/shared/supabase/supabase';
-import { toastUtils } from '@/shared/utils/toastUtils';
+import supabase from '@/shared/api/supabase/client';
+import { toastUtils } from '@/shared/components/Toast';
 
 export const createAuthAccount = async ({
   email,

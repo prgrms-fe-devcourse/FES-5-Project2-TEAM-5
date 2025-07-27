@@ -2,9 +2,9 @@ import S from './style.module.css';
 import DiaryRowCard from '@/shared/components/DiaryRowCard';
 import { type DiaryRowEntity } from '@/shared/types/diary';
 import { useEffect, useState } from 'react';
-import supabase from '@/shared/supabase/supabase';
-import { toastUtils } from '@/shared/utils/toastUtils';
-import { transformDiaryData } from '@/shared/utils/formatter/supabase';
+import { toastUtils } from '@/shared/components/Toast';
+import supabase from '@/shared/api/supabase/client';
+import { transformDiaryData } from '@/shared/utils/formatSupabase';
 
 const DiarySection = () => {
   const [diaries, setDiaries] = useState<DiaryRowEntity[]>([]);

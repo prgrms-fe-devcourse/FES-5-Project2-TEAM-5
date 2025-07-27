@@ -1,6 +1,6 @@
+import supabase from '@/shared/api/supabase/client';
+import type { Tables } from '@/shared/api/supabase/types';
 import { uploadAndGetProfileImageUrl } from '@/shared/helpers/image';
-import type { Tables } from '@/shared/supabase/database.types';
-import supabase from '@/shared/supabase/supabase';
 
 export const useProfileChange = () => {
   const updateProfileImage = async (file: File | null, userInfo: Tables<'users'>) => {

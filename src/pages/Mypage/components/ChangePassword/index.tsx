@@ -1,11 +1,11 @@
 import { useId, useRef } from 'react';
 import S from './style.module.css';
 import { useForm } from '@/shared/hooks';
-import { passwordValidator } from '../../utils/validator';
 import type { ChangePasswordForm } from '../../utils/type';
-import supabase from '@/shared/supabase/supabase';
-import { toastUtils } from '@/shared/utils/toastUtils';
+import { toastUtils } from '@/shared/components/Toast';
 import { useUserContext } from '@/shared/context/UserContext';
+import supabase from '@/shared/api/supabase/client';
+import { validator } from '../../utils/validator';
 
 const ChangePassword = () => {
   const { userInfo } = useUserContext();
@@ -16,7 +16,7 @@ const ChangePassword = () => {
   const currentPasswordRef = useRef<HTMLInputElement>(null);
   const { formData, onChange, error, setFormData } = useForm<ChangePasswordForm>({
     initialData: { confirmPassword: '', password: '' },
-    validator: passwordValidator,
+    validator,
   });
 
   const isFormValid = formData.password && formData.confirmPassword && !error;

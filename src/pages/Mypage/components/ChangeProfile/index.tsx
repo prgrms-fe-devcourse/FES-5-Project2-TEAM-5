@@ -6,7 +6,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { useUploadImage } from '@/shared/hooks';
 import { useUserContext } from '@/shared/context/UserContext';
 import { useProfileChange } from '../../hooks/useProfileChange';
-import { toastUtils } from '@/shared/utils/toastUtils';
+import { toastUtils } from '@/shared/components/Toast';
 
 const ChangeProfile = () => {
   const { userInfo, updateUserInfo } = useUserContext();

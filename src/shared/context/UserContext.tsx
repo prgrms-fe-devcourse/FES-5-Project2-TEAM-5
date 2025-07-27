@@ -1,7 +1,7 @@
 import type { User } from '@supabase/supabase-js';
 import { createContext, useContext, useMemo } from 'react';
 import { useUser } from '../hooks/useUser';
-import type { Tables } from '../supabase/database.types';
+import type { Tables } from '../api/supabase/types';
 
 interface UserContextType {
   user: User | null;

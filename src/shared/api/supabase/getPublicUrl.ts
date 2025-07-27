@@ -1,4 +1,4 @@
-import supabase from '@/shared/supabase/supabase';
+import supabase from './client';
 
 export const getPublicUrl = ({
   bucket,

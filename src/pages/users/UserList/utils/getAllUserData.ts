@@ -1,5 +1,5 @@
-import supabase from '@/shared/supabase/supabase';
 import type { DbUser } from '@/pages/users/UserList/types/dbUser';
+import supabase from '@/shared/api/supabase/client';
 
 export const getAllUserData = async (): Promise<DbUser[]> => {
   const { data, error } = await supabase.from('users').select('*');

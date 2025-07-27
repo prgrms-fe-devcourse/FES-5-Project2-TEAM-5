@@ -1,5 +1,5 @@
 import { useForm, useUploadImage } from '@/shared/hooks';
-import { toastUtils } from '@/shared/utils/toastUtils';
+import { toastUtils } from '@/shared/components/Toast';
 import { useId, useRef } from 'react';
 import { IoChevronBackOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,7 @@ import S from './style.module.css';
 import { createAuthAccount, insertUser } from './utils/helper';
 import type { RegisterForm } from './utils/type';
 import { registerValidator } from './utils/validator';
-import { uploadAndGetProfileImageUrl } from '@/shared/helpers/image';
+import { uploadAndGetProfileImageUrl } from '@/shared/utils/image';
 
 const Register = () => {
   const profileId = useId();

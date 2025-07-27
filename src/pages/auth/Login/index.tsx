@@ -1,6 +1,6 @@
 import logo from '@/assets/logo.svg';
 import { useForm } from '@/shared/hooks';
-import { toastUtils } from '@/shared/utils/toastUtils';
+import { toastUtils } from '@/shared/components/Toast';
 import { useEffect, useId } from 'react';
 import { FaGithub } from 'react-icons/fa';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
