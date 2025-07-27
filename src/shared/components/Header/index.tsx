@@ -1,15 +1,18 @@
 import Logo from '@/assets/logo.svg';
-import { withConditionalRender } from '@/shared/hoc';
+import { withConditionalRender, withDynamicHeaderRender } from '@/shared/hoc';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiUser, FiLogOut, FiBell } from 'react-icons/fi';
 import { PiUserCircleThin } from 'react-icons/pi';
 import { MENU_LIST } from './constants';
 import S from './style.module.css';
 import { useUserContext } from '@/shared/context/UserContext';
+import type { CSSProperties } from 'react';
 
-const Header = () => {
+const Header = ({ style }: { style: CSSProperties }) => {
   const navigate = useNavigate();
   const { logout, isAuth, userInfo } = useUserContext();
+
+  const { color, border } = style;
 
   const handleHome = () => {
     navigate('/home');
@@ -29,13 +32,14 @@ const Header = () => {
   };
 
   return (
-    <header className={S.container}>
+    <header className={S.container} style={{ color }}>
       <div className={S.logo}>
         <button
           type="button"
           onClick={handleHome}
           aria-label="홈으로 이동"
           className={S.logoButton}
+          style={{ color }}
         >
           <img src={Logo} alt="Seediary 로고" />
           <span>Seediary</span>
@@ -53,7 +57,12 @@ const Header = () => {
       <div className={S.authMenu}>
         {isAuth ? (
           <div className={S.buttonGroup}>
-            <button type="button" aria-label="알림 (새 알림있음)" className={S.bellButton}>
+            <button
+              type="button"
+              aria-label="알림 (새 알림있음)"
+              className={S.bellButton}
+              style={{ color }}
+            >
               <div className={S.notificationBadge} aria-hidden="true" />
               <FiBell size={24} aria-hidden="true" />
             </button>
@@ -75,13 +84,20 @@ const Header = () => {
               type="button"
               onClick={handleLogout}
               aria-label="로그아웃"
+              style={{ color, border }}
             >
               <FiLogOut size={16} />
               Logout
             </button>
           </div>
         ) : (
-          <button className={S.authButton} type="button" onClick={handleLogin} aria-label="로그인">
+          <button
+            className={S.authButton}
+            type="button"
+            onClick={handleLogin}
+            aria-label="로그인"
+            style={{ color, border }}
+          >
             <FiUser size={16} /> Login
           </button>
         )}
@@ -89,4 +105,4 @@ const Header = () => {
     </header>
   );
 };
-export default withConditionalRender(Header, ['/login', '/register']);
+export default withConditionalRender(withDynamicHeaderRender(Header));
