@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
 import type { User } from '@supabase/supabase-js';
+import { useEffect, useState } from 'react';
+import { logout } from '../api/auth';
 import supabase from '../api/supabase/client';
 import type { Tables } from '../api/supabase/types';
+import { getUserDataById } from '../api/user';
 
 export const useUser = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -12,12 +14,8 @@ export const useUser = () => {
       setUserInfo(null);
       return;
     }
-    const { data, error } = await supabase.from('users').select().eq('id', user.id).single();
-    if (error) {
-      console.error(`사용자 정보 로드 실패 : ${error}`);
-      setUserInfo(null);
-    }
-    setUserInfo(data);
+    const userData = await getUserDataById(user.id);
+    setUserInfo(userData);
   };
 
   useEffect(() => {
@@ -48,13 +46,6 @@ export const useUser = () => {
 
   const updateUserInfo = (user: Tables<'users'> | null) => {
     setUserInfo(user);
-  };
-
-  const logout = async (): Promise<void> => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error(`로그아웃 실패 : ${error}`);
-    }
   };
 
   return {

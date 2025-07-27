@@ -14,7 +14,7 @@ const ChangeProfile = () => {
   const profileRef = useRef<HTMLInputElement | null>(null);
   const [displayImage, setDisplayImage] = useState<string>(defaultProfile);
   const { imageFile, imagePreview, onChange, clearImage } = useUploadImage();
-  const { updateProfileImage } = useProfileChange();
+  const { updateProfile } = useProfileChange();
 
   useEffect(() => {
     if (imagePreview) {
@@ -43,28 +43,34 @@ const ChangeProfile = () => {
 
   const handleChangeProfile = async () => {
     try {
-      if (userInfo) {
-        const updated = await updateProfileImage(imageFile, userInfo);
-        resetInputAndImage();
-        updateUserInfo(updated);
-        toastUtils.success({ title: '성공', message: '프로필 이미지 변경 성공!' });
-      }
+      if (!userInfo) return;
+      const updated = await updateProfile(imageFile, userInfo);
+      resetInputAndImage();
+      updateUserInfo(updated);
+      toastUtils.success({ title: '성공', message: '프로필 이미지 변경 성공!' });
     } catch (error) {
-      toastUtils.error({ title: '실패', message: '프로필 이미지 변경 실패..' });
+      if (error instanceof Error) {
+        toastUtils.error({ title: '실패', message: error.message });
+      } else {
+        toastUtils.error({ title: '실패', message: '예상하지 못한 에러 발생' });
+      }
     }
   };
 
   const setDefaultProfile = async () => {
+    if (!userInfo) return;
     try {
-      if (userInfo) {
-        setDisplayImage(defaultProfile);
-        const updated = await updateProfileImage(null, userInfo);
-        resetInputAndImage();
-        updateUserInfo(updated);
-        toastUtils.info({ title: '변경', message: '기본 프로필 이미지로 변경' });
-      }
+      setDisplayImage(defaultProfile);
+      const updated = await updateProfile(null, userInfo);
+      resetInputAndImage();
+      updateUserInfo(updated);
+      toastUtils.info({ title: '변경', message: '기본 프로필 이미지로 변경' });
     } catch (error) {
-      toastUtils.error({ title: '실패', message: '본 프로필 이미지로 변경 실패..' });
+      if (error instanceof Error) {
+        toastUtils.error({ title: '실패', message: error.message });
+      } else {
+        toastUtils.error({ title: '실패', message: '예상하지 못한 에러 발생' });
+      }
     }
   };
 

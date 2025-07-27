@@ -6,10 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import defaultProfile from '../assets/profile.svg';
 import { AuthInput, AuthLayout } from '../components';
 import S from './style.module.css';
-import { createAuthAccount, insertUser } from './utils/helper';
 import type { RegisterForm } from './utils/type';
 import { registerValidator } from './utils/validator';
-import { uploadAndGetProfileImageUrl } from '@/shared/utils/image';
+import { registerWithEmail } from '@/shared/api/auth';
+import { createNewUser, uploadProfileImage } from '@/shared/api/user';
 
 const Register = () => {
   const profileId = useId();
@@ -38,11 +38,11 @@ const Register = () => {
     if (!validateAll()) return false;
     try {
       const { email, name, password } = formData;
-      const userId = await createAuthAccount({ email, password });
+      const user = await registerWithEmail({ email, password });
       const publicUrl = imageFile
-        ? await uploadAndGetProfileImageUrl({ file: imageFile, userId })
+        ? await uploadProfileImage({ file: imageFile, userId: user.id })
         : null;
-      await insertUser({ id: userId, name, email, profile_image: publicUrl });
+      await createNewUser({ id: user.id, name, email, profile_image: publicUrl });
       toastUtils.success({ title: '화원가입 성공', message: 'Seediary에 오신 걸 환영합니다!' });
 
       navigate('/login', {
@@ -51,7 +51,9 @@ const Register = () => {
         },
       });
     } catch (error) {
-      console.error(`회원가입 실패 : ${error}`);
+      if (error instanceof Error) {
+        toastUtils.error({ title: '회원가입 실패', message: error.message });
+      }
     }
   };
 

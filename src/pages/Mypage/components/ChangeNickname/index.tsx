@@ -2,8 +2,8 @@ import { toastUtils } from '@/shared/components/Toast';
 import { useId, useState } from 'react';
 import S from './style.module.css';
 import { useUserContext } from '@/shared/context/UserContext';
-import supabase from '@/shared/api/supabase/client';
 import { nameValidator } from '@/shared/utils/validator';
+import { uploadUserNickname } from '@/shared/api/user';
 
 const ChangeNickname = () => {
   const nicknameId = useId();
@@ -23,27 +23,22 @@ const ChangeNickname = () => {
   };
 
   const handleChangeNickname = async () => {
-    if (userInfo) {
-      const { data, error } = await supabase
-        .from('users')
-        .update({ name: nickname })
-        .eq('id', userInfo.id)
-        .select()
-        .single();
-
-      if (error) {
-        toastUtils.error({ title: '실패', message: '닉네임 변경에 실패했습니다.' });
-        return;
-      }
+    if (!userInfo) return;
+    try {
+      const user = await uploadUserNickname({ id: userInfo.id, nickname });
       toastUtils.success({ title: '성공', message: '닉네임 변경 성공!' });
-      updateUserInfo(data);
-
+      updateUserInfo(user);
       setNickname('');
+    } catch (error) {
+      if (error instanceof Error) {
+        toastUtils.error({ title: '실패', message: error.message });
+      } else {
+        toastUtils.error({ title: '실패', message: '예상하지 못한 에러 발생' });
+      }
     }
   };
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      // 엔터나 스페이스바
+    if (e.key === 'Enter') {
       e.preventDefault();
       handleChangeNickname();
     }

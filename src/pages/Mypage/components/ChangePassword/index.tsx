@@ -4,8 +4,8 @@ import { useForm } from '@/shared/hooks';
 import type { ChangePasswordForm } from '../../utils/type';
 import { toastUtils } from '@/shared/components/Toast';
 import { useUserContext } from '@/shared/context/UserContext';
-import supabase from '@/shared/api/supabase/client';
 import { validator } from '../../utils/validator';
+import { reauthenticate, updateUserPassword } from '@/shared/api/auth';
 
 const ChangePassword = () => {
   const { userInfo } = useUserContext();
@@ -46,39 +46,20 @@ const ChangePassword = () => {
 
     try {
       // 현재 비밀번호 재인증
-
-      console.log(userInfo.email, currentPassword);
-      const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email: userInfo.email,
-        password: currentPassword,
-      });
-      console.log(data);
-      if (authError) {
-        const errorMessage =
-          authError.message === 'Invalid login credentials'
-            ? '현재 비밀번호가 올바르지 않습니다.'
-            : '인증에 실패했습니다.';
-        toastUtils.error({ title: '실패', message: errorMessage });
-        return;
-      }
-
+      await reauthenticate({ email: userInfo.email, password: currentPassword });
       // 비밀번호 변경
-      const { error: updateError } = await supabase.auth.updateUser({
-        password: formData.password,
-      });
-
-      if (updateError) {
-        toastUtils.error({ title: '실패', message: '비밀번호 변경에 실패했습니다.' });
-        return;
-      }
+      await updateUserPassword(formData.password);
 
       // 성공 처리
       toastUtils.success({ title: '성공', message: '비밀번호가 성공적으로 변경되었습니다!' });
       currentPasswordRef.current.value = '';
       setFormData({ confirmPassword: '', password: '' });
     } catch (error) {
-      console.error('비밀번호 변경 오류:', error);
-      toastUtils.error({ title: '실패', message: '예기치 못한 오류가 발생했습니다.' });
+      if (error instanceof Error) {
+        toastUtils.error({ title: '실패', message: error.message });
+      } else {
+        toastUtils.error({ title: '실패', message: '예기치 못한 오류가 발생했습니다.' });
+      }
     }
   };
 
