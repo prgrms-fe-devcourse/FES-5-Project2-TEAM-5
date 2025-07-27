@@ -2,7 +2,7 @@ import S from './style.module.css';
 import { getWeatherImage } from './utils/getWeatherImage';
 import { useWeatherContext } from './context/WeatherContext';
 
-const DiaryWeather = ({ title = 'Welcome to the Seediary' }: { title: string }) => {
+const DiaryWeather = ({ title = 'Welcome to the Seediary' }: { title?: string }) => {
   const { weather } = useWeatherContext();
   const weatherImage = weather ? getWeatherImage(weather.weather[0].id) : null;
 
