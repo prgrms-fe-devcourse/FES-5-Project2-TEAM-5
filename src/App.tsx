@@ -14,6 +14,7 @@ import DiaryDetailPage from './pages/diary/DiaryDetail';
 import SelectDiary from './pages/analysis/SelectDiary';
 import EmotionAndQuest from './pages/analysis/EmotionAndQuest';
 import { UserProvider } from './shared/context/UserContext';
+import { PATHS } from './shared/constants/path';
 
 function App() {
   return (
@@ -22,14 +23,14 @@ function App() {
         <Toaster position="top-center" toastOptions={{ duration: 4000 }} /> {/* react-hot-toast */}
         <Header />
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path={PATHS.LOGIN} element={<Login />} />
+          <Route path={PATHS.REGISTER} element={<Register />} />
           <Route path="/diary" element={<DiaryPage />} />
           <Route path="/diary/form" element={<DiaryFormPage />} />
           <Route path="/diary/detail" element={<DiaryDetailPage />} />
           <Route path="/community" element={<DiaryList />} />
           <Route path="/users" element={<UserPage />} />
-          <Route path="/mypage" element={<Mypage />} />
+          <Route path={PATHS.MYPAGE} element={<Mypage />} />
           <Route path="/analysis/select-diary" element={<SelectDiary />} />
           <Route path="/analysis/emotion-and-quest" element={<EmotionAndQuest />} />
         </Routes>

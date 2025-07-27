@@ -105,4 +105,4 @@ const Header = ({ style }: { style: CSSProperties }) => {
     </header>
   );
 };
-export default withConditionalRender(withDynamicHeaderRender(Header), ['/login', '/register']);
+export default withConditionalRender(withDynamicHeaderRender(Header));
