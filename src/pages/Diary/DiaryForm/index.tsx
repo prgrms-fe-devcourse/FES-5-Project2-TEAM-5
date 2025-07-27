@@ -1,5 +1,4 @@
 import S from './style.module.css';
-import DiaryWeather from '../DiaryMain/components/DiaryWeather';
 import Emotion1 from '/src/assets/icon_joy.svg';
 import Emotion2 from '/src/assets/icon_sad.svg';
 import Emotion3 from '/src/assets/icon_anger.svg';
@@ -11,6 +10,7 @@ import { useEffect, useId, useState } from 'react';
 import { useUploadImage } from '@/shared/hooks';
 import { BsCheckSquare, BsCheckSquareFill } from 'react-icons/bs';
 import { CgClose } from 'react-icons/cg';
+import DiaryWeather from '@/shared/components/DiaryWeather';
 
 interface Props {
   emotion: string;
