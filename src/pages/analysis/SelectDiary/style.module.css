@@ -1,17 +1,16 @@
 
-body {
-  background-color: var(--background);
-}
 
 .container{
   max-width: 896px;
-  margin: 60px auto;
+  margin: 0 auto;
+  padding-top: 80px; /* 헤더 높이 */
 
   .intro{
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    margin-top: 40px;     /* 헤더와 추가 간격 */
     margin-bottom: 40px;
 
     h2{
