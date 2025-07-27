@@ -1,7 +1,6 @@
 import S from './style.module.css';
-import { useEffect, useState } from 'react';
-import { fetchWeather } from './utils/getWeather';
 import { getWeatherImage } from './utils/getWeatherImage';
+import { useWeatherContext } from './context/WeatherContext';
 
 interface WeatherInfo {
   id: number;
@@ -12,21 +11,7 @@ export interface WeatherData {
 }
 
 const DiaryWeather = () => {
-  const [weather, setWeather] = useState<WeatherData | null>(null);
-
-  useEffect(() => {
-    const loadWeather = async () => {
-      const data = await fetchWeather();
-      if (data) setWeather(data);
-    };
-    loadWeather();
-
-    const interval = setInterval(() => {
-      loadWeather();
-    }, 3 * 60 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, []);
-
+  const { weather } = useWeatherContext();
   const weatherImage = weather ? getWeatherImage(weather.weather[0].id) : null;
 
   return (
