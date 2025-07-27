@@ -6,9 +6,9 @@ import { FaGithub } from 'react-icons/fa';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthInput, AuthLayout } from '../components';
 import S from './style.module.css';
-import { login } from './utils/helper';
 import type { LoginForm } from './utils/type';
 import { useRememberMe } from './hook/useRememberMe';
+import { loginWithEmail } from '@/shared/api/auth';
 
 const Login = () => {
   const location = useLocation();
@@ -33,7 +33,7 @@ const Login = () => {
 
     try {
       const { email, password } = formData;
-      await login({ email, password });
+      await loginWithEmail({ email, password });
 
       toastUtils.success({ title: '로그인 성공', message: '로그인에 성공했습니다!' });
 
@@ -41,7 +41,8 @@ const Login = () => {
 
       navigate('/home');
     } catch (error) {
-      console.error(`로그인 실패 : ${error}`);
+      if (error instanceof Error)
+        toastUtils.error({ title: '로그인 실패', message: error.message });
     }
   };
 
