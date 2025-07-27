@@ -1,9 +1,18 @@
-import { useId } from 'react';
+import { memo, useId } from 'react';
 import S from './style.module.css';
 import { IoSearch } from 'react-icons/io5';
 
-const SearchBox = () => {
+interface Props {
+  onSearch: (searchTerm: string) => void;
+}
+
+const SearchBox = ({ onSearch }: Props) => {
   const searchId = useId();
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = e.target.value;
+    onSearch(searchTerm);
+  };
 
   return (
     <div className={S.searchBox}>
@@ -16,8 +25,9 @@ const SearchBox = () => {
         type="search"
         className={S.searchInput}
         placeholder="이름이나 이메일을 검색해보세요"
+        onChange={handleSearch}
       />
     </div>
   );
 };
-export default SearchBox;
+export default memo(SearchBox);

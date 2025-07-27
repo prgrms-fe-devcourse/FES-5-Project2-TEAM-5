@@ -1,9 +1,9 @@
-import type { User } from '../..';
+import type { DbUser } from '@/pages/users/UserList/types/dbUser';
 import UserCard from '../UserCard';
 import S from './style.module.css';
 
 interface Props {
-  users: User[];
+  users: DbUser[];
 }
 
 const UserList = ({ users }: Props) => {

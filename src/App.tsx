@@ -27,7 +27,7 @@ function App() {
           <Route path="/diary" element={<DiaryPage />} />
           <Route path="/diary/form" element={<DiaryFormPage />} />
           <Route path="/diary/detail" element={<DiaryDetailPage />} />
-          <Route path="/feed-diaries" element={<DiaryList />} />
+          <Route path="/community" element={<DiaryList />} />
           <Route path="/users" element={<UserPage />} />
           <Route path="/mypage" element={<Mypage />} />
           <Route path="/analysis/select-diary" element={<SelectDiary />} />
