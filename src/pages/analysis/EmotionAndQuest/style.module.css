@@ -2,7 +2,8 @@
 
 .container{
   max-width: 896px;
-  margin: 100px auto;
+  margin: 0 auto;
+  padding-top: 80px; /* 헤더 높이 */
 
   h3{
     color: var(--gray-900, #303030);
@@ -15,6 +16,7 @@
 
 /* 선택한 일기 영역 */
 .diarySection{
+  margin-top: 60px; /* 헤더와 추가 간격 */
   margin-bottom: 60px;
 
   h3{
@@ -101,6 +103,7 @@
 /* 퀘스트 수락 여부 */
 .decisionSection{
   text-align: center;
+  margin-bottom: 60px;
 
   h3{
     margin-bottom: var(--space-8);
@@ -144,6 +147,7 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  margin-bottom: 60px;
 
   button{
     /* max-width: 100px; */
