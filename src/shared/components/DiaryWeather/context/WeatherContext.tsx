@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo } from 'react';
 import { useWeather } from '../hooks/useWeather';
-import type { WeatherData } from '..';
+import type { WeatherData } from '../utils/type';
 
 interface WeatherContextType {
   weather: WeatherData | null;

@@ -1,4 +1,4 @@
-import type { WeatherData } from '..';
+import type { WeatherData } from './type';
 
 const WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 const CITY = 'Seoul,KR';

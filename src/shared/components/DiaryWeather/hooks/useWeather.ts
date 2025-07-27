@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { WeatherData } from '..';
 import { fetchWeather } from '../utils/getWeather';
+import type { WeatherData } from '../utils/type';
 
 export const useWeather = () => {
   const [weather, setWeather] = useState<WeatherData | null>(null);
