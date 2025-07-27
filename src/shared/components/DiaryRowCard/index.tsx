@@ -1,6 +1,6 @@
 import type { DiaryRowEntity } from '@/shared/types/diary';
 import S from './style.module.css';
-import { formatToReadableDate } from '@/shared/utils/formatter/date';
+import { formatToReadableDate } from '@/shared/utils/formatDate';
 
 function DiaryRowCard({
   comments,
@@ -8,8 +8,6 @@ function DiaryRowCard({
   diary_hashtags,
   diary_image,
   emotion_mains,
-  id,
-  is_public,
   likes,
   title,
 }: DiaryRowEntity) {

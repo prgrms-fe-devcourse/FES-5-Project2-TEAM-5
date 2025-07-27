@@ -1,7 +1,7 @@
 import S from './style.module.css';
 import defaultProfile from '@/assets/defaultProfile.svg';
 import { useUserContext } from '@/shared/context/UserContext';
-import { formatToReadableDate } from '@/shared/utils/formatter/date';
+import { formatToReadableDate } from '@/shared/utils/formatDate';
 
 const UserInfoSection = () => {
   const { userInfo } = useUserContext();

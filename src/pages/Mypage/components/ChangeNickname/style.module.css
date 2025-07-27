@@ -6,7 +6,7 @@
 .inputSection {
   position: relative;
   display: inline-block;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 
   .nicknameInput {
     width: 500px;
@@ -47,4 +47,12 @@
       }
     }
   }
+}
+
+.errorMessage {
+  margin-bottom: 20px;
+  height: var(--space-3);
+  color: #ff3b30;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
