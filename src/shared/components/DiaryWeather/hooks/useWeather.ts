@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchWeather } from '../utils/getWeather';
+import { getWeatherData } from '../utils/getWeatherData';
 import type { WeatherData } from '../utils/type';
 
 export const useWeather = () => {
@@ -7,7 +7,7 @@ export const useWeather = () => {
 
   useEffect(() => {
     const loadWeather = async () => {
-      const data = await fetchWeather();
+      const data = await getWeatherData();
       if (data) setWeather(data);
     };
     loadWeather();
