@@ -16,16 +16,17 @@ import EmotionAndQuest from './pages/analysis/EmotionAndQuest';
 import { UserProvider } from './shared/context/UserContext';
 import { PATHS } from './shared/constants/path';
 import { WeatherProvider } from './shared/context/WeatherContext';
+import Home from './pages/Home';
 
 function App() {
   return (
     <UserProvider>
       <WeatherProvider>
         <BrowserRouter>
-          <Toaster position="top-center" toastOptions={{ duration: 4000 }} />{' '}
-          {/* react-hot-toast */}
+          <Toaster position="top-center" toastOptions={{ duration: 4000 }} />
           <Header />
           <Routes>
+            <Route path={PATHS.HOME} element={<Home />} />
             <Route path={PATHS.LOGIN} element={<Login />} />
             <Route path={PATHS.REGISTER} element={<Register />} />
             <Route path="/diary" element={<DiaryPage />} />

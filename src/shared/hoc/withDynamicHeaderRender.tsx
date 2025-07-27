@@ -4,7 +4,7 @@ import { PATHS } from '../constants/path';
 
 type PathValues = (typeof PATHS)[keyof typeof PATHS];
 
-const whiteStyle: PathValues[] = [PATHS.HOME];
+const whiteStyle: PathValues[] = [PATHS.HOME, PATHS.MYPAGE];
 
 interface WithStyleProps {
   style: CSSProperties;

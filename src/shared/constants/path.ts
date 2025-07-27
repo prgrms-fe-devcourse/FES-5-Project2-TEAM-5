@@ -1,5 +1,5 @@
 export const PATHS = {
-  HOME: '/home',
+  HOME: '/',
   LOGIN: '/login',
   REGISTER: '/register',
   ANALYSIS: '/analysis',

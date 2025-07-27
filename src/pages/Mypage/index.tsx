@@ -5,13 +5,14 @@ import TabNav from './components/TabNav';
 import UserInfoSection from './components/UserInfoSection';
 import S from './style.module.css';
 import type { TabType } from './utils/type';
+import DiaryWeather from '@/shared/components/DiaryWeather';
 
 const Mypage = () => {
   const [activeTab, setActiveTab] = useState<TabType>('diary');
 
   return (
     <main className={S.container}>
-      <div className={S.banner}></div>
+      <DiaryWeather title="My page" />
       <UserInfoSection />
       <TabNav activeTab={activeTab} onTabChange={setActiveTab} />
       {activeTab === 'diary' && <DiarySection />}
