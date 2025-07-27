@@ -1,15 +1,22 @@
 import type { CSSProperties } from 'react';
 import { useLocation } from 'react-router-dom';
+import { PATHS } from '../constants/path';
 
-const whiteStyle = ['/home'];
+type PathValues = (typeof PATHS)[keyof typeof PATHS];
+
+const whiteStyle: PathValues[] = [PATHS.HOME];
+
+interface WithStyleProps {
+  style: CSSProperties;
+}
 
 export const withDynamicHeaderRender = <P extends object = {}>(
-  WrappedComponent: React.ComponentType<P>,
+  WrappedComponent: React.ComponentType<P & WithStyleProps>,
 ) => {
   return function (props: P) {
     const { pathname } = useLocation();
 
-    const isWhite = whiteStyle.includes(pathname);
+    const isWhite = whiteStyle.includes(pathname as PathValues);
 
     // 공통 색상 스타일
     const style: CSSProperties = {
