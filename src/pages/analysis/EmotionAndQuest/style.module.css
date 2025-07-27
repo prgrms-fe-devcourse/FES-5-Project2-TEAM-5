@@ -66,6 +66,8 @@
     font-size: var(--text-base);
     font-weight: 500;
     line-height: var(--space-5);
+    
+    transition: background-color 0.1s ease;
   }
 
   .subEmotionBtn.selected{
@@ -230,8 +232,10 @@
   background-color: var(--secondary);
   border-radius: var(--radius-6);
   padding: 8px 24px;
-
   cursor: pointer;
+  user-select: none;
+
+  transition: background-color 0.1s ease;
 }
 
 .cardButton.selected{
