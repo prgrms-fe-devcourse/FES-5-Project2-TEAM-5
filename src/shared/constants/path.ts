@@ -2,7 +2,7 @@ export const PATHS = {
   HOME: '/home',
   LOGIN: '/login',
   REGISTER: '/register',
-  ANALYSIS: '/analysis',
+  ANALYSIS: '/analysis/select-diary',
   FEED_DIARIES: '/feed-diaries',
   MYPAGE: '/mypage',
   DIARY_DETAIL: '/diary/:id',

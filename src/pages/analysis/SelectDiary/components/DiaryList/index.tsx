@@ -1,8 +1,14 @@
 import S from './style.module.css'
-import type { Diary } from '../../types'
+import type { Database } from '@/shared/api/supabase/types';
 import DiaryItem from '../DiaryItem/index'
 
-function DiaryList({ diaries }: { diaries: Diary[] }) {
+type Diary = Database['public']['Tables']['diaries']['Row'];
+
+interface Props {
+  diaries: Diary[];
+}
+
+function DiaryList({ diaries }: Props) {
   return (
     <section aria-label='일기 목록' className={S.diaryList}>
       {
@@ -10,7 +16,6 @@ function DiaryList({ diaries }: { diaries: Diary[] }) {
           <DiaryItem key={diary.id} diary={diary}/>
         ))
       }
-      <button type='button' className={S.loadMore}>이전 일기 불러오기</button>
     </section>
   )
 }
