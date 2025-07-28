@@ -164,9 +164,7 @@ const DiaryPage = () => {
   return (
     <main className={S.container}>
       {/* 날씨 영역 */}
-      <div className={S.banner}>
-        <DiaryWeather />
-      </div>
+      <DiaryWeather />
 
       {/* 일기 통계 영역 */}
       <section className={S.section02}>
