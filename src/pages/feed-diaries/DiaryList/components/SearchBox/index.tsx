@@ -1,9 +1,21 @@
-import { useId } from 'react';
+import { memo, useId } from 'react';
 import { IoSearch } from 'react-icons/io5';
 import S from './style.module.css';
 
-const SearchBox = () => {
+interface Props {
+  onSearch: (searchTerm: string) => void;
+}
+
+const SearchBox = ({ onSearch }: Props) => {
   const searchId = useId();
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const searchTerm = e.currentTarget.value.trim();
+      onSearch(searchTerm);
+    }
+  };
 
   return (
     <div className={S.searchBox}>
@@ -16,8 +28,9 @@ const SearchBox = () => {
         type="search"
         className={S.searchInput}
         placeholder="일기 제목이나 태그를 검색해보세요"
+        onKeyDown={handleKeyDown}
       />
     </div>
   );
 };
-export default SearchBox;
+export default memo(SearchBox);
