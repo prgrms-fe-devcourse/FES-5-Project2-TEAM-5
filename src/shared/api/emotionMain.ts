@@ -7,8 +7,8 @@ import type { Tables } from './supabase/types';
 export const getAllEmotionMains = async (): Promise<Tables<'emotion_mains'>[]> => {
   const { data, error } = await supabase.from('emotion_mains').select();
 
-  if (error) {
-    throw new Error('emotion 데이터 불러오기를 실패했습니다.');
+  if (error || !data) {
+    throw new Error(`emotion 데이터 불러오기를 실패: ${error.message}`);
   }
   return data;
 };

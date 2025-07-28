@@ -7,7 +7,8 @@ export const getAllDiariesCommentsCount = async (): Promise<Record<string, numbe
   const { data, error } = await supabase.from('comments').select('diary_id');
 
   if (error) {
-    throw new Error('전체 댓글 데이터 조회를 실패했습니다.');
+    throw new Error(`전체 댓글 데이터 조회 실패: ${error.message}`);
+    return {};
   }
 
   const commentsCount: Record<string, number> = {};

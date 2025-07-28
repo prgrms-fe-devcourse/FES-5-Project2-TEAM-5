@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { DbUser } from '@/shared/types/dbUser';
 import { debounce } from '@/shared/utils/debounce';
 import { getAllUserData } from '@/shared/api/user';
+import { toastUtils } from '@/shared/components/Toast';
 
 const UserPage = () => {
   const [users, setUsers] = useState<DbUser[]>([]);
@@ -14,8 +15,13 @@ const UserPage = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const data = await getAllUserData();
-      setUsers(data);
+      try {
+        const data = await getAllUserData();
+        setUsers(data);
+      } catch (error) {
+        console.error('데이터 로딩 실패:', error);
+        toastUtils.error({ title: '실패', message: '예상하지 못한 에러 발생' });
+      }
     };
     fetchUsers();
   }, []);

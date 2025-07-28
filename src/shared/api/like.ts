@@ -7,7 +7,8 @@ export const getAllDiariesLikesCount = async (): Promise<Record<string, number>>
   const { data, error } = await supabase.from('likes').select('diary_id');
 
   if (error) {
-    throw new Error('전체 댓글 데이터 조회를 실패했습니다.');
+    throw new Error(`전체 좋아요 데이터 조회 실패: ${error.message}`);
+    return {};
   }
 
   const likesCount: Record<string, number> = {};

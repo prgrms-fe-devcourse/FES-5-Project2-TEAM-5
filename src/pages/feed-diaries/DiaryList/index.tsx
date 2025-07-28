@@ -13,6 +13,7 @@ import { getAllDiaryData } from '@/shared/api/diary';
 import { getAllUserData } from '@/shared/api/user';
 import type { DbUser } from '@/shared/types/dbUser';
 import type { Diary } from '@/shared/types/diary';
+import { toastUtils } from '@/shared/components/Toast';
 
 const breakpointColumns = {
   default: 2,
@@ -31,18 +32,23 @@ const DiaryList = () => {
 
   useEffect(() => {
     const fetchDiaries = async () => {
-      const [userData, diaryData, emotionData, likesCount, commentsCount] = await Promise.all([
-        getAllUserData(),
-        getAllDiaryData(),
-        getAllEmotionMains(),
-        getAllDiariesLikesCount(),
-        getAllDiariesCommentsCount(),
-      ]);
-      setUsers(userData);
-      setDiaries(diaryData);
-      setMainEmotions(emotionData);
-      setLikesCount(likesCount);
-      setCommentsCount(commentsCount);
+      try {
+        const [userData, diaryData, emotionData, likesCount, commentsCount] = await Promise.all([
+          getAllUserData(),
+          getAllDiaryData(),
+          getAllEmotionMains(),
+          getAllDiariesLikesCount(),
+          getAllDiariesCommentsCount(),
+        ]);
+        setUsers(userData);
+        setDiaries(diaryData);
+        setMainEmotions(emotionData);
+        setLikesCount(likesCount);
+        setCommentsCount(commentsCount);
+      } catch (error) {
+        console.error('데이터 로딩 실패:', error);
+        toastUtils.error({ title: '실패', message: '예상하지 못한 에러 발생' });
+      }
     };
     fetchDiaries();
   }, []);

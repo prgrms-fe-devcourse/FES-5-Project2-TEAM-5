@@ -119,8 +119,8 @@ export const getUserDataById = async (id: string) => {
 export const getAllUserData = async () => {
   const { data, error } = await supabase.from('users').select('*');
 
-  if (error || !data) {
-    console.error(`전체 유저 정보 조회 실패: ${error}}`);
+  if (error) {
+    throw new Error(`전체 유저 정보 조회 실패: ${error}}`);
     return [];
   }
   return data;
