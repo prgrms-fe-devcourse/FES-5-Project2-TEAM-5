@@ -26,6 +26,7 @@
   .diaryBox{
     width: 100%;
     min-height: 160px;
+    max-height: 300px;
     box-sizing: border-box;
     padding: 15px;
     resize: none;
@@ -38,6 +39,8 @@
     font-size: var(--text-lg);
     font-weight: 400;
     line-height: var(--space-6);
+
+    overflow-y: auto;
   }
 }
 
@@ -165,6 +168,7 @@
     border: 1px solid var(--secondary);
     background-color: var(--secondary);
     color: #fff;
+    user-select: none;
   } 
 }
 
