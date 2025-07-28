@@ -3,9 +3,9 @@ import UserList from './components/UserList';
 import SearchBox from './components/SearchBox';
 import { useUserSearch } from './hooks/useUserSearch';
 import { useCallback, useEffect, useState } from 'react';
-import { debounce } from './utils/debounce';
 import { getAllUserData } from './utils/getAllUserData';
 import type { DbUser } from '@/pages/users/UserList/types/dbUser';
+import { debounce } from '@/shared/utils/debounce';
 
 const UserPage = () => {
   const [users, setUsers] = useState<DbUser[]>([]);
