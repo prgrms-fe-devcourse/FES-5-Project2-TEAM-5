@@ -9,6 +9,7 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(7.5px);
+    padding-top: 80px;
 
     display: flex;
     flex-direction: column;
@@ -27,9 +28,13 @@
     padding: var(--space-5);
     border: 1px solid #fff;
     background: rgba(217, 217, 217, 0);
-
+    /* background: var(--gray-500); */
     &::placeholder {
       color: #fff;
+    }
+
+    &:focus {
+      background: #ffffff60;
     }
   }
 
