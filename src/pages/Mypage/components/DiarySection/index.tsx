@@ -3,32 +3,27 @@ import DiaryRowCard from '@/shared/components/DiaryRowCard';
 import { type DiaryRowEntity } from '@/shared/types/diary';
 import { useEffect, useState } from 'react';
 import { toastUtils } from '@/shared/components/Toast';
-import supabase from '@/shared/api/supabase/client';
-import { transformDiaryData } from '@/shared/utils/formatSupabase';
+import { getDiariesById } from '@/shared/api/diary';
+import { useUserContext } from '@/shared/context/UserContext';
 
 const DiarySection = () => {
+  const { userInfo } = useUserContext();
   const [diaries, setDiaries] = useState<DiaryRowEntity[]>([]);
 
   useEffect(() => {
     const fetchDiary = async () => {
-      const { data, error } = await supabase
-        .from('diaries')
-        .select(
-          'id, title, created_at, is_public,diary_image,emotion_mains(name, icon_url),diary_hashtags(hashtags(id,name)),likes(count),comments(count) ',
-        );
-
-      if (error || !data) {
-        toastUtils.error({ title: '실패', message: '다이어리 목록 로드에 실패했습니다.' });
-        setDiaries([]);
-        return;
+      if (!userInfo) return;
+      try {
+        const data = await getDiariesById(userInfo.id);
+        setDiaries(data);
+      } catch (error) {
+        if (error instanceof Error) {
+          toastUtils.error({ title: '실패', message: error.message });
+        }
       }
-
-      setDiaries(transformDiaryData(data) || []);
     };
     fetchDiary();
   }, []);
-
-  // console.log(diaries.map((d) => d.emotion_mains));
 
   return (
     <section className={S.contents}>

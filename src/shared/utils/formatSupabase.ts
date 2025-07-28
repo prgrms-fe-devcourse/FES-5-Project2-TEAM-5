@@ -1,6 +1,7 @@
 import type { DiaryRowEntity, SupabaseDiaryResponse } from '@/shared/types/diary';
 
 export const transformDiaryData = (diaries: SupabaseDiaryResponse[]): DiaryRowEntity[] => {
+  if (!diaries) return [];
   return diaries.map((diary) => ({
     id: diary.id,
     title: diary.title,
