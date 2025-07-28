@@ -1,0 +1,29 @@
+.form {
+  position: relative;
+  .chat {
+    color: #fff;
+    width: 500px;
+    height: 50px;
+    border-radius: var(--radius-2);
+    padding: var(--space-5);
+    border: 1px solid #fff;
+    background: rgba(217, 217, 217, 0);
+    /* background: var(--gray-500); */
+    &::placeholder {
+      color: #fff;
+    }
+
+    &:focus {
+      background: #ffffff60;
+    }
+  }
+
+  .submitButton {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #fff;
+  }
+}
