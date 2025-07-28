@@ -1,6 +1,6 @@
 import S from './style.module.css';
 import default_image from '../../assets/default_image.svg';
-import type { Emotion } from '../..';
+import type { Emotion } from '../../type/emotion';
 const user = {
   name: '홍길동',
   image: default_image,
@@ -23,7 +23,7 @@ const DiaryCardHeader = ({ emotion, created_at }: Props) => {
           {new Date(created_at).toLocaleDateString('ko-KR')}
         </time>
         <div className={S.emotion} aria-label="일기 기분 표시">
-          <img className={S.emotionImg} src={emotion?.URL} alt={emotion?.name} />
+          <img className={S.emotionImg} src={emotion?.icon_url} alt={emotion?.name} />
           <span className={S.emotionLabel}>{emotion?.name}</span>
         </div>
       </div>

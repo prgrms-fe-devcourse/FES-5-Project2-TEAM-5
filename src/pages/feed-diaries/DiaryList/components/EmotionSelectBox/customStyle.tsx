@@ -1,7 +1,7 @@
-import type { Emotion } from '../..';
 import { type OptionProps, type PlaceholderProps, type StylesConfig } from 'react-select';
 import { components } from 'react-select';
 import S from './style.module.css';
+import type { Emotion } from '../../type/emotion';
 
 export const customStyles: StylesConfig<Emotion, true> = {
   control: (provided, state) => ({
@@ -59,7 +59,7 @@ export const CustomOption = (props: OptionProps<Emotion, true>) => {
   return (
     <components.Option {...props}>
       <div className={S.optionContent}>
-        <img src={data.URL} alt={data.name} className={S.optionIcon} />
+        <img src={data.icon_url} alt={data.name} className={S.optionIcon} />
         <span>{data.name}</span>
       </div>
     </components.Option>

@@ -11,13 +11,9 @@ import surpriseImg from './assets/surprise.png';
 import peaceImg from './assets/peace.png';
 import expectationImg from './assets/expectation.png';
 import { useCallback, useState } from 'react';
-import { useDiariesSearch } from './components/SearchBox/hooks/useDiarySearch';
+import { useDiariesSearch } from './hooks/useDiarySearch';
+import type { Emotion } from './type/emotion';
 
-export interface Emotion {
-  id: number;
-  name: string;
-  URL: string;
-}
 // 임시데이터
 const diaries = [
   {
@@ -101,13 +97,13 @@ const diaries = [
 ];
 
 const emotions = [
-  { id: 1, name: '기쁨', URL: joyImg },
-  { id: 2, name: '슬픔', URL: sadnessImg },
-  { id: 3, name: '분노', URL: angerImg },
-  { id: 4, name: '불안', URL: anxietyImg },
-  { id: 5, name: '놀람', URL: surpriseImg },
-  { id: 6, name: '평온', URL: peaceImg },
-  { id: 7, name: '기대', URL: expectationImg },
+  { id: 1, name: '기쁨', icon_url: joyImg },
+  { id: 2, name: '슬픔', icon_url: sadnessImg },
+  { id: 3, name: '분노', icon_url: angerImg },
+  { id: 4, name: '불안', icon_url: anxietyImg },
+  { id: 5, name: '놀람', icon_url: surpriseImg },
+  { id: 6, name: '평온', icon_url: peaceImg },
+  { id: 7, name: '기대', icon_url: expectationImg },
 ];
 
 const breakpointColumns = {
@@ -117,16 +113,23 @@ const breakpointColumns = {
 
 const DiaryList = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const { filteredDiaries } = useDiariesSearch(diaries, searchTerm);
+  const [selectedEmotions, setSelectedEmotions] = useState<Emotion[]>([]);
+  const { filteredDiaries } = useDiariesSearch(diaries, searchTerm, selectedEmotions);
+
   const handleSearch = useCallback((value: string) => {
     setSearchTerm(value);
   }, []);
+
+  const handleFilter = useCallback((emotions: Emotion[]) => {
+    setSelectedEmotions(emotions);
+  }, []);
+
   return (
     <main className={S.container}>
       <h2 className="sr-only">전체 사용자 일기 목록</h2>
       <section className={S.searchSection}>
         <SearchBox onSearch={handleSearch} />
-        <EmotionSelectBox emotions={emotions} />
+        <EmotionSelectBox emotions={emotions} onFilter={handleFilter} />
       </section>
 
       <section aria-label="일기 목록" className={S.diariesSection}>
