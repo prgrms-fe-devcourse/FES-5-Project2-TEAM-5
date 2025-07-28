@@ -17,6 +17,13 @@ const SearchBox = ({ onSearch }: Props) => {
     }
   };
 
+  const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
+    const searchTerm = e.currentTarget.value.trim();
+    if (!searchTerm) {
+      onSearch('');
+    }
+  };
+
   return (
     <div className={S.searchBox}>
       <label htmlFor={searchId} className="sr-only">
@@ -29,6 +36,7 @@ const SearchBox = ({ onSearch }: Props) => {
         className={S.searchInput}
         placeholder="일기 제목이나 태그를 검색해보세요"
         onKeyDown={handleKeyDown}
+        onInput={handleInput}
       />
     </div>
   );
