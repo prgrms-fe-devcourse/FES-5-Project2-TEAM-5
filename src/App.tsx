@@ -29,8 +29,8 @@ function App() {
             <Route path={PATHS.HOME} element={<Home />} />
             <Route path={PATHS.LOGIN} element={<Login />} />
             <Route path={PATHS.REGISTER} element={<Register />} />
-            <Route path="/diary" element={<DiaryPage />} />
-            <Route path="/diary/form" element={<DiaryFormPage />} />
+            <Route path={PATHS.DIARY} element={<DiaryPage />} />
+            <Route path={PATHS.DIARY_FORM} element={<DiaryFormPage />} />
             <Route path="/diary/detail" element={<DiaryDetailPage />} />
             <Route path="/community" element={<DiaryList />} />
             <Route path="/users" element={<UserPage />} />

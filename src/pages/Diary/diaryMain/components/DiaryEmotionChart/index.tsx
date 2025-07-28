@@ -15,11 +15,11 @@ import Emotion2 from '/src/assets/icon_sad.svg';
 import Emotion3 from '/src/assets/icon_anger.svg';
 import Emotion4 from '/src/assets/icon_anxiety.svg';
 import Emotion5 from '/src/assets/icon_surprise.svg';
-import Emotion6 from '/src/assets/icon_peace.svg';
-import Emotion7 from '/src/assets/icon_expect.svg';
+import Emotion6 from '/src/assets/icon_expect.svg';
+import Emotion7 from '/src/assets/icon_peace.svg';
 
 const emotionImages = [Emotion1, Emotion2, Emotion3, Emotion4, Emotion5, Emotion6, Emotion7];
-const emotionLabels = ['행복', '기대', '슬픔', '분노', '불안', '놀람', '평온'];
+const emotionLabels = ['기쁨', '슬픔', '분노', '불안', '놀람', '기대', '평온'];
 
 interface Props {
   data: number[];
@@ -109,7 +109,7 @@ const DiaryEmotionChart = ({ data }: Props) => {
           const x = scales.x.getPixelForTick(idx);
           const y = chartArea.bottom + 10;
 
-          ctx.drawImage(loadedEmotionImages[idx], x - 21, y, 42, 46);
+          ctx.drawImage(loadedEmotionImages[idx], x - 21, y, 40, 46);
         });
       }
     },

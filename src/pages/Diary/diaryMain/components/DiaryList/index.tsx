@@ -1,50 +1,19 @@
 import S from './style.module.css';
-import IconExpect from '/src/assets/icon_expect.svg';
-import ThumbImage from '../../../assets/@thumb.png';
-import DiaryItem from '../DiaryItem';
+import DiaryRowCard from '@/shared/components/DiaryRowCard';
+import type { DiaryRowEntity } from '@/shared/types/diary';
 
-interface Props {
-  id: number;
-  emotionIcon: string;
-  emotionText: string;
-  title: string;
-  tags: string[];
-  likes: number;
-  comments: number;
-  date: string;
-  thumbnail?: string;
-}
+type Props = {
+  diaries: DiaryRowEntity[];
+};
 
-const diaryEntries: Props[] = [
-  {
-    id: 1,
-    emotionIcon: IconExpect,
-    emotionText: '기대',
-    title: '오늘은 날씨가 선선해서 기분이 좋아',
-    tags: ['날씨', '씨앗일기', '감정일기'],
-    likes: 23,
-    comments: 5,
-    date: '2025-07-20',
-    thumbnail: ThumbImage,
-  },
-  {
-    id: 2,
-    emotionIcon: IconExpect,
-    emotionText: '기대',
-    title: '좋은 친구를 만났어',
-    tags: ['친구', '행복'],
-    likes: 15,
-    comments: 2,
-    date: '2025-06-18',
-  },
-];
+const DiaryList = ({ diaries }: Props) => {
+  if (!diaries.length) return null;
 
-const DiaryList = () => {
   return (
     <ul className={S.diaryList}>
-      {diaryEntries.map((entry) => (
-        <DiaryItem key={entry.id} {...entry} />
-      ))}
+      {diaries.map((diary) => {
+        return <DiaryRowCard {...diary} key={diary.id} />;
+      })}
     </ul>
   );
 };
