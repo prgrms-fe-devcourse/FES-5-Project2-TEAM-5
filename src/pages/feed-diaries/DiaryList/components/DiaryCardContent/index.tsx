@@ -1,4 +1,4 @@
-import type { Diary } from '../..';
+import type { Diary } from '../../type/diary';
 import S from './style.module.css';
 
 interface Props {

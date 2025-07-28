@@ -13,7 +13,7 @@ function EmotionSelectItem({ emotion, onDelete }: Props) {
   };
   return (
     <li key={emotion.id} className={S.selectedEmotion}>
-      <img src={emotion.icon_url} alt={emotion.name} />
+      <img src={emotion.icon_url} alt={emotion.name} className={S.selectedEmotionIcon} />
       {emotion.name}
       <AiOutlineClose className={S.deleteIcon} onClick={handleDelete} />
     </li>
