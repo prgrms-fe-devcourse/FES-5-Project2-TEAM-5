@@ -24,6 +24,7 @@
     background: var(--gray-900);
     color: #fff;
     width: fit-content;
+    line-height: 1.3;
   }
 }
 
@@ -41,5 +42,6 @@
     background: var(--gray-500);
     color: #fff;
     width: fit-content;
+    line-height: 1.3;
   }
 }

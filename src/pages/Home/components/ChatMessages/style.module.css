@@ -62,6 +62,24 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+.chatMessage::-webkit-scrollbar {
+  width: 4px;
+}
+
+.chatMessage::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chatMessage::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.chatMessage::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .emptyMessage {

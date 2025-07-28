@@ -22,7 +22,10 @@ const ChatMessages = ({ onClose }: Props) => {
     );
   }
 
-  const { messages, isAiTyping, isLoading, error } = useChatMessages(userInfo.id, userInfo.name);
+  const { messages, isAiTyping, isLoading, error, ref } = useChatMessages({
+    name: userInfo.name,
+    userId: userInfo.id,
+  });
 
   if (isLoading) {
     return (
@@ -45,7 +48,7 @@ const ChatMessages = ({ onClose }: Props) => {
           <h3 className={S.today}>{formatToKoreaDate(new Date())}</h3>
         </div>
       </header>
-      <div className={S.chatMessage}>
+      <div className={S.chatMessage} ref={ref}>
         {messages.length > 0 ? (
           messages.map((message) => (
             <MessageItem

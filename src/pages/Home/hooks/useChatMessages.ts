@@ -5,10 +5,16 @@ import {
 } from '@/shared/api/chat';
 import type { Tables } from '@/shared/api/supabase/types';
 import type { RealtimePostgresInsertPayload } from '@supabase/supabase-js';
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 
-export const useChatMessages = (userId: string, name: string) => {
+interface Props {
+  userId: string;
+  name: string;
+}
+
+export const useChatMessages = ({ name, userId }: Props) => {
   const [messages, setMessages] = useState<Tables<'chat_messages'>[]>([]);
+  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const [isAiTyping, setIsAiTyping] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string>('');
@@ -61,10 +67,22 @@ export const useChatMessages = (userId: string, name: string) => {
     }
   };
 
+  // 스크롤 추적
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (messagesContainerRef.current) {
+        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+      }
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, [messages, isAiTyping]);
+
   return {
     messages,
     isAiTyping,
     error,
     isLoading: isPending,
+    ref: messagesContainerRef,
   };
 };
