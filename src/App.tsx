@@ -15,7 +15,7 @@ import SelectDiary from './pages/analysis/SelectDiary';
 import EmotionAndQuest from './pages/analysis/EmotionAndQuest';
 import { UserProvider } from './shared/context/UserContext';
 import { PATHS } from './shared/constants/path';
-import { WeatherProvider } from './shared/components/DiaryWeather/context/WeatherContext';
+import { WeatherProvider } from './shared/context/WeatherContext';
 
 function App() {
   return (

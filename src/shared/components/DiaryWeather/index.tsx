@@ -1,6 +1,6 @@
 import S from './style.module.css';
 import { getWeatherImage } from './utils/getWeatherImage';
-import { useWeatherContext } from './context/WeatherContext';
+import { useWeatherContext } from '@/shared/context/WeatherContext';
 
 const DiaryWeather = ({ title = 'Welcome to the Seediary' }: { title?: string }) => {
   const { weather } = useWeatherContext();
