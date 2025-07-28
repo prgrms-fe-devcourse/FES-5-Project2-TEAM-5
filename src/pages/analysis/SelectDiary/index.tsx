@@ -13,17 +13,19 @@ function SelectDiary() {
   const [diaries, setDiaries] = useState<Diary[]>([]);
   const [visibleCount, setVisibleCount] = useState(3);
   const [loading, setLoading] = useState(true);
+  const [selectedDiaryId, setSelectedDiaryId] = useState<string | null>(null);
 
   const isSessionUnknown = user === null && !isAuth && loading; // 세션 확인 전인지 판별
 
   useEffect(() => {
-    if (isSessionUnknown) return; // 세션 확인 전
 
     if (!isAuth || !user) {
       setDiaries([]);  // 로그인 안 된 경우
       setLoading(false);
       return;
     }
+
+    if (isSessionUnknown) return; // 세션 확인 전
 
     // 일기 데이터 있으면 스피너 x
     if (diaries.length > 0) {
@@ -115,7 +117,10 @@ function SelectDiary() {
       </section>
 
       <div className={S.listWrapper}>
-        <DiaryList diaries={visibleDiaries} />
+        <DiaryList
+          diaries={visibleDiaries}
+          onSelect={setSelectedDiaryId}
+        />
       </div>
 
       {hasMore && (
@@ -124,7 +129,7 @@ function SelectDiary() {
         </button>
       )}
 
-      <NextPageButton />
+      <NextPageButton disabled={!selectedDiaryId}/>
     </main>
   );
 }

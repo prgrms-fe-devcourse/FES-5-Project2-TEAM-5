@@ -6,14 +6,15 @@ type Diary = Database['public']['Tables']['diaries']['Row'];
 
 interface Props {
   diaries: Diary[];
+  onSelect: (id: string) => void;
 }
 
-function DiaryList({ diaries }: Props) {
+function DiaryList({ diaries, onSelect }: Props) {
   return (
     <section aria-label='일기 목록' className={S.diaryList}>
       {
         diaries.map((diary)=>(
-          <DiaryItem key={diary.id} diary={diary}/>
+          <DiaryItem key={diary.id} diary={diary} onSelect={onSelect}/>
         ))
       }
     </section>

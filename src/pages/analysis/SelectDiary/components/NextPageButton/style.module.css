@@ -21,7 +21,17 @@
     font-size: var(--text-lg);
     font-weight: 400;
     padding: 8px 15px 8px 20px;
-    cursor: pointer;
     user-select: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .active {
+    background: var(--primary); /* 기존 초록 계열 */
+    cursor: pointer;
+  }
+
+  .disabled {
+    background: var(--secondary);
+    cursor: not-allowed;
   }
 }
