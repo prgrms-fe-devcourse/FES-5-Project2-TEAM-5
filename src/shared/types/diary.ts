@@ -1,3 +1,5 @@
+import type { Database } from '@/shared/api/supabase/types';
+
 export interface SupabaseDiaryResponse {
   id: string;
   title: string;
@@ -21,3 +23,5 @@ export interface DiaryRowEntity {
   diary_hashtags: { name: string; id: string }[];
   emotion_mains: { name: string; icon_url: string };
 }
+
+export type Diary = Database['public']['Tables']['diaries']['Row'];
