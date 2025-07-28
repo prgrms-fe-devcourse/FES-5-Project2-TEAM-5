@@ -4,6 +4,7 @@ import { IoArrowUpCircleOutline } from 'react-icons/io5';
 import { IoIosClose } from 'react-icons/io';
 
 import S from './style.module.css';
+import Chat from './components/Chat';
 
 const Home = () => {
   const chatId = useId();
@@ -25,17 +26,7 @@ const Home = () => {
     <main className={S.container}>
       <div className={S.overlay}>
         {isChatActive ? (
-          <section className={S.chatSection}>
-            <h2 className="sr-only">채팅창</h2>
-            <button
-              className={S.chatCloseButton}
-              type="button"
-              aria-label="채팅창 닫기"
-              onClick={handleChatClose}
-            >
-              <IoIosClose size={24} />
-            </button>
-          </section>
+          <Chat onClose={handleChatClose} />
         ) : (
           <section className={S.cardSection}>
             <h2 className="sr-only">AI 케릭터 섹션</h2>

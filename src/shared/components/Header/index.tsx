@@ -15,7 +15,7 @@ const Header = ({ style }: { style: CSSProperties }) => {
   const { color, border } = style;
 
   const handleHome = () => {
-    navigate('/home');
+    navigate('/');
   };
 
   const handleLogin = () => {

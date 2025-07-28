@@ -74,25 +74,3 @@
     }
   }
 }
-
-.chatSection {
-  width: 500px;
-  height: 650px;
-  border-radius: 24px;
-  background: rgba(0, 0, 0, 0.55);
-  position: relative;
-
-  .chatCloseButton {
-    position: absolute;
-    color: #fff;
-    right: 10px;
-    top: 10px;
-    cursor: pointer;
-    &:hover {
-      scale: 1.2;
-    }
-    &:active {
-      scale: 0.97;
-    }
-  }
-}
