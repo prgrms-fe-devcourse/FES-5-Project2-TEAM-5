@@ -1,6 +1,6 @@
+import type { Diary } from '@/shared/types/diary';
+import type { Emotion } from '@/shared/types/emotion';
 import { useMemo } from 'react';
-import type { Diary } from '../type/diary';
-import type { Emotion } from '../type/emotion';
 
 export const useDiariesSearch = (
   diaries: Diary[],

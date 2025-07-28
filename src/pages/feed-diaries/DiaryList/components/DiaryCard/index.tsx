@@ -2,10 +2,10 @@ import S from './style.module.css';
 import DiaryCardHeader from '../DiaryCardHeader';
 import DiaryCardFooter from '../DiaryCardFooter';
 import DiaryCardContent from '../DiaryCardContent';
-import type { Diary } from '../../type/diary';
-import type { Emotion } from '../../type/emotion';
 import { useNavigate } from 'react-router-dom';
-import type { DbUser } from '@/pages/users/UserList/types/dbUser';
+import type { DbUser } from '@/shared/types/dbUser';
+import type { Diary } from '@/shared/types/diary';
+import type { Emotion } from '@/shared/types/emotion';
 
 interface Props {
   user: DbUser;

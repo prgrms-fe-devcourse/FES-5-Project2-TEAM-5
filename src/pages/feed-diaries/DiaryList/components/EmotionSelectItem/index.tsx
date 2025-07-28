@@ -1,6 +1,6 @@
 import { AiOutlineClose } from 'react-icons/ai';
 import S from './style.module.css';
-import type { Emotion } from '../../type/emotion';
+import type { Emotion } from '@/shared/types/emotion';
 
 interface Props {
   emotion: Emotion;

@@ -1,8 +1,8 @@
 import S from './style.module.css';
 import default_image from '../../assets/default_image.svg';
-import type { Emotion } from '../../type/emotion';
 import { formatToReadableDate } from '@/shared/utils/formatDate';
-import type { DbUser } from '@/pages/users/UserList/types/dbUser';
+import type { DbUser } from '@/shared/types/dbUser';
+import type { Emotion } from '@/shared/types/emotion';
 
 const DEFAULT_IMAGE = default_image;
 

@@ -1,7 +1,7 @@
 import { type OptionProps, type PlaceholderProps, type StylesConfig } from 'react-select';
 import { components } from 'react-select';
 import S from './style.module.css';
-import type { Emotion } from '../../type/emotion';
+import type { Emotion } from '@/shared/types/emotion';
 
 export const customStyles: StylesConfig<Emotion, true> = {
   control: (provided, state) => ({

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import EmotionSelectItem from '../EmotionSelectItem';
 import { CustomOption, CustomPlaceholder, customStyles } from './customStyle';
-import type { Emotion } from '../../type/emotion';
+import type { Emotion } from '@/shared/types/emotion';
 
 const animatedComponents = makeAnimated();
 

@@ -3,7 +3,7 @@ import UserList from './components/UserList';
 import SearchBox from './components/SearchBox';
 import { useUserSearch } from './hooks/useUserSearch';
 import { useCallback, useEffect, useState } from 'react';
-import type { DbUser } from '@/pages/users/UserList/types/dbUser';
+import type { DbUser } from '@/shared/types/dbUser';
 import { debounce } from '@/shared/utils/debounce';
 import { getAllUserData } from '@/shared/api/user';
 

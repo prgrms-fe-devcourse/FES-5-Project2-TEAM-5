@@ -5,14 +5,14 @@ import EmotionSelectBox from './components/EmotionSelectBox';
 import SearchBox from './components/SearchBox';
 import { useCallback, useEffect, useState } from 'react';
 import { useDiariesSearch } from './hooks/useDiarySearch';
-import type { Emotion } from './type/emotion';
-import type { Diary } from './type/diary';
+import type { Emotion } from '../../../shared/types/emotion';
 import { getAllEmotionMains } from '@/shared/api/emotionMain';
 import { getAllDiariesLikesCount } from '@/shared/api/like';
 import { getAllDiariesCommentsCount } from '@/shared/api/comment';
 import { getAllDiaryData } from '@/shared/api/diary';
 import { getAllUserData } from '@/shared/api/user';
-import type { DbUser } from '@/pages/users/UserList/types/dbUser';
+import type { DbUser } from '@/shared/types/dbUser';
+import type { Diary } from '@/shared/types/diary';
 
 const breakpointColumns = {
   default: 2,
