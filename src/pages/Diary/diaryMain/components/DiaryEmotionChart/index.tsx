@@ -1,3 +1,4 @@
+import S from './style.module.css';
 import { useRef, useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
@@ -8,44 +9,54 @@ import {
   Tooltip,
   Legend,
   Title,
+  type TooltipItem,
+  Scale,
+  type Plugin,
 } from 'chart.js';
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, Title);
-import Emotion1 from '/src/assets/icon_joy.svg';
-import Emotion2 from '/src/assets/icon_sad.svg';
-import Emotion3 from '/src/assets/icon_anger.svg';
-import Emotion4 from '/src/assets/icon_anxiety.svg';
-import Emotion5 from '/src/assets/icon_surprise.svg';
-import Emotion6 from '/src/assets/icon_expect.svg';
-import Emotion7 from '/src/assets/icon_peace.svg';
 
-const emotionImages = [Emotion1, Emotion2, Emotion3, Emotion4, Emotion5, Emotion6, Emotion7];
-const emotionLabels = ['기쁨', '슬픔', '분노', '불안', '놀람', '기대', '평온'];
+ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, Title);
 
 interface Props {
   data: number[];
+  emotionLabels: string[];
+  emotionImages: string[];
 }
 
-const DiaryEmotionChart = ({ data }: Props) => {
-  const chartRef = useRef<any>(null);
+const DiaryEmotionChart = ({ data, emotionLabels, emotionImages }: Props) => {
+  const chartRef = useRef<ChartJS<'bar'>>(null);
   const [loadedEmotionImages, setLoadedEmotionImages] = useState<HTMLImageElement[]>([]);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   useEffect(() => {
     const loadImages = async () => {
+      if (emotionImages.length === 0) {
+        setLoadedEmotionImages([]);
+        setIsInitialLoading(false);
+        return;
+      }
+
       const images: HTMLImageElement[] = [];
       for (const src of emotionImages) {
         const img = new Image();
         img.src = src;
-        await new Promise((resolve) => {
-          img.onload = resolve;
-          img.onerror = resolve;
-        });
-        images.push(img);
+
+        try {
+          await new Promise<void>((resolve, reject) => {
+            img.onload = () => resolve();
+            img.onerror = () => reject(new Error(`이미지 로드 실패: ${src}`));
+          });
+          images.push(img);
+        } catch (error) {
+          console.error(error);
+        }
       }
+
       setLoadedEmotionImages(images);
+      setIsInitialLoading(false);
     };
 
     loadImages();
-  }, []);
+  }, [emotionImages]);
 
   const chartData = {
     labels: emotionLabels,
@@ -66,7 +77,13 @@ const DiaryEmotionChart = ({ data }: Props) => {
     maintainAspectRatio: false,
     plugins: {
       legend: { display: false },
-      tooltip: {},
+      tooltip: {
+        callbacks: {
+          label: function (context: TooltipItem<'bar'>) {
+            return context.parsed.y + '%';
+          },
+        },
+      },
     },
     scales: {
       x: {
@@ -74,7 +91,7 @@ const DiaryEmotionChart = ({ data }: Props) => {
         ticks: {
           display: false,
         },
-        afterFit: function (scale: any) {
+        afterFit: function (scale: Scale) {
           scale.height = 60;
         },
       },
@@ -94,22 +111,31 @@ const DiaryEmotionChart = ({ data }: Props) => {
             family: 'Urbanist',
           },
           color: '#999999',
+          callback: function (value: string | number, index: number) {
+            if (value === 0 && index === 0) {
+              return value + '%';
+            }
+            return value;
+          },
         },
       },
     },
   };
 
-  // 커스텀 플러그인: x축 이미지 라벨
-  const imagePlugin = {
+  const imagePlugin: Plugin<'bar'> = {
     id: 'xImageLabel',
-    afterDraw: (chart: any) => {
+    afterDraw: (chart: ChartJS<'bar'>) => {
       const { ctx, chartArea, scales } = chart;
-      if (loadedEmotionImages.length === emotionImages.length) {
-        scales.x.ticks.forEach((_: any, idx: number) => {
+
+      if (loadedEmotionImages.length === 0) return;
+
+      if (loadedEmotionImages.length === emotionLabels.length) {
+        scales.x.ticks.forEach((_, idx: number) => {
           const x = scales.x.getPixelForTick(idx);
           const y = chartArea.bottom + 10;
-
-          ctx.drawImage(loadedEmotionImages[idx], x - 21, y, 40, 46);
+          if (loadedEmotionImages[idx]) {
+            ctx.drawImage(loadedEmotionImages[idx], x - 21, y, 40, 46);
+          }
         });
       }
     },
@@ -119,15 +145,25 @@ const DiaryEmotionChart = ({ data }: Props) => {
     if (chartRef.current) {
       chartRef.current.update();
     }
-  }, []);
+  }, [data, emotionLabels, loadedEmotionImages]);
+
+  if (isInitialLoading && emotionImages.length > 0) {
+    return (
+      <div className={S.spinner_wrap}>
+        <span className={S.spinner}></span>
+      </div>
+    );
+  }
+
+  if (emotionImages.length === 0) {
+    setLoadedEmotionImages([]);
+    setIsInitialLoading(false);
+    return;
+  }
 
   return (
     <div style={{ width: '100%', height: '50%' }}>
-      {loadedEmotionImages.length === emotionImages.length ? (
-        <Bar ref={chartRef} data={chartData} options={chartOptions} plugins={[imagePlugin]} />
-      ) : (
-        <div>이미지 로딩 중...</div>
-      )}
+      <Bar ref={chartRef} data={chartData} options={chartOptions} plugins={[imagePlugin]} />
     </div>
   );
 };

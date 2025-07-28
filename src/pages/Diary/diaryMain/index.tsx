@@ -18,6 +18,12 @@ type MonthEntry = {
   created_at: string;
 };
 
+interface EmotionMain {
+  id: number;
+  name: string;
+  icon_url: string;
+}
+
 const DiaryPage = () => {
   const { user } = useUserContext();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -25,6 +31,10 @@ const DiaryPage = () => {
   const [loading, setLoading] = useState(false);
   const [monthEntries, setMonthEntries] = useState<MonthEntry[]>([]);
   const navigate = useNavigate();
+
+  const [emotionMainsList, setEmotionMainsList] = useState<EmotionMain[]>([]);
+  const [emotionStatsData, setEmotionStatsData] = useState<number[]>([]);
+  const [currentMonthDiaryCount, setCurrentMonthDiaryCount] = useState(0);
 
   // YYYY-MM-DD 형식으로 로컬 날짜 문자열을 반환하는 함수
   const getLocalDateString = (date: Date) => {
@@ -113,6 +123,7 @@ const DiaryPage = () => {
   useEffect(() => {
     if (!user?.id) {
       setMonthEntries([]);
+      setCurrentMonthDiaryCount(0);
       return;
     }
 
@@ -144,17 +155,115 @@ const DiaryPage = () => {
       if (error) {
         console.error('월별 일기 항목 로드 실패:', error);
         setMonthEntries([]);
+        setCurrentMonthDiaryCount(0);
       } else {
-        if (data && Array.isArray(data)) {
-          setMonthEntries(data as MonthEntry[]);
-        } else {
-          setMonthEntries([]);
-        }
+        const entries = data || [];
+        const uniqueDates = new Set<string>();
+
+        entries.forEach((entry: { created_at: string }) => {
+          const dateOnly = entry.created_at.split('T')[0];
+          uniqueDates.add(dateOnly);
+        });
+
+        setMonthEntries(entries);
+        setCurrentMonthDiaryCount(uniqueDates.size);
+      }
+    };
+    fetchMonthEntries();
+  }, [selectedDate, user?.id]);
+
+  useEffect(() => {
+    const fetchEmotionMains = async () => {
+      const { data, error } = await supabase
+        .from('emotion_mains')
+        .select('id, name, icon_url')
+        .order('id', { ascending: true });
+
+      if (error) {
+        console.error('감정 목록 로드 실패:', error);
+        toastUtils.error({ title: '실패', message: '감정 목록을 불러오지 못했습니다.' });
+        return;
+      }
+      if (data) {
+        setEmotionMainsList(data);
       }
     };
 
-    fetchMonthEntries();
-  }, [selectedDate, user?.id]);
+    fetchEmotionMains();
+  }, []);
+
+  useEffect(() => {
+    const fetchEmotionStats = async () => {
+      if (!user?.id || emotionMainsList.length === 0) {
+        setEmotionStatsData([]);
+        return;
+      }
+
+      const firstDayOfSelectedMonth = new Date(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        1,
+      );
+      firstDayOfSelectedMonth.setHours(0, 0, 0, 0);
+      const queryStartUTC = firstDayOfSelectedMonth.toISOString();
+
+      const firstDayOfNextMonth = new Date(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth() + 1,
+        1,
+      );
+      firstDayOfNextMonth.setHours(0, 0, 0, 0);
+      const queryEndUTC = firstDayOfNextMonth.toISOString();
+
+      const { data, error } = await supabase
+        .from('diaries')
+        .select('emotion_main_id')
+        .eq('user_id', user.id)
+        .eq('is_drafted', false)
+        .gte('created_at', queryStartUTC)
+        .lt('created_at', queryEndUTC);
+
+      if (error) {
+        console.error('감정 통계 로드 실패:', error);
+        toastUtils.error({ title: '실패', message: '감정 통계를 불러오지 못했습니다.' });
+        setEmotionStatsData([]);
+        return;
+      }
+
+      const initialCounts = new Array(emotionMainsList.length).fill(0);
+
+      if (data) {
+        data.forEach((entry: { emotion_main_id: number }) => {
+          const emotionIndex = emotionMainsList.findIndex(
+            (emo) => emo.id === entry.emotion_main_id,
+          );
+          if (emotionIndex !== -1) {
+            initialCounts[emotionIndex]++;
+          }
+        });
+      }
+      setEmotionStatsData(initialCounts);
+    };
+
+    fetchEmotionStats();
+  }, [user?.id, selectedDate, emotionMainsList]);
+
+  const getDaysInMonth = (year: number, month: number) => {
+    // 다음 달 0번째 날은 해당 달의 마지막 날
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  // 현재 선택된 월의 총 일수
+  const totalDaysInSelectedMonth = getDaysInMonth(
+    selectedDate.getFullYear(),
+    selectedDate.getMonth(),
+  );
+
+  const diaryCompletionPercentage = Math.round(
+    (currentMonthDiaryCount / totalDaysInSelectedMonth) * 100,
+  );
+
+  const clampedPercentage = Math.min(100, diaryCompletionPercentage);
 
   const handleNewDiaryClick = () => {
     const dateStr = getLocalDateString(selectedDate); // 'YYYY-MM-DD' 형식의 로컬 날짜 전달
@@ -188,9 +297,15 @@ const DiaryPage = () => {
           <div className={S.stats}>
             <div className={S.plantGrowth}>
               <h3>My emotional record</h3>
-              <DiaryPlant target={25} />
+              <DiaryPlant value={clampedPercentage} currentPlantLevel={currentMonthDiaryCount} />
             </div>
-            <DiaryEmotionChart data={[88, 61, 49, 37, 55, 72, 85]} />
+            {emotionMainsList.length > 0 && (
+              <DiaryEmotionChart
+                data={emotionStatsData}
+                emotionLabels={emotionMainsList.map((e) => e.name)}
+                emotionImages={emotionMainsList.map((e) => e.icon_url)}
+              />
+            )}
           </div>
         </div>
       </section>

@@ -3,38 +3,61 @@ import S from './style.module.css';
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import PlantLevel01 from '../../../assets/plant_grow_level1.svg';
+import PlantLevel02 from '../../../assets/plant_grow_level2.svg';
+import PlantLevel03 from '../../../assets/plant_grow_level3.svg';
+import PlantLevel04 from '../../../assets/plant_grow_level4.svg';
 
 interface Props {
-  target: number;
+  value: number;
+  currentPlantLevel: number;
 }
 
-const DiaryPlant = ({ target }: Props) => {
-  const [value, setValue] = useState(0);
+const plantLevels = [
+  { threshold: 0, image: PlantLevel01 }, // 0% ~ 29%
+  { threshold: 30, image: PlantLevel02 }, // 30% ~ 59%
+  { threshold: 60, image: PlantLevel03 }, // 60% ~ 89%
+  { threshold: 90, image: PlantLevel04 }, // 90% 이상
+];
+
+const DiaryPlant = ({ value, currentPlantLevel }: Props) => {
+  const getPlantImage = () => {
+    for (let i = plantLevels.length - 1; i >= 0; i--) {
+      if (value >= plantLevels[i].threshold) {
+        return plantLevels[i].image;
+      }
+    }
+    return PlantLevel01; // 기본값
+  };
+
+  const currentPlantImage = getPlantImage();
+  const [displayedValue, setDisplayedValue] = useState(0);
 
   useEffect(() => {
-    let animationFrame: number;
-    const animate = () => {
-      setValue((prev) => {
-        if (prev < target) {
-          const next = Math.min(prev + 1, target);
-          if (next !== target) animationFrame = requestAnimationFrame(animate);
-          return next;
-        } else if (prev > target) {
-          const next = Math.max(prev - 1, target);
-          if (next !== target) animationFrame = requestAnimationFrame(animate);
-          return next;
-        }
-        return prev;
-      });
+    let animationFrameId: number;
+    const duration = 1000;
+    const startTime = performance.now();
+
+    const animate = (currentTime: DOMHighResTimeStamp) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      const nextValue = Math.round(progress * value);
+      setDisplayedValue(nextValue);
+
+      if (progress < 1) {
+        animationFrameId = requestAnimationFrame(animate);
+      }
     };
-    animationFrame = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationFrame);
-  }, [target]);
+
+    animationFrameId = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [value]);
 
   return (
     <div className={S.plantWrap}>
       <CircularProgressbarWithChildren
-        value={value}
+        value={displayedValue}
         styles={buildStyles({
           rotation: 0,
           strokeLinecap: 'round',
@@ -44,8 +67,8 @@ const DiaryPlant = ({ target }: Props) => {
           backgroundColor: '#F6C915',
         })}
       >
-        <img src={PlantLevel01} alt="감정 식물 성장" />
-        <strong className={S.percent}>{value}%</strong>
+        <img src={currentPlantImage} alt="감정 식물 성장" />
+        <strong className={S.percent}>{displayedValue}%</strong>{' '}
       </CircularProgressbarWithChildren>
     </div>
   );
