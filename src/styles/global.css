@@ -65,7 +65,17 @@
 *:focus-visible {
   outline: 2px solid var(--point);
 }
+html {
+  /* 웹킷 브라우저 */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 
+  overflow-y: scroll;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
 /*  전역 설정 */
 body {
   font-family: var(--font-main);
