@@ -112,3 +112,16 @@ export const getUserDataById = async (id: string) => {
   }
   return data;
 };
+
+/**
+ * 전체 유저정보 조회
+ */
+export const getAllUserData = async () => {
+  const { data, error } = await supabase.from('users').select('*');
+
+  if (error || !data) {
+    console.error(`전체 유저 정보 조회 실패: ${error}}`);
+    return [];
+  }
+  return data;
+};

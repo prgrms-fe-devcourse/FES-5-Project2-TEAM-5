@@ -7,6 +7,10 @@ interface Props {
   commentsCount: number;
 }
 const DiaryCardFooter = ({ likesCount, commentsCount }: Props) => {
+  const handleLikeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
     <footer className={S.interaction}>
       <div className={S.comment}>
@@ -14,7 +18,7 @@ const DiaryCardFooter = ({ likesCount, commentsCount }: Props) => {
         <span className={S.count}>{commentsCount}</span>
       </div>
       <div className={S.like}>
-        <button className={S.likeButton}>
+        <button className={S.likeButton} onClick={handleLikeClick}>
           <FaRegHeart className={S.likeIcon} />
         </button>
         <span className={S.count}>{likesCount}</span>

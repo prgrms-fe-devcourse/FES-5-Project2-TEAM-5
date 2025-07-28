@@ -6,11 +6,13 @@ import SearchBox from './components/SearchBox';
 import { useCallback, useEffect, useState } from 'react';
 import { useDiariesSearch } from './hooks/useDiarySearch';
 import type { Emotion } from './type/emotion';
-import { getAllDiaryData } from './utils/getAllDiaryData';
 import type { Diary } from './type/diary';
 import { getAllEmotionMains } from '@/shared/api/emotionMain';
 import { getAllDiariesLikesCount } from '@/shared/api/like';
 import { getAllDiariesCommentsCount } from '@/shared/api/comment';
+import { getAllDiaryData } from '@/shared/api/diary';
+import { getAllUserData } from '@/shared/api/user';
+import type { DbUser } from '@/pages/users/UserList/types/dbUser';
 
 const breakpointColumns = {
   default: 2,
@@ -22,18 +24,21 @@ const DiaryList = () => {
   const [selectedEmotions, setSelectedEmotions] = useState<Emotion[]>([]);
   const [likesCount, setLikesCount] = useState<Record<string, number>>({});
   const [commentsCount, setCommentsCount] = useState<Record<string, number>>({});
+  const [users, setUsers] = useState<DbUser[]>([]);
   const [diaries, setDiaries] = useState<Diary[]>([]);
   const [mainEmotions, setMainEmotions] = useState<Emotion[]>([]);
   const { filteredDiaries } = useDiariesSearch(diaries, searchTerm, selectedEmotions);
 
   useEffect(() => {
     const fetchDiaries = async () => {
-      const [diaryData, emotionData, likesCount] = await Promise.all([
+      const [userData, diaryData, emotionData, likesCount, commentsCount] = await Promise.all([
+        getAllUserData(),
         getAllDiaryData(),
         getAllEmotionMains(),
         getAllDiariesLikesCount(),
         getAllDiariesCommentsCount(),
       ]);
+      setUsers(userData);
       setDiaries(diaryData);
       setMainEmotions(emotionData);
       setLikesCount(likesCount);
@@ -70,16 +75,21 @@ const DiaryList = () => {
               className={S.masonryGrid}
               columnClassName={S.masonryColumn}
             >
-              {filteredDiaries.map((diary) => (
-                <li key={diary.id}>
-                  <DiaryCard
-                    diary={diary}
-                    emotions={mainEmotions}
-                    likesCount={likesCount[diary.id] || 0}
-                    commentsCount={commentsCount[diary.id] || 0}
-                  />
-                </li>
-              ))}
+              {filteredDiaries.map((diary) => {
+                const user = users.find((u) => u.id === diary.user_id);
+                if (!user) return null;
+                return (
+                  <li key={diary.id}>
+                    <DiaryCard
+                      user={user}
+                      diary={diary}
+                      emotions={mainEmotions}
+                      likesCount={likesCount[diary.id] || 0}
+                      commentsCount={commentsCount[diary.id] || 0}
+                    />
+                  </li>
+                );
+              })}
             </Masonry>
           </ul>
         )}
