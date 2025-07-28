@@ -9,6 +9,8 @@ import type { Emotion } from './type/emotion';
 import { getAllDiaryData } from './utils/getAllDiaryData';
 import type { Diary } from './type/diary';
 import { getAllEmotionMains } from '@/shared/api/emotionMain';
+import { getAllDiariesLikesCount } from '@/shared/api/like';
+import { getAllDiariesCommentsCount } from '@/shared/api/comment';
 
 const breakpointColumns = {
   default: 2,
@@ -18,15 +20,24 @@ const breakpointColumns = {
 const DiaryList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedEmotions, setSelectedEmotions] = useState<Emotion[]>([]);
+  const [likesCount, setLikesCount] = useState<Record<string, number>>({});
+  const [commentsCount, setCommentsCount] = useState<Record<string, number>>({});
   const [diaries, setDiaries] = useState<Diary[]>([]);
   const [mainEmotions, setMainEmotions] = useState<Emotion[]>([]);
   const { filteredDiaries } = useDiariesSearch(diaries, searchTerm, selectedEmotions);
 
   useEffect(() => {
     const fetchDiaries = async () => {
-      const [diaryData, emotionData] = await Promise.all([getAllDiaryData(), getAllEmotionMains()]);
+      const [diaryData, emotionData, likesCount] = await Promise.all([
+        getAllDiaryData(),
+        getAllEmotionMains(),
+        getAllDiariesLikesCount(),
+        getAllDiariesCommentsCount(),
+      ]);
       setDiaries(diaryData);
       setMainEmotions(emotionData);
+      setLikesCount(likesCount);
+      setCommentsCount(commentsCount);
     };
     fetchDiaries();
   }, []);
@@ -61,7 +72,12 @@ const DiaryList = () => {
             >
               {filteredDiaries.map((diary) => (
                 <li key={diary.id}>
-                  <DiaryCard diary={diary} emotions={mainEmotions} />
+                  <DiaryCard
+                    diary={diary}
+                    emotions={mainEmotions}
+                    likesCount={likesCount[diary.id] || 0}
+                    commentsCount={commentsCount[diary.id] || 0}
+                  />
                 </li>
               ))}
             </Masonry>
