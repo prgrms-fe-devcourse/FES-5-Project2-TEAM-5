@@ -12,7 +12,7 @@ export const MENU_LIST: MenuList[] = [
   },
   {
     name: 'Emotional Analysis',
-    path: '/analysis',
+    path: '/analysis/select-diary',
     label: '감성분석',
   },
   {
