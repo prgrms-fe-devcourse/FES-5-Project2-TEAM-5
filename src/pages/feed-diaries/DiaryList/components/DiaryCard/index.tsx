@@ -13,9 +13,10 @@ interface Props {
   emotions: Emotion[];
   likesCount: number;
   commentsCount: number;
+  isLiked: boolean;
 }
 
-const DiaryCard = ({ user, diary, emotions, likesCount, commentsCount }: Props) => {
+const DiaryCard = ({ user, diary, emotions, likesCount, commentsCount, isLiked }: Props) => {
   const { created_at, emotion_main_id } = diary;
   const emotion = emotions.find((e) => e.id === emotion_main_id)!;
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const DiaryCard = ({ user, diary, emotions, likesCount, commentsCount }: Props) 
     <article className={S.card} onClick={handleDiaryDetail}>
       <DiaryCardHeader emotion={emotion} created_at={created_at} user={user} />
       <DiaryCardContent diary={diary} />
-      <DiaryCardFooter likesCount={likesCount} commentsCount={commentsCount} />
+      <DiaryCardFooter likesCount={likesCount} isLiked={isLiked} commentsCount={commentsCount} />
     </article>
   );
 };

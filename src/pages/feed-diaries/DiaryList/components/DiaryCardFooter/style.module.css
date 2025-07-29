@@ -19,8 +19,14 @@
   height: 20px;
 }
 
+.likeIconFill {
+  color: var(--point);
+  width: 20px;
+  height: 20px;
+}
+
 .likeIcon {
-  color: var(--gray-300);
+  color: var(--gray-30);
   width: 20px;
   height: 20px;
 }
