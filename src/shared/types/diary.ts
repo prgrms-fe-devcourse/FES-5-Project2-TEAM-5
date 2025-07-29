@@ -3,6 +3,7 @@ import type { Database } from '@/shared/api/supabase/types';
 export interface SupabaseDiaryResponse {
   id: string;
   title: string;
+  content: string;
   created_at: string;
   is_public: boolean;
   diary_image: string | null;
