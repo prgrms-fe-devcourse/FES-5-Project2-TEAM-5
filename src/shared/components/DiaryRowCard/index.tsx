@@ -1,8 +1,10 @@
 import type { DiaryRowEntity } from '@/shared/types/diary';
 import S from './style.module.css';
 import { formatToReadableDate } from '@/shared/utils/formatDate';
+import { useNavigate } from 'react-router-dom';
 
 function DiaryRowCard({
+  id,
   comments,
   created_at,
   diary_hashtags,
@@ -11,9 +13,16 @@ function DiaryRowCard({
   likes,
   title,
 }: DiaryRowEntity) {
+  const navigate = useNavigate();
+
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    navigate(`/diary/${id}`);
+  };
+
   return (
     <li>
-      <a href="#" className={S.container}>
+      <a href={`/diary/${id}`} className={S.container} onClick={handleClick}>
         <div className={S.diaryContents}>
           <span>
             {emotion_mains.icon_url && (
