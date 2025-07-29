@@ -1,10 +1,12 @@
 import type { CSSProperties } from 'react';
-import { useLocation } from 'react-router-dom';
+import { matchPath, useLocation } from 'react-router-dom';
 import { PATHS } from '../constants/path';
 
 type PathValues = (typeof PATHS)[keyof typeof PATHS];
 
 const whiteStyle: PathValues[] = [PATHS.HOME, PATHS.MYPAGE, PATHS.DIARY, PATHS.DIARY_FORM];
+
+const whiteDynamicPathPatterns = ['/diary/:id'];
 
 interface WithStyleProps {
   style: CSSProperties;
@@ -16,7 +18,13 @@ export const withDynamicHeaderRender = <P extends object = {}>(
   return function (props: P) {
     const { pathname } = useLocation();
 
-    const isWhite = whiteStyle.includes(pathname as PathValues);
+    const isWhiteStatic = whiteStyle.includes(pathname as PathValues);
+
+    const isWhiteDynamic = whiteDynamicPathPatterns.some((pattern) =>
+      matchPath({ path: pattern, end: true }, pathname),
+    );
+
+    const isWhite = isWhiteStatic || isWhiteDynamic;
 
     // 공통 색상 스타일
     const style: CSSProperties = {

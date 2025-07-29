@@ -46,7 +46,6 @@ function App() {
 
             <Route path={PATHS.COMMUNITY} element={<DiaryList />} />
             <Route path={PATHS.USER} element={<UserPage />} />
-
           </Routes>
         </BrowserRouter>
       </WeatherProvider>

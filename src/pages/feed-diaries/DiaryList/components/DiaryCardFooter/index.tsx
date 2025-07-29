@@ -7,6 +7,7 @@ import { deleteLikeToDiary, postLikeToDiary } from '@/shared/api/like';
 import { toastUtils } from '@/shared/components/Toast';
 import { postLikeNotification } from '@/shared/api/notification';
 import type { DbUser } from '@/shared/types/dbUser';
+import { useUserContext } from '@/shared/context/UserContext';
 
 interface Props {
   diaryAuthor: DbUser;
@@ -28,6 +29,7 @@ const DiaryCardFooter = ({
 }: Props) => {
   const [currentLikesCount, setCurrentLikesCount] = useState(likesCount);
   const [currentIsLiked, setCurrentIsLiked] = useState(isLiked);
+  const { userInfo } = useUserContext();
 
   const handleLikeClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -35,8 +37,8 @@ const DiaryCardFooter = ({
       if (!currentIsLiked) {
         await postLikeToDiary(currentUser, diaryId);
         // 자신의 일기가 아닌 경우에만 알림 생성
-        if (currentUser !== diaryAuthor.id) {
-          await postLikeNotification(diaryAuthor.id, currentUser, diaryId);
+        if (currentUser !== diaryAuthor.id && userInfo) {
+          await postLikeNotification(diaryAuthor.id, currentUser, diaryId, userInfo.name);
         }
         const count = currentLikesCount + 1;
         setCurrentIsLiked(true);

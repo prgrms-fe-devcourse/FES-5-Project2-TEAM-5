@@ -6,15 +6,8 @@ export const postLikeNotification = async (
   recipientUserId: string,
   senderUserId: string,
   diaryId: string,
+  senderUserName: string,
 ) => {
-  const { data: senderUser } = await supabase
-    .from('users')
-    .select('name')
-    .eq('id', senderUserId)
-    .single();
-
-  if (!senderUser) return;
-
   const { data } = await supabase
     .from('notifications')
     .select('id')
@@ -29,7 +22,7 @@ export const postLikeNotification = async (
     user_id: recipientUserId,
     diary_id: diaryId,
     title: '좋아요 알림',
-    message: `${senderUser.name}님이 좋아요를 눌렀습니다.`,
+    message: `${senderUserName}님이 좋아요를 눌렀습니다.`,
     type: '좋아요',
     is_read: false,
     sender_id: senderUserId,
@@ -47,6 +40,7 @@ export const postCommentNotification = async (
   recipientUserId: string,
   senderUserId: string,
   diaryId: string,
+  senderUserName: string,
 ) => {
   const { data: senderUser } = await supabase
     .from('users')
@@ -60,7 +54,7 @@ export const postCommentNotification = async (
     user_id: recipientUserId,
     diary_id: diaryId,
     title: '댓글 알림',
-    message: `${senderUser.name}님이 댓글을 남겼습니다.`,
+    message: `${senderUserName}님이 댓글을 남겼습니다.`,
     type: '댓글',
     is_read: false,
     sender_id: senderUserId,
