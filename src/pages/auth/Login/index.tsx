@@ -39,7 +39,7 @@ const Login = () => {
 
       handleRememberMe(email);
 
-      navigate('/home');
+      navigate('/');
     } catch (error) {
       if (error instanceof Error)
         toastUtils.error({ title: '로그인 실패', message: error.message });

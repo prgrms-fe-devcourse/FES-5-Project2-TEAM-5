@@ -49,6 +49,16 @@
           text-decoration: underline;
         }
       }
+
+      a.disabled {
+        cursor: not-allowed;
+
+        &:hover {
+          color: inherit;
+          font-weight: inherit;
+          text-decoration: none;
+        }
+      }
     }
   }
 

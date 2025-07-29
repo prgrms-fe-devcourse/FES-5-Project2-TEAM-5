@@ -7,6 +7,7 @@ import { MENU_LIST } from './constants';
 import S from './style.module.css';
 import { useUserContext } from '@/shared/context/UserContext';
 import type { CSSProperties } from 'react';
+import { toastUtils } from '../Toast';
 
 const Header = ({ style }: { style: CSSProperties }) => {
   const navigate = useNavigate();
@@ -24,11 +25,18 @@ const Header = ({ style }: { style: CSSProperties }) => {
 
   const handleLogout = async () => {
     await logout();
-    navigate('/home');
+    navigate('/about');
   };
 
   const handleMypage = () => {
     navigate('/mypage');
+  };
+
+  const handleLinkClick = (requireAuth: boolean) => (e: React.PointerEvent<HTMLAnchorElement>) => {
+    if (requireAuth && !isAuth) {
+      e.preventDefault();
+      toastUtils.info({ title: '로그인 필요', message: '해당 서비스는 로그인이 필요합니다.' });
+    }
   };
 
   return (
@@ -48,7 +56,12 @@ const Header = ({ style }: { style: CSSProperties }) => {
       <ul className={S.menuList}>
         {MENU_LIST.map((menu) => (
           <li key={menu.name}>
-            <Link to={menu.path} aria-label={menu.label}>
+            <Link
+              to={menu.path}
+              aria-label={menu.label}
+              onClick={handleLinkClick(menu.requireAuth)}
+              className={menu.requireAuth && !isAuth ? S.disabled : ''}
+            >
               {menu.name}
             </Link>
           </li>
