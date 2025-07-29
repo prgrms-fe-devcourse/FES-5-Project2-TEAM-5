@@ -73,7 +73,10 @@ function SelectDiary() {
         </button>
       )}
 
-      <NextPageButton onClick={handleNext} disabled={!selectedDiaryId} />
+      <NextPageButton
+        onClick={handleNext}
+        disabled={!selectedDiaryId}
+      />
     </main>
   );
 }

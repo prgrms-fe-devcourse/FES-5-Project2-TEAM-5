@@ -13,7 +13,7 @@ function NextPageButton({ onClick, disabled }: Props) {
         type="button"
         onClick={onClick}
         disabled={disabled}
-        className={`${S.button} ${disabled ? S.disabled : S.active}`}
+        className={S.button}
       >다음으로
         <GrFormNextLink className={S.nextIcon} size={28} />
       </button>

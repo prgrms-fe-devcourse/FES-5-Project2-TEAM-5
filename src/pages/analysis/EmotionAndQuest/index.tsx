@@ -119,7 +119,12 @@ function EmotionAndQuest() {
       )}
       {questAccepted !== null && (
         <section className={S.submitSection}>
-          <button type="button" className={S.submit} onClick={handleSubmit}>
+          <button
+            type="button"
+            className={S.submit}
+            onClick={handleSubmit}
+            disabled={emotionSelection.selected.length === 0}
+          >
             완료
           </button>
         </section>
