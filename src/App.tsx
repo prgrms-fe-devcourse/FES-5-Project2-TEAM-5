@@ -19,6 +19,7 @@ import { WeatherProvider } from './shared/context/WeatherContext';
 import Home from './pages/Home';
 import { ProtectedLayout } from './shared/components/ProtectedLayout';
 import About from './pages/About';
+import AuthCallback from './pages/auth/AuthCallback';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path={PATHS.LOGIN} element={<Login />} />
             <Route path={PATHS.REGISTER} element={<Register />} />
             <Route path={PATHS.ABOUT} element={<About />} />
+            <Route path={PATHS.AUTH_CALLBACK} element={<AuthCallback />} />
 
             {/* 로그인이 필요한 페이지는  ProtectedLayout 안에 위치 */}
             <Route element={<ProtectedLayout />}>

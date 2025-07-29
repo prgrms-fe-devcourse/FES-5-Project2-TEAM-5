@@ -3,7 +3,7 @@ import { PATHS } from '../constants/path';
 
 type PathValues = (typeof PATHS)[keyof typeof PATHS];
 
-const hideOnPath: PathValues[] = [PATHS.LOGIN, PATHS.REGISTER];
+const hideOnPath: PathValues[] = [PATHS.LOGIN, PATHS.REGISTER, PATHS.AUTH_CALLBACK];
 
 export const withConditionalRender = <P extends object = {}>(
   WrappedComponent: React.ComponentType<P>,

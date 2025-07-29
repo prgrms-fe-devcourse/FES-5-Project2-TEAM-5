@@ -1,7 +1,7 @@
 .container {
   width: 100vw;
   height: 100vh;
-  background-image: url('/public/auth/auth_back.png');
+  background-image: url('/auth/auth_back.png');
   background-size: cover;
 }
 

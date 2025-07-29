@@ -64,7 +64,13 @@ export const logout = async (): Promise<void> => {
 /**
  * 비밀번호 검증
  */
-export const reauthenticate = async ({ email, password }: { email: string; password: string }) => {
+export const reauthenticate = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}): Promise<void> => {
   const { error: authError } = await supabase.auth.signInWithPassword({
     email: email,
     password: password,
@@ -81,7 +87,7 @@ export const reauthenticate = async ({ email, password }: { email: string; passw
 /**
  * 비밀번호 변경
  */
-export const updateUserPassword = async (password: string) => {
+export const updateUserPassword = async (password: string): Promise<void> => {
   const { error: updateError } = await supabase.auth.updateUser({
     password: password,
   });
@@ -93,6 +99,16 @@ export const updateUserPassword = async (password: string) => {
 
 /**
  * 깃허브 로그인
- * TODO: 마지막에 구현
  */
-export const loginWithGithub = async () => {};
+export const loginWithGithub = async (): Promise<void> => {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'github',
+    options: {
+      redirectTo: 'http://localhost:5173/auth/callback',
+    },
+  });
+
+  if (error) {
+    throw new Error('사용자 인증에 실패했습니다.');
+  }
+};

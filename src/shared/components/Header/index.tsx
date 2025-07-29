@@ -24,8 +24,8 @@ const Header = ({ style }: { style: CSSProperties }) => {
   };
 
   const handleLogout = async () => {
-    await logout();
     navigate('/about');
+    await logout();
   };
 
   const handleMypage = () => {
@@ -74,10 +74,10 @@ const Header = ({ style }: { style: CSSProperties }) => {
               type="button"
               aria-label="알림 (새 알림있음)"
               className={S.bellButton}
-              style={{ color }}
+              data-tooltip="알림 (새 알림있음)"
             >
               <div className={S.notificationBadge} aria-hidden="true" />
-              <FiBell size={24} aria-hidden="true" />
+              <FiBell size={24} aria-hidden="true" style={{ color }} />
             </button>
             <button
               type="button"
@@ -89,7 +89,7 @@ const Header = ({ style }: { style: CSSProperties }) => {
               {userInfo?.profile_image ? (
                 <img src={userInfo.profile_image} alt="" className={S.profileImage} />
               ) : (
-                <PiUserCircleThin size={30} aria-hidden="true" />
+                <PiUserCircleThin size={30} aria-hidden="true" style={{ color }} />
               )}
             </button>
             <button

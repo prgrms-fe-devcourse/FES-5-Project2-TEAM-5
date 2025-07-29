@@ -1,3 +1,4 @@
+import type { User } from '@supabase/supabase-js';
 import supabase from './supabase/client';
 import { getPublicUrl } from './supabase/getPublicUrl';
 import type { Tables } from './supabase/types';
@@ -106,7 +107,7 @@ export const removeProfileImage = async (filePath: string) => {
  * 유저정보 조회
  */
 export const getUserDataById = async (id: string) => {
-  const { data, error } = await supabase.from('users').select().eq('id', id).single();
+  const { data, error } = await supabase.from('users').select().eq('id', id).maybeSingle();
   if (error) {
     throw new Error('사용자 정보 로드 실패');
   }
@@ -121,7 +122,39 @@ export const getAllUserData = async () => {
 
   if (error) {
     throw new Error(`전체 유저 정보 조회 실패: ${error}}`);
-    return [];
   }
   return data;
+};
+
+/**
+ * 소셜 로그인 시 사용자 프로필을 생성하거나 업데이트
+ * 사용자가 처음 로그인하면 DB에 프로필을 생성
+ */
+export const insertUserProfileOnLogin = async (user: User): Promise<void> => {
+  const { data: existingProfile, error: selectError } = await supabase
+    .from('users')
+    .select('id')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  if (selectError) {
+    throw new Error('사용자 프로필 조회 중 에러 발생');
+  }
+
+  if (existingProfile) {
+    return;
+  }
+
+  const { full_name, name, avatar_url } = user.user_metadata;
+
+  const { error: insertError } = await supabase.from('users').upsert({
+    id: user.id,
+    name: name || full_name,
+    email: user.email,
+    profile_image: avatar_url,
+  });
+
+  if (insertError) {
+    throw new Error('사용자 프로필 생성 중 오류 발생');
+  }
 };
