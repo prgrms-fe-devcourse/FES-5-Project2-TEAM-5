@@ -37,11 +37,11 @@ function App() {
             <Route element={<ProtectedLayout />}>
               <Route path={PATHS.HOME} element={<Home />} />
               <Route path={PATHS.MYPAGE} element={<Mypage />} />
+              <Route path={PATHS.DIARY} element={<DiaryPage />} />
+              <Route path={PATHS.DIARY_FORM} element={<DiaryFormPage />} />
+              <Route path={PATHS.DIARY_DETAIL} element={<DiaryDetailPage />} />
             </Route>
 
-            <Route path={PATHS.DIARY} element={<DiaryPage />} />
-            <Route path={PATHS.DIARY_FORM} element={<DiaryFormPage />} />
-            <Route path="/diary/detail" element={<DiaryDetailPage />} />
             <Route path="/community" element={<DiaryList />} />
             <Route path="/users" element={<UserPage />} />
 

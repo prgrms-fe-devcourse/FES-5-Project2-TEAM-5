@@ -1,11 +1,12 @@
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import '../../../../../styles/custom.css';
+import '@/styles/custom.css';
 import CalendarImg from '../../../assets/calendar_img.svg';
 import DiaryCompleted from '../../../assets/diary_completed.svg';
 import DiaryEmpty from '../../../assets/diary_empty.svg';
 import { useCallback } from 'react';
 import { toastUtils } from '@/shared/components/Toast';
+import { getLocalDateString, isFutureDate } from '@/shared/utils/dateUtils';
 
 type DiaryEntry = {
   created_at: string;
@@ -19,25 +20,7 @@ type Props = {
 };
 
 const DiaryCalendar = ({ userId, date, onDateChange, entries }: Props) => {
-  const getLocalDateString = (date: Date) => {
-    const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2, '0');
-    const dd = String(date.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}`;
-  };
-
   const todayStr = getLocalDateString(new Date());
-
-  // 미래 날짜 체크 함수
-  const isFutureDate = useCallback((checkDate: Date) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const targetDate = new Date(checkDate);
-    targetDate.setHours(0, 0, 0, 0);
-
-    return targetDate > today;
-  }, []);
 
   // 날짜 클릭 핸들러 (미래 날짜 방지)
   const handleDateClick = useCallback(

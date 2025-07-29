@@ -8,6 +8,7 @@ import supabase from '@/shared/api/supabase/client';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toastUtils } from '@/shared/components/Toast';
 import { useUserContext } from '@/shared/context/UserContext';
+import Spinner from '@/shared/components/Spinner';
 
 interface EmotionMain {
   id: number;
@@ -317,7 +318,7 @@ const DiaryFormPage = () => {
       <main className={S.container}>
         <DiaryWeather />
         <div className={S.inner}>
-          <span className={S.spinner}></span>
+          <Spinner />
         </div>
       </main>
     );
