@@ -6,6 +6,7 @@ import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 import DiaryWeather from '@/shared/components/DiaryWeather';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDiaryDetail } from '../DiaryMain/hooks/useDiaryDetail';
+import { formatToSimpleDate } from '@/shared/utils/formatDate';
 
 const DiaryDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -82,7 +83,7 @@ const DiaryDetailPage = () => {
       <div className={S.inner}>
         <div>
           <div className={S.titleArea}>
-            <span className={S.date}>{diary.created_at.split('T')[0].replace(/-/g, '.')}</span>
+            <span className={S.date}>{formatToSimpleDate(diary.created_at)}</span>
             <h3>
               {diary.title}
               <ul>
