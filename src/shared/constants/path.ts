@@ -3,8 +3,11 @@ export const PATHS = {
   LOGIN: '/login',
   REGISTER: '/register',
   ANALYSIS: '/analysis/select-diary',
-  FEED_DIARIES: '/feed-diaries',
+  COMMUNITY: '/community',
   MYPAGE: '/mypage',
+  DIARY: '/diary',
   DIARY_DETAIL: '/diary/:id',
-  DIARY_FORM: '/diary-form',
+  DIARY_FORM: '/diary/form',
+  USER: '/users',
+  ABOUT: '/about',
 } as const;

@@ -11,6 +11,7 @@
     padding: var(--space-2) var(--space-4);
     font-size: var(--text-lg);
     font-family: var(--font-main);
+    box-sizing: border-box;
   }
   textarea.customTextarea {
     resize: vertical;

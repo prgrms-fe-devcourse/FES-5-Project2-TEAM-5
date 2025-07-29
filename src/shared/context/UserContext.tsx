@@ -21,7 +21,7 @@ export const UserProvider = ({ children }: { children: React.ReactElement }) => 
   return <UserContext value={value}>{children}</UserContext>;
 };
 
-export const useUserContext = () => {
+export const useUserContext = (): UserContextType => {
   const context = useContext(UserContext);
   if (context === undefined) {
     throw new Error('useUser must be used within a UserProvider');
