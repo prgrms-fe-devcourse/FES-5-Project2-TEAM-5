@@ -18,3 +18,16 @@ export const getDiariesById = async (id: string): Promise<DiaryRowEntity[]> => {
   }
   return transformDiaryData(data);
 };
+
+/**
+ * 전체 다이어리 리스트 조회
+ */
+export const getAllDiaryData = async () => {
+  const { data, error } = await supabase.from('diaries').select('*');
+
+  if (error) {
+    throw new Error(`전체 다이어리 정보 불러오기 실패: ${error}}`);
+    return [];
+  }
+  return data;
+};

@@ -2,22 +2,37 @@ import Select from 'react-select';
 import S from './style.module.css';
 import makeAnimated from 'react-select/animated';
 import { useState } from 'react';
-import type { Emotion } from '../..';
 import { AiOutlineClose } from 'react-icons/ai';
 import EmotionSelectItem from '../EmotionSelectItem';
 import { CustomOption, CustomPlaceholder, customStyles } from './customStyle';
+import type { Emotion } from '@/shared/types/emotion';
 
 const animatedComponents = makeAnimated();
 
 interface Props {
   emotions: Emotion[];
+  onFilter: (selectedEmotions: Emotion[]) => void;
 }
 
-const EmotionSelectBox = ({ emotions }: Props) => {
+const EmotionSelectBox = ({ emotions, onFilter }: Props) => {
   const [selectedEmotions, setSelectedEmotions] = useState<Emotion[]>([]);
+
+  const handleEmotionChange = (addSelectedEmotions: Emotion[]) => {
+    setSelectedEmotions(addSelectedEmotions);
+    onFilter(addSelectedEmotions);
+  };
 
   const handleAllDelete = () => {
     setSelectedEmotions([]);
+    onFilter([]);
+  };
+
+  const handleItemDelete = (deleteEmotion: Emotion) => {
+    const deleteSelectedEmotion = selectedEmotions.filter(
+      (emotion) => emotion.id !== deleteEmotion.id,
+    );
+    setSelectedEmotions(deleteSelectedEmotion);
+    onFilter(deleteSelectedEmotion);
   };
 
   return (
@@ -35,7 +50,7 @@ const EmotionSelectBox = ({ emotions }: Props) => {
         isMulti
         closeMenuOnSelect={false}
         controlShouldRenderValue={false}
-        onChange={(s) => setSelectedEmotions(s as Emotion[])}
+        onChange={(s) => handleEmotionChange(s as Emotion[])}
         styles={customStyles}
         isClearable={false}
         value={selectedEmotions}
@@ -43,7 +58,7 @@ const EmotionSelectBox = ({ emotions }: Props) => {
 
       <ul className={S.selectedList}>
         {selectedEmotions.map((emotion) => (
-          <EmotionSelectItem key={emotion.id} emotion={emotion} />
+          <EmotionSelectItem key={emotion.id} emotion={emotion} onDelete={handleItemDelete} />
         ))}
       </ul>
       {selectedEmotions.length > 1 && (

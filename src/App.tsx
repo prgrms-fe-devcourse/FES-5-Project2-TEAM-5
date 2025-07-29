@@ -32,8 +32,8 @@ function App() {
             <Route path={PATHS.DIARY} element={<DiaryPage />} />
             <Route path={PATHS.DIARY_FORM} element={<DiaryFormPage />} />
             <Route path="/diary/detail" element={<DiaryDetailPage />} />
-            <Route path="/community" element={<DiaryList />} />
-            <Route path="/users" element={<UserPage />} />
+            <Route path={PATHS.COMMUNITY} element={<DiaryList />} />
+            <Route path={PATHS.USER} element={<UserPage />} />
             <Route path={PATHS.MYPAGE} element={<Mypage />} />
             <Route path="/analysis/select-diary" element={<SelectDiary />} />
             <Route path="/analysis/emotion-and-quest" element={<EmotionAndQuest />} />
