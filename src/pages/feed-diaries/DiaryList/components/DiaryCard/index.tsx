@@ -8,15 +8,26 @@ import type { Diary } from '@/shared/types/diary';
 import type { Emotion } from '@/shared/types/emotion';
 
 interface Props {
+  currentUser: string;
   user: DbUser;
   diary: Diary;
   emotions: Emotion[];
   likesCount: number;
   commentsCount: number;
   isLiked: boolean;
+  onLikeUpdate: (diaryId: string, isLiked: boolean, count: number) => void;
 }
 
-const DiaryCard = ({ user, diary, emotions, likesCount, commentsCount, isLiked }: Props) => {
+const DiaryCard = ({
+  currentUser,
+  user,
+  diary,
+  emotions,
+  likesCount,
+  commentsCount,
+  isLiked,
+  onLikeUpdate,
+}: Props) => {
   const { created_at, emotion_main_id } = diary;
   const emotion = emotions.find((e) => e.id === emotion_main_id)!;
   const navigate = useNavigate();
@@ -32,7 +43,15 @@ const DiaryCard = ({ user, diary, emotions, likesCount, commentsCount, isLiked }
     <article className={S.card} onClick={handleDiaryDetail}>
       <DiaryCardHeader emotion={emotion} created_at={created_at} user={user} />
       <DiaryCardContent diary={diary} />
-      <DiaryCardFooter likesCount={likesCount} isLiked={isLiked} commentsCount={commentsCount} />
+      <DiaryCardFooter
+        diaryAuthor={user}
+        currentUser={currentUser}
+        diaryId={diary.id}
+        likesCount={likesCount}
+        isLiked={isLiked}
+        commentsCount={commentsCount}
+        onLikeUpdate={onLikeUpdate}
+      />
     </article>
   );
 };

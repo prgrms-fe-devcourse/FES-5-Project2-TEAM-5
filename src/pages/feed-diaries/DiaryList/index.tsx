@@ -31,7 +31,7 @@ const DiaryList = () => {
   const [mainEmotions, setMainEmotions] = useState<Emotion[]>([]);
   const [currentUserLikes, setCurrentUserLikes] = useState<Set<string>>(new Set());
   const { filteredDiaries } = useDiariesSearch(diaries, searchTerm, selectedEmotions);
-  const { user } = useUserContext();
+  const { user, isAuth } = useUserContext();
   const currentUserId = user?.id || null;
 
   useEffect(() => {
@@ -66,6 +66,26 @@ const DiaryList = () => {
     setSelectedEmotions(emotions);
   }, []);
 
+  const handleLikeUpdate = useCallback((diaryId: string, isLiked: boolean, count: number) => {
+    if (!isAuth || !user) {
+      toastUtils.info({
+        title: '로그인 필요',
+        message: '좋아요를 누르려면 로그인해주세요.',
+      });
+    }
+    setLikesCount((prev) => ({ ...prev, [diaryId]: count }));
+
+    setCurrentUserLikes((prev) => {
+      const updateLikes = new Set(prev);
+      if (isLiked) {
+        updateLikes.add(diaryId);
+      } else {
+        updateLikes.delete(diaryId);
+      }
+      return updateLikes;
+    });
+  }, []);
+
   return (
     <main className={S.container}>
       <h2 className="sr-only">전체 사용자 일기 목록</h2>
@@ -92,12 +112,14 @@ const DiaryList = () => {
                 return (
                   <li key={diary.id}>
                     <DiaryCard
+                      currentUser={currentUserId || ''}
                       user={user}
                       diary={diary}
                       emotions={mainEmotions}
                       likesCount={likesCount[diary.id] || 0}
                       commentsCount={commentsCount[diary.id] || 0}
                       isLiked={currentUserLikes.has(diary.id)}
+                      onLikeUpdate={handleLikeUpdate}
                     />
                   </li>
                 );

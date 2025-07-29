@@ -9,7 +9,7 @@ export const getAllDiariesLikesData = async (
   const { data, error } = await supabase.from('likes').select('diary_id, user_id');
 
   if (error) {
-    throw new Error(`전체 좋아요 데이터 조회 실패: ${error.message}`);
+    throw new Error('전체 좋아요 데이터 조회 실패');
   }
 
   const likesCount: Record<string, number> = {};
@@ -46,4 +46,30 @@ export const fetchDiaryInteractions = async (diaryId: string) => {
     likesCount,
     commentsCount,
   };
+};
+
+/**
+ *  특정 diary에 좋아요 추가
+ */
+export const postLikeToDiary = async (user_id: string, diary_id: string) => {
+  const { error } = await supabase.from('likes').insert({ user_id, diary_id });
+
+  if (error) {
+    throw new Error('좋아요 추가 실패');
+  }
+};
+
+/**
+ *  특정 diary에 좋아요 제거
+ */
+export const deleteLikeToDiary = async (user_id: string, diary_id: string) => {
+  const { error } = await supabase
+    .from('likes')
+    .delete()
+    .eq('diary_id', diary_id)
+    .eq('user_id', user_id);
+
+  if (error) {
+    throw new Error('좋아요 제거 실패');
+  }
 };
