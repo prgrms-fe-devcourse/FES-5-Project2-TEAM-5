@@ -10,6 +10,7 @@ import QuestDecision from './components/QuestDecision';
 import QuestSelector from './components/QuestSelector';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useToggleList } from './hooks/useToggleList';
+import { toastUtils } from '@/shared/components/Toast';
 
 function EmotionAndQuest() {
   const location = useLocation();
@@ -81,7 +82,8 @@ function EmotionAndQuest() {
         await supabase.from('user_accepted_quests').insert(questRows);
       }
 
-      alert('분석이 저장되었습니다!');
+      toastUtils.success({ title: '성공', message: '분석이 저장되었습니다.' })
+
       navigate('/', { replace: true });
     } catch (err) {
       console.error('저장 중 오류 발생:', err);
