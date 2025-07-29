@@ -1,13 +1,10 @@
-import { useId, useState } from 'react';
+import { useState } from 'react';
+import ChatInput from './components/ChatInput';
+import ChatMessages from './components/ChatMessages';
 import Molly from './components/Molly';
-import { IoArrowUpCircleOutline } from 'react-icons/io5';
-import { IoIosClose } from 'react-icons/io';
-
 import S from './style.module.css';
-import Chat from './components/Chat';
 
 const Home = () => {
-  const chatId = useId();
   const [isChatActive, setIsChatActive] = useState<boolean>(false);
 
   const handleOpenChat = () => {
@@ -18,15 +15,11 @@ const Home = () => {
     setIsChatActive(false);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault;
-  };
-
   return (
     <main className={S.container}>
       <div className={S.overlay}>
         {isChatActive ? (
-          <Chat onClose={handleChatClose} />
+          <ChatMessages onClose={handleChatClose} />
         ) : (
           <section className={S.cardSection}>
             <h2 className="sr-only">AI 케릭터 섹션</h2>
@@ -38,23 +31,7 @@ const Home = () => {
             </div>
           </section>
         )}
-
-        <form className={S.form} onSubmit={handleSubmit}>
-          <label htmlFor={chatId} className="sr-only">
-            AI와 채팅
-          </label>
-          <input
-            className={S.chat}
-            type="text"
-            name="chat"
-            id={chatId}
-            placeholder="몰리에게 말을 걸어주세요."
-            onClick={handleOpenChat}
-          />
-          <button type="submit" className={S.submitButton}>
-            <IoArrowUpCircleOutline size={24} />
-          </button>
-        </form>
+        <ChatInput onOpenChat={handleOpenChat} />
       </div>
     </main>
   );
