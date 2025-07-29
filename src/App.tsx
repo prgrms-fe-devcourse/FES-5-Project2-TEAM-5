@@ -44,8 +44,8 @@ function App() {
               <Route path={PATHS.ANALYSIS_QUEST} element={<EmotionAndQuest />} />
             </Route>
 
-            <Route path="/community" element={<DiaryList />} />
-            <Route path="/users" element={<UserPage />} />
+            <Route path={PATHS.COMMUNITY} element={<DiaryList />} />
+            <Route path={PATHS.USER} element={<UserPage />} />
 
           </Routes>
         </BrowserRouter>

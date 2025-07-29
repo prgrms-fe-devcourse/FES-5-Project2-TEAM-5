@@ -7,13 +7,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDiariesSearch } from './hooks/useDiarySearch';
 import type { Emotion } from '../../../shared/types/emotion';
 import { getAllEmotionMains } from '@/shared/api/emotionMain';
-import { getAllDiariesLikesCount } from '@/shared/api/like';
+import { getAllDiariesLikesData } from '@/shared/api/like';
 import { getAllDiariesCommentsCount } from '@/shared/api/comment';
 import { getAllDiaryData } from '@/shared/api/diary';
 import { getAllUserData } from '@/shared/api/user';
 import type { DbUser } from '@/shared/types/dbUser';
 import type { Diary } from '@/shared/types/diary';
 import { toastUtils } from '@/shared/components/Toast';
+import { useUserContext } from '@/shared/context/UserContext';
 
 const breakpointColumns = {
   default: 2,
@@ -28,23 +29,27 @@ const DiaryList = () => {
   const [users, setUsers] = useState<DbUser[]>([]);
   const [diaries, setDiaries] = useState<Diary[]>([]);
   const [mainEmotions, setMainEmotions] = useState<Emotion[]>([]);
+  const [currentUserLikes, setCurrentUserLikes] = useState<Set<string>>(new Set());
   const { filteredDiaries } = useDiariesSearch(diaries, searchTerm, selectedEmotions);
+  const { user, isAuth } = useUserContext();
+  const currentUserId = user?.id || null;
 
   useEffect(() => {
     const fetchDiaries = async () => {
       try {
-        const [userData, diaryData, emotionData, likesCount, commentsCount] = await Promise.all([
+        const [userData, diaryData, emotionData, likesData, commentsCount] = await Promise.all([
           getAllUserData(),
           getAllDiaryData(),
           getAllEmotionMains(),
-          getAllDiariesLikesCount(),
+          getAllDiariesLikesData(currentUserId),
           getAllDiariesCommentsCount(),
         ]);
         setUsers(userData);
         setDiaries(diaryData);
         setMainEmotions(emotionData);
-        setLikesCount(likesCount);
+        setLikesCount(likesData.likesCount);
         setCommentsCount(commentsCount);
+        setCurrentUserLikes(likesData.userLikes);
       } catch (error) {
         console.error('데이터 로딩 실패:', error);
         toastUtils.error({ title: '실패', message: '예상하지 못한 에러 발생' });
@@ -59,6 +64,26 @@ const DiaryList = () => {
 
   const handleFilter = useCallback((emotions: Emotion[]) => {
     setSelectedEmotions(emotions);
+  }, []);
+
+  const handleLikeUpdate = useCallback((diaryId: string, isLiked: boolean, count: number) => {
+    if (!isAuth || !user) {
+      toastUtils.info({
+        title: '로그인 필요',
+        message: '좋아요를 누르려면 로그인해주세요.',
+      });
+    }
+    setLikesCount((prev) => ({ ...prev, [diaryId]: count }));
+
+    setCurrentUserLikes((prev) => {
+      const updateLikes = new Set(prev);
+      if (isLiked) {
+        updateLikes.add(diaryId);
+      } else {
+        updateLikes.delete(diaryId);
+      }
+      return updateLikes;
+    });
   }, []);
 
   return (
@@ -87,11 +112,14 @@ const DiaryList = () => {
                 return (
                   <li key={diary.id}>
                     <DiaryCard
+                      currentUser={currentUserId || ''}
                       user={user}
                       diary={diary}
                       emotions={mainEmotions}
                       likesCount={likesCount[diary.id] || 0}
                       commentsCount={commentsCount[diary.id] || 0}
+                      isLiked={currentUserLikes.has(diary.id)}
+                      onLikeUpdate={handleLikeUpdate}
                     />
                   </li>
                 );
