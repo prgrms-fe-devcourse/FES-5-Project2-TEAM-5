@@ -100,17 +100,7 @@ export const fetchEmotionStats = async (userId: string, startUTC: string, endUTC
  * 특정 일기의 상세 정보 불러오기
  */
 export const getDiaryDetailById = async (diaryId: string) => {
-  const { data, error } = await supabase
-    .from('diaries')
-    .select(
-      `
-      id, title, content, created_at, is_public, diary_image,
-      emotion_mains(id, name, icon_url),
-      diary_hashtags(hashtags(id, name))
-    `,
-    )
-    .eq('id', diaryId)
-    .single();
+  const { data, error } = await supabase.from('diaries').select().eq('id', diaryId).single();
 
   if (error || !data) {
     throw new Error('일기 상세 정보 불러오기 실패');

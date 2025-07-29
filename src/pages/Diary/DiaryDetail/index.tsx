@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { IoArrowUpCircleOutline, IoLockClosedOutline, IoLockOpenOutline } from 'react-icons/io5';
 import { BsChat } from 'react-icons/bs';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
-import Emotion7 from '/src/assets/icon_expect.svg'; // 기본 아이콘 경로
 import DiaryWeather from '@/shared/components/DiaryWeather';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDiaryDetail } from '../DiaryMain/hooks/useDiaryDetail';
