@@ -6,6 +6,7 @@ import { useUserContext } from '@/shared/context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { useDiaries } from './hooks/useDiaries';
 import Spinner from '@/shared/components/Spinner';
+import { getTodayDateForForm } from './utils/date';
 
 function SelectDiary() {
   const { user, isAuth } = useUserContext();
@@ -67,7 +68,7 @@ function SelectDiary() {
         <NextPageButton 
           label="일기 작성하러 가기"
           className={S.noStickyBtn}
-          onClick={() => navigate('/diary/form')} 
+          onClick={() => navigate('/diary/form', { state: { date: getTodayDateForForm() } })} 
         />
       </div>
     </main>
