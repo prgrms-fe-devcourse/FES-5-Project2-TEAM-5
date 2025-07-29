@@ -8,7 +8,7 @@ import { AuthInput, AuthLayout } from '../components';
 import S from './style.module.css';
 import type { LoginForm } from './utils/type';
 import { useRememberMe } from './hook/useRememberMe';
-import { loginWithEmail } from '@/shared/api/auth';
+import { loginWithEmail, loginWithGithub } from '@/shared/api/auth';
 
 const Login = () => {
   const location = useLocation();
@@ -43,6 +43,17 @@ const Login = () => {
     } catch (error) {
       if (error instanceof Error)
         toastUtils.error({ title: '로그인 실패', message: error.message });
+    }
+  };
+
+  const handleLoginWithGithub = async (e: React.PointerEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    try {
+      await loginWithGithub();
+    } catch (error) {
+      if (error instanceof Error) {
+        toastUtils.error({ title: '인증 실패', message: '깃허브 로그인에 실패했습니다.' });
+      }
     }
   };
 
@@ -98,7 +109,7 @@ const Login = () => {
           <button type="submit" className={S.loginButton}>
             Login
           </button>
-          <button type="button" className={S.githubButton}>
+          <button type="button" className={S.githubButton} onPointerDown={handleLoginWithGithub}>
             <FaGithub size={20} aria-hidden="true" />
             Continue with GitHub
           </button>

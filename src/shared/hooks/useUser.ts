@@ -3,18 +3,19 @@ import { useEffect, useState } from 'react';
 import { logout } from '../api/auth';
 import supabase from '../api/supabase/client';
 import type { Tables } from '../api/supabase/types';
-import { getUserDataById } from '../api/user';
+import { getUserDataById, insertUserProfileOnLogin } from '../api/user';
 
 export const useUser = () => {
   const [user, setUser] = useState<User | null>(null);
   const [userInfo, setUserInfo] = useState<Tables<'users'> | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const getUserData = async () => {
-    if (!user) {
+  const getUserData = async (currentUser: User) => {
+    if (!currentUser) {
       setUserInfo(null);
       return;
     }
-    const userData = await getUserDataById(user.id);
+    const userData = await getUserDataById(currentUser.id);
     setUserInfo(userData);
   };
 
@@ -27,10 +28,17 @@ export const useUser = () => {
 
       const {
         data: { subscription },
-      } = supabase.auth.onAuthStateChange(async (_, session) => {
+      } = supabase.auth.onAuthStateChange(async (event, session) => {
         setUser(session?.user ?? null);
 
-        if (!session?.user) {
+        if (session?.user && event === 'INITIAL_SESSION') {
+          await insertUserProfileOnLogin(session.user);
+        }
+
+        if (session?.user) {
+          await getUserData(session.user);
+          setIsLoading(false);
+        } else {
           setUserInfo(null);
         }
       });
@@ -39,10 +47,6 @@ export const useUser = () => {
 
     initializeUser();
   }, []);
-
-  useEffect(() => {
-    getUserData();
-  }, [user]);
 
   const updateUserInfo = (user: Tables<'users'> | null) => {
     setUserInfo(user);
@@ -54,5 +58,6 @@ export const useUser = () => {
     isAuth: !!user,
     logout,
     updateUserInfo,
+    isLoading,
   };
 };

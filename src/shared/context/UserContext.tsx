@@ -9,6 +9,7 @@ interface UserContextType {
   isAuth: boolean;
   logout: () => Promise<void>;
   updateUserInfo: (user: Tables<'users'> | null) => void;
+  isLoading: boolean;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
