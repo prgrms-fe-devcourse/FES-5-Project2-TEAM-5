@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { useUserContext } from '@/shared/context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { useDiaries } from './hooks/useDiaries';
+import Spinner from '@/shared/components/Spinner';
+import { getTodayDateForForm } from './utils/date';
 
 function SelectDiary() {
   const { user, isAuth } = useUserContext();
@@ -40,7 +42,7 @@ function SelectDiary() {
   if (loading) {
     return (
       <main className={S.container}>
-        <div className={S.spinner}></div>
+        <Spinner />
       </main>
     );
   }
@@ -50,7 +52,27 @@ function SelectDiary() {
   }
 
   if (!diaries.length) {
-    return <main className={S.container}>작성한 일기가 없습니다.</main>;
+    return (
+      <main className={S.container}>
+      <div className={S.noDiaryState}>
+        <img 
+          src="/src/assets/icon_sad.svg" 
+          alt="일기 없음 아이콘" 
+          className={S.noDiaryIcon} 
+        />
+        <div className={S.noDiaryMessage}>
+          <p className={S.noDiaryMain}>분석할 수 있는 일기가 없습니다.</p>
+          <p className={S.noDiarySub}>최근 14일 이내에 작성한 일기 중 분석할 수 있는 일기가 없습니다.</p>
+          <p className={S.noDiarySub}>새로운 일기를 작성하고 감정을 분석해 보세요.</p>
+        </div>
+        <NextPageButton 
+          label="일기 작성하러 가기"
+          className={S.noStickyBtn}
+          onClick={() => navigate('/diary/form', { state: { date: getTodayDateForForm() } })} 
+        />
+      </div>
+    </main>
+    )
   }
 
   const visibleDiaries = diaries.slice(0, visibleCount);
@@ -76,6 +98,7 @@ function SelectDiary() {
       <NextPageButton
         onClick={handleNext}
         disabled={!selectedDiaryId}
+        className={S.stickyBtn}
       />
     </main>
   );
