@@ -34,9 +34,9 @@ const DiaryCardFooter = ({
     try {
       if (!currentIsLiked) {
         await postLikeToDiary(currentUser, diaryId);
+        // 자신의 일기가 아닌 경우에만 알림 생성
         if (currentUser !== diaryAuthor.id) {
-          // 자신의 일기가 아닌 경우에만 알림 생성
-          await postLikeNotification(currentUser, diaryAuthor.name, diaryId);
+          await postLikeNotification(diaryAuthor.id, currentUser, diaryId);
         }
         const count = currentLikesCount + 1;
         setCurrentIsLiked(true);

@@ -4,20 +4,38 @@ import supabase from './supabase/client';
  */
 export const postLikeNotification = async (
   recipientUserId: string,
-  senderUserName: string,
+  senderUserId: string,
   diaryId: string,
 ) => {
+  const { data: senderUser } = await supabase
+    .from('users')
+    .select('name')
+    .eq('id', senderUserId)
+    .single();
+
+  if (!senderUser) return;
+
+  const { data } = await supabase
+    .from('notifications')
+    .select('id')
+    .eq('diary_id', diaryId)
+    .eq('type', '좋아요')
+    .eq('sender_id', senderUserId)
+    .maybeSingle();
+
+  if (data) return;
+
   const { error } = await supabase.from('notifications').insert({
     user_id: recipientUserId,
     diary_id: diaryId,
     title: '좋아요 알림',
-    message: `${senderUserName}님이 좋아요를 눌렀습니다.`,
+    message: `${senderUser.name}님이 좋아요를 눌렀습니다.`,
     type: '좋아요',
     is_read: false,
+    sender_id: senderUserId,
   });
 
   if (error) {
-    console.error('알림 생성 에러:', error);
     throw new Error('좋아요 알림 생성 실패');
   }
 };
@@ -27,16 +45,25 @@ export const postLikeNotification = async (
  */
 export const postCommentNotification = async (
   recipientUserId: string,
-  senderUserName: string,
+  senderUserId: string,
   diaryId: string,
 ) => {
+  const { data: senderUser } = await supabase
+    .from('users')
+    .select('name')
+    .eq('id', senderUserId)
+    .single();
+
+  if (!senderUser) return;
+
   const { error } = await supabase.from('notifications').insert({
     user_id: recipientUserId,
     diary_id: diaryId,
     title: '댓글 알림',
-    message: `${senderUserName}님이 댓글을 남겼습니다.`,
+    message: `${senderUser.name}님이 댓글을 남겼습니다.`,
     type: '댓글',
     is_read: false,
+    sender_id: senderUserId,
   });
 
   if (error) {
