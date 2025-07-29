@@ -16,12 +16,18 @@
 
     border: none;
     border-radius: var(--radius-2);
-    background: var(--secondary);
+    background: var(--primary);
     color: white;
     font-size: var(--text-lg);
     font-weight: 400;
     padding: 8px 15px 8px 20px;
-    cursor: pointer;
     user-select: none;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    background-color: var(--secondary);
+    cursor: default;
   }
 }

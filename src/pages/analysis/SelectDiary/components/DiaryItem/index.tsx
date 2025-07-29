@@ -10,7 +10,7 @@ function truncateText(text: string, limit: number) {
 }
 
 
-function DiaryItem({ diary }: { diary: Diary }) {
+function DiaryItem({ diary, onSelect }: { diary: Diary; onSelect: (id: string) => void }) {
   
   const { id, created_at, title, content } = diary;
 
@@ -19,7 +19,13 @@ function DiaryItem({ diary }: { diary: Diary }) {
 
   return (
     <label htmlFor={`diary-${id}`} className={S.diaryItem}>
-      <input type="radio" name="diary" id={`diary-${id}`} className={S.radioBtn} />
+      <input
+        type="radio"
+        name="diary"
+        id={`diary-${id}`}
+        className={S.radioBtn}
+        onChange={() => onSelect(id)}
+      />
       <GrFormCheckmark className={S.checkIcon} />
       <div className={S.textContent}>
         <p className={S.date}>{formattedDate}</p>
