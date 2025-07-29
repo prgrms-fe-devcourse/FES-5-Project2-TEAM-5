@@ -18,3 +18,26 @@ export const getAllDiariesLikesCount = async (): Promise<Record<string, number>>
 
   return likesCount;
 };
+
+export const fetchDiaryInteractions = async (diaryId: string) => {
+  const [{ data: likesData, error: likesError }, { data: commentsData, error: commentsError }] =
+    await Promise.all([
+      supabase.from('likes').select('id', { count: 'exact', head: true }).eq('diary_id', diaryId),
+      supabase
+        .from('comments')
+        .select('id', { count: 'exact', head: true })
+        .eq('diary_id', diaryId),
+    ]);
+
+  if (likesError || commentsError) {
+    throw new Error('다이어리 좋아요/댓글 정보 불러오기 실패');
+  }
+
+  const likesCount = (likesData as unknown as { count: number }[])[0]?.count || 0;
+  const commentsCount = (commentsData as unknown as { count: number }[])[0]?.count || 0;
+
+  return {
+    likesCount,
+    commentsCount,
+  };
+};

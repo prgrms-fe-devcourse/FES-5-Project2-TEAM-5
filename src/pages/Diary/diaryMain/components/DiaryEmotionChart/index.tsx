@@ -13,6 +13,7 @@ import {
   Scale,
   type Plugin,
 } from 'chart.js';
+import Spinner from '@/shared/components/Spinner';
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, Title);
 
@@ -150,7 +151,7 @@ const DiaryEmotionChart = ({ data, emotionLabels, emotionImages }: Props) => {
   if (isInitialLoading && emotionImages.length > 0) {
     return (
       <div className={S.spinner_wrap}>
-        <span className={S.spinner}></span>
+        <Spinner />
       </div>
     );
   }
