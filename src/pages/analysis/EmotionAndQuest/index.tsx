@@ -39,6 +39,10 @@ function EmotionAndQuest() {
     if (!user || !diaryId) return alert('로그인이 필요합니다.');
 
     try {
+
+      // 퀘스트 미선택 시 is_quest_accepted false로 변경
+      const accepted = questAccepted && questSelection.selected.length > 0 ? true : false;
+      
       // 1. diary_analysis 저장
       const { data: analysis, error: analysisError } = await supabase
         .from('diary_analysis')
@@ -46,7 +50,7 @@ function EmotionAndQuest() {
           diary_id: diaryId,
           user_id: user.id,
           reason_text: reason || null,
-          is_quest_accepted: questAccepted ?? false,
+          is_quest_accepted: accepted,
         })
         .select()
         .single();

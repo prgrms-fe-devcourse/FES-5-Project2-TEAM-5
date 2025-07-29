@@ -19,10 +19,17 @@ export function useDiaries(userId?: string, isAuth?: boolean) {
       setLoading(true);
       const start = Date.now(); // 로딩 시작 시간
 
+      // 기준 날짜 계산
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - 14); // 14일 전
+      startDate.setHours(0, 0, 0, 0); // 14일 전 자정으로 초기화
+      const isoStartDate = startDate.toISOString();
+
       const { data, error } = await supabase
-        .from('diaries')
+        .from('diaries_unanalyzed')   // 뷰 사용
         .select('*')
         .eq('user_id', userId)
+        .gte('created_at', isoStartDate) // 14일 이내
         .order('created_at', { ascending: false });
 
       const loadTime = Date.now() - start;
@@ -44,4 +51,4 @@ export function useDiaries(userId?: string, isAuth?: boolean) {
   }, [userId, isAuth]);
 
   return { diaries, loading };
-}
+};

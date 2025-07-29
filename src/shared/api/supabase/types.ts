@@ -432,7 +432,9 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      diaries_unanalyzed: {
+        Row: Database['public']['Tables']['diaries']['Row'];
+      }
     }
     Functions: {
       [_ in never]: never

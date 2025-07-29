@@ -60,7 +60,7 @@ function SelectDiary() {
     <main className={S.container}>
       <section aria-label='일기 선택 안내' className={S.intro}>
         <h2>일기 선택</h2>
-        <p>감정분석을 하고 싶은 일기를 선택해주세요.</p>
+        <p>최근 2주 이내 작성된 일기만 선택할 수 있습니다.</p>
       </section>
 
       <div className={S.listWrapper}>
