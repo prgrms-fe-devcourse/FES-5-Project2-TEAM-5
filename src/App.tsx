@@ -17,6 +17,8 @@ import { UserProvider } from './shared/context/UserContext';
 import { PATHS } from './shared/constants/path';
 import { WeatherProvider } from './shared/context/WeatherContext';
 import Home from './pages/Home';
+import { ProtectedLayout } from './shared/components/ProtectedLayout';
+import About from './pages/About';
 
 function App() {
   return (
@@ -26,15 +28,23 @@ function App() {
           <Toaster position="top-center" toastOptions={{ duration: 4000 }} />
           <Header />
           <Routes>
-            <Route path={PATHS.HOME} element={<Home />} />
+            {/* 로그인 필요 없는 페이지 */}
             <Route path={PATHS.LOGIN} element={<Login />} />
             <Route path={PATHS.REGISTER} element={<Register />} />
+            <Route path={PATHS.ABOUT} element={<About />} />
+
+            {/* 로그인이 필요한 페이지는  ProtectedLayout 안에 위치 */}
+            <Route element={<ProtectedLayout />}>
+              <Route path={PATHS.HOME} element={<Home />} />
+              <Route path={PATHS.MYPAGE} element={<Mypage />} />
+            </Route>
+
             <Route path={PATHS.DIARY} element={<DiaryPage />} />
             <Route path={PATHS.DIARY_FORM} element={<DiaryFormPage />} />
             <Route path="/diary/detail" element={<DiaryDetailPage />} />
-            <Route path={PATHS.COMMUNITY} element={<DiaryList />} />
-            <Route path={PATHS.USER} element={<UserPage />} />
-            <Route path={PATHS.MYPAGE} element={<Mypage />} />
+            <Route path="/community" element={<DiaryList />} />
+            <Route path="/users" element={<UserPage />} />
+
             <Route path="/analysis/select-diary" element={<SelectDiary />} />
             <Route path="/analysis/emotion-and-quest" element={<EmotionAndQuest />} />
           </Routes>

@@ -9,4 +9,5 @@ export const PATHS = {
   DIARY_DETAIL: '/diary/:id',
   DIARY_FORM: '/diary/form',
   USER: '/users',
+  ABOUT: '/about',
 } as const;
