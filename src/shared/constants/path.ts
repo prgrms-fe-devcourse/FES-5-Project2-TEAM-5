@@ -11,4 +11,5 @@ export const PATHS = {
   DIARY_FORM: '/diary/form',
   USER: '/users',
   ABOUT: '/about',
+  AUTH_CALLBACK: '/auth/callback',
 } as const;

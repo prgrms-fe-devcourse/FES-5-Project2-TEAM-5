@@ -1,5 +1,5 @@
 import type { User } from '@supabase/supabase-js';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { logout } from '../api/auth';
 import supabase from '../api/supabase/client';
 import type { Tables } from '../api/supabase/types';
@@ -9,6 +9,7 @@ export const useUser = () => {
   const [user, setUser] = useState<User | null>(null);
   const [userInfo, setUserInfo] = useState<Tables<'users'> | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const unsubscribeRef = useRef<() => void | null>(null);
 
   const getUserData = async (currentUser: User) => {
     if (!currentUser) {
@@ -24,28 +25,38 @@ export const useUser = () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
+      const currentUser = session?.user ?? null;
+      setUser(currentUser);
+
+      if (session?.user) {
+        await getUserData(session.user);
+      }
+      setIsLoading(false);
 
       const {
         data: { subscription },
       } = supabase.auth.onAuthStateChange(async (event, session) => {
-        setUser(session?.user ?? null);
+        const newUser = session?.user ?? null;
+        setUser(newUser);
 
-        if (session?.user && event === 'INITIAL_SESSION') {
-          await insertUserProfileOnLogin(session.user);
+        if (newUser && event === 'INITIAL_SESSION') {
+          await insertUserProfileOnLogin(newUser);
         }
 
-        if (session?.user) {
-          await getUserData(session.user);
-          setIsLoading(false);
+        if (newUser) {
+          await getUserData(newUser);
         } else {
           setUserInfo(null);
         }
+        setIsLoading(false);
       });
-      return () => subscription.unsubscribe();
+      unsubscribeRef.current = subscription.unsubscribe;
     };
 
     initializeUser();
+    return () => {
+      unsubscribeRef.current?.();
+    };
   }, []);
 
   const updateUserInfo = (user: Tables<'users'> | null) => {
