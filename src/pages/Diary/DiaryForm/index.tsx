@@ -9,12 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { toastUtils } from '@/shared/components/Toast';
 import { useUserContext } from '@/shared/context/UserContext';
 import Spinner from '@/shared/components/Spinner';
-
-interface EmotionMain {
-  id: number;
-  name: string;
-  icon_url: string;
-}
+import type { EmotionMain } from '@/shared/types/diary';
 
 interface Props {
   emotion: string;
@@ -37,7 +32,6 @@ const DiaryFormPage = () => {
     () => existingDiary?.created_at?.split('T')[0] ?? new Date().toISOString().split('T')[0],
   );
 
-  // ID들 (접근성/레이블 속성 등)
   const titleId = useId();
   const contentId = useId();
   const imageId = useId();
@@ -48,39 +42,28 @@ const DiaryFormPage = () => {
   const titleRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLTextAreaElement>(null);
 
-  // useUploadImage 훅으로 새 이미지 파일 & 프리뷰 관리
-  const {
-    imagePreview, // 새로 선택한 이미지 로컬 URL (프리뷰)
-    imageFile, // 새로 선택한 이미지 File 객체
-    onChange: handleImageChange, // input change 핸들러
-    clearImage, // 이미지 초기화 함수
-  } = useUploadImage();
+  const { imagePreview, imageFile, onChange: handleImageChange, clearImage } = useUploadImage();
 
-  // 기존 이미지 URL 프리뷰 (수정 시 기존 이미지가 있을때)
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(
     existingDiary?.diary_image || null,
   );
 
-  // 감정 리스트 로딩 상태 및 데이터
   const [emotions, setEmotions] = useState<EmotionMain[]>([]);
   const [isLoadingEmotions, setIsLoadingEmotions] = useState(true);
 
-  // 폼 데이터 (기본 상태)
   const [formData, setFormData] = useState<Props>({
     emotion: existingDiary?.emotion_mains?.name || '',
     title: existingDiary?.title || '',
     content: existingDiary?.content || '',
     isPublic: existingDiary?.is_public ?? true,
-    image: null, // 실제 파일 객체는 imageFile 사용
+    image: null,
     tags: existingDiary?.diary_hashtags?.map((h: any) => `#${h.hashtags.name}`) || [],
   });
 
-  // 공개/비공개 설정 (‘public’ or ‘private’)
   const [selected, setSelected] = useState<'public' | 'private'>(
     existingDiary?.is_public ? 'public' : 'private',
   );
 
-  // 선택된 감정 ID
   const [selectedEmotionId, setSelectedEmotionId] = useState<number | null>(
     existingDiary?.emotion_main_id || null,
   );
@@ -106,7 +89,6 @@ const DiaryFormPage = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  // 감정 데이터 fetch
   useEffect(() => {
     const fetchEmotions = async () => {
       try {
@@ -144,13 +126,12 @@ const DiaryFormPage = () => {
     }
   }, [existingDiary, emotions]);
 
-  // 폼 데이터 감지 (title, content)
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 공개 설정 라디오 변경
+  // 공개 설정
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value as 'public' | 'private';
     setSelected(value);
@@ -160,14 +141,12 @@ const DiaryFormPage = () => {
     }));
   };
 
-  // 감정 선택 버튼 클릭
   const handleEmotionSelect = (id: number) => {
     setSelectedEmotionId((prev) => (prev === id ? null : id));
     const emotionName = emotions.find((emo) => emo.id === id)?.name || '';
     setFormData((prev) => ({ ...prev, emotion: emotionName }));
   };
 
-  // 해시태그 처리 함수 (기존과 동일)
   const processHashtags = async (tagStrings: string[]) => {
     if (tagStrings.length === 0) return [];
 
@@ -213,7 +192,6 @@ const DiaryFormPage = () => {
     return hashtagIds;
   };
 
-  // 이미지 스토리지 업로드 함수 (기존과 동일)
   const uploadImageToStorage = async (file: File) => {
     if (!user?.id) {
       toastUtils.error({
@@ -247,11 +225,9 @@ const DiaryFormPage = () => {
     return publicUrlData.publicUrl;
   };
 
-  // 폼 제출 처리 (신규 / 수정 모두 처리)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 유효성 검사
     if (!selectedEmotionId) {
       toastUtils.error({ title: '실패', message: '감정을 선택해 주세요' });
       scrollToElement(emotionSectionRef.current);
@@ -284,7 +260,6 @@ const DiaryFormPage = () => {
       // 이미지 업로드 처리
       let imageUrl = imagePreviewUrl || '';
       if (imageFile) {
-        // 새로 선택한 이미지만 업로드 진행
         const uploadedUrl = await uploadImageToStorage(imageFile);
         if (!uploadedUrl) {
           toastUtils.error({ title: '실패', message: '이미지 업로드에 실패했습니다.' });
@@ -293,7 +268,6 @@ const DiaryFormPage = () => {
         imageUrl = uploadedUrl;
       }
 
-      // 날짜 ISO 처리
       const selectedLocalDay = new Date(diaryDate);
       selectedLocalDay.setHours(0, 0, 0, 0);
       const createdAtISOString = selectedLocalDay.toISOString();
@@ -318,10 +292,8 @@ const DiaryFormPage = () => {
         if (error) throw error;
         diaryData = data;
 
-        // 기존 해시태그 모두 삭제 후 새로운 해시태그 재등록
         await supabase.from('diary_hashtags').delete().eq('diary_id', existingDiary.id);
       } else {
-        // 신규 작성 모드: insert
         const { data, error } = await supabase
           .from('diaries')
           .insert([
@@ -494,12 +466,11 @@ const DiaryFormPage = () => {
               </div>
             </div>
 
+            {/* 이미지 */}
             <div>
               <label htmlFor={imageId} className={S.itemTitle}>
                 이미지
               </label>
-
-              {/* 파일명, 첨부 버튼 등 UI는 fileAttachBox 내부에 유지 */}
               <div className={S.fileAttachBox}>
                 <input
                   type="file"
@@ -515,8 +486,6 @@ const DiaryFormPage = () => {
                 >
                   이미지 첨부
                 </button>
-
-                {/* 새로 선택한 이미지가 있을 때 파일명만 보여주기 */}
                 {imageFile && (
                   <div className={S.fileNameBox}>
                     <p className={S.fileName}>{imageFile.name}</p>
@@ -533,14 +502,9 @@ const DiaryFormPage = () => {
                     </button>
                   </div>
                 )}
-
-                {/* 기존에 파일명 보여주고 싶으면 여기에 추가 가능 */}
                 {!imageFile && imagePreviewUrl && (
                   <div className={S.fileNameBox}>
-                    <p className={S.fileName}>
-                      {/* 기존 이미지 URL에서 파일명만 추출해서 보여주기 */}
-                      {imagePreviewUrl.split('/').pop()}
-                    </p>
+                    <p className={S.fileName}>{imagePreviewUrl.split('/').pop()}</p>
                     <button
                       type="button"
                       className={S.deleteButton}
@@ -553,13 +517,11 @@ const DiaryFormPage = () => {
                     </button>
                   </div>
                 )}
-                {/* 이미지가 없을 때 placeholder */}
                 {!imageFile && !imagePreviewUrl && (
                   <p className={S.placeholderText}>이미지를 첨부해 주세요</p>
                 )}
               </div>
 
-              {/* 이미지 미리보기는 fileAttachBox 바깥, 별도 영역에 렌더링 */}
               {(imagePreview || (!imagePreview && imagePreviewUrl)) && (
                 <div className={S.imagePreviewBox}>
                   <img
@@ -598,7 +560,7 @@ const DiaryFormPage = () => {
             </div>
           </div>
 
-          {/* 버튼 그룹 */}
+          {/* 버튼 */}
           <div className={S.buttonGroup}>
             <button type="button" className={S.bgGrayBtn} onClick={() => navigate(-1)}>
               취소

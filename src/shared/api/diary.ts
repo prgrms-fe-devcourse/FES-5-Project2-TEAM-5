@@ -1,4 +1,4 @@
-import type { DiaryRowEntity, SupabaseDiaryResponse, UpdateDiaryData } from '../types/diary';
+import type { DiaryDetailEntity, DiaryRowEntity, SupabaseDiaryResponse } from '../types/diary';
 import { transformDiaryData } from '../utils/formatSupabase';
 import supabase from './supabase/client';
 
@@ -100,15 +100,16 @@ export const fetchEmotionStats = async (userId: string, startUTC: string, endUTC
 /**
  * 특정 일기의 상세 정보 불러오기
  */
-export const getDiaryDetailById = async (diaryId: string) => {
+export const getDiaryDetailById = async (diaryId: string): Promise<DiaryDetailEntity> => {
   const { data, error } = await supabase
     .from('diaries')
     .select(
       `
-      id, title, content, created_at, is_public, diary_image,
-      emotion_mains(id, name, icon_url),
-      diary_hashtags(hashtags(id, name)), 
-      ikes:likes(count),comments:comments(count)
+      *,
+      emotion_mains(*),
+      diary_hashtags(hashtags(*)), 
+      likes(*),
+      comments(*)
     `,
     )
     .eq('id', diaryId)
@@ -117,7 +118,15 @@ export const getDiaryDetailById = async (diaryId: string) => {
   if (error || !data) {
     throw new Error('일기 상세 정보 불러오기 실패');
   }
-  return data;
+
+  // 타입 변환
+  const transformedData: DiaryDetailEntity = {
+    ...data,
+    likes_count: Array.isArray(data.likes) ? data.likes.length : 0,
+    comments_count: Array.isArray(data.comments) ? data.comments.length : 0,
+  };
+
+  return transformedData;
 };
 
 /**

@@ -30,7 +30,7 @@
 .titleArea {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-2);
   padding: 0 var(--space-5) var(--space-6);
   margin-bottom: var(--space-6);
   border-bottom: 1px solid var(--gray-100);
@@ -99,6 +99,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  padding: 0 var(--space-5);
 }
 .commnetArea {
   margin-top: var(--space-5);
@@ -224,6 +225,12 @@
   left: 50%;
   top: 50%;
   translate: -50% -50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-4);
   p {
     font-size: var(--text-xl);
   }
@@ -233,7 +240,6 @@
     border-radius: var(--radius-2);
     font-size: var(--text-xl);
     cursor: pointer;
-    margin-right: auto;
     background-color: var(--gray-100);
     color: var(--gray-900);
   }

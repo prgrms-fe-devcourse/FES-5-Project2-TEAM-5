@@ -5,9 +5,9 @@ import { BsChat } from 'react-icons/bs';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 import DiaryWeather from '@/shared/components/DiaryWeather';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useDiaryDetail } from '../DiaryMain/hooks/useDiaryDetail';
 import { formatToSimpleDate } from '@/shared/utils/formatDate';
 import Spinner from '@/shared/components/Spinner';
+import { useDiaryDetail } from '../DiaryMain/hooks/useDiaryDetail';
 
 const DiaryDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -28,8 +28,10 @@ const DiaryDetailPage = () => {
   const [newCommentInput, setNewCommentInput] = useState('');
 
   const onAddComment = () => {
-    handleAddComment(newCommentInput);
-    setNewCommentInput('');
+    if (newCommentInput.trim()) {
+      handleAddComment(newCommentInput);
+      setNewCommentInput('');
+    }
   };
 
   const onDeleteDiary = async () => {
@@ -91,8 +93,12 @@ const DiaryDetailPage = () => {
               {diary.title}
               <ul>
                 <li>
-                  <img src={diary.emotion_mains.icon_url} alt={diary.emotion_mains.name} />
-                  {diary.emotion_mains.name}
+                  {diary.emotion_mains && (
+                    <>
+                      <img src={diary.emotion_mains.icon_url} alt={diary.emotion_mains.name} />
+                      {diary.emotion_mains.name}
+                    </>
+                  )}
                 </li>
                 <li className={S.publicOrNot}>
                   {diary.is_public ? (
@@ -122,7 +128,10 @@ const DiaryDetailPage = () => {
 
           <div className={S.hashtag}>
             {diary.diary_hashtags &&
-              diary.diary_hashtags.map((h) => <span key={h.hashtags.id}>#{h.hashtags.name}</span>)}
+              diary.diary_hashtags.length > 0 &&
+              diary.diary_hashtags.map((dh) => (
+                <span key={dh.hashtags.id}>#{dh.hashtags.name}</span>
+              ))}
           </div>
 
           <section className={S.commnetArea}>
@@ -175,7 +184,11 @@ const DiaryDetailPage = () => {
                     if (e.key === 'Enter') onAddComment();
                   }}
                 />
-                <button onClick={onAddComment} className={S.commentBtn}>
+                <button
+                  onClick={onAddComment}
+                  className={S.commentBtn}
+                  disabled={!newCommentInput.trim()}
+                >
                   <IoArrowUpCircleOutline size={24} />
                 </button>
               </div>

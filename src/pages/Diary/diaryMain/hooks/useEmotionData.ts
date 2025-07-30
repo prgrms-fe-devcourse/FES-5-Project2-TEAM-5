@@ -1,12 +1,7 @@
 import { useState, useEffect } from 'react';
 import { toastUtils } from '@/shared/components/Toast';
 import { getAllEmotionMains } from '@/shared/api/emotionMain';
-
-interface EmotionMain {
-  id: number;
-  name: string;
-  icon_url: string;
-}
+import type { EmotionMain } from '@/shared/types/diary';
 
 export const useEmotionData = () => {
   const [emotionMainsList, setEmotionMainsList] = useState<EmotionMain[]>([]);
