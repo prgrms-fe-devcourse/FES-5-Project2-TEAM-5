@@ -18,10 +18,7 @@ const UserInfoSection = () => {
       <div className={S.info}>
         <span className={S.username}>{userInfo?.name}</span>
         <span>{userInfo?.email}</span>
-        <span>
-          Joined on {formatToReadableDate(userInfo?.created_at || '')} | Today's mood:{' '}
-          <strong className={S.userMood}>Happy</strong>
-        </span>
+        <span>Joined on {formatToReadableDate(userInfo?.created_at || '')}</span>
       </div>
     </section>
   );
