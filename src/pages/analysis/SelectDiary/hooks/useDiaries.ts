@@ -26,9 +26,10 @@ export function useDiaries(userId?: string, isAuth?: boolean) {
       const isoStartDate = startDate.toISOString();
 
       const { data, error } = await supabase
-        .from('diaries_unanalyzed')   // 뷰 사용
-        .select('*')
+        .from('diaries')
+        .select('id, title, content, created_at')
         .eq('user_id', userId)
+        .eq('is_analyzed', false)
         .gte('created_at', isoStartDate) // 14일 이내
         .order('created_at', { ascending: false });
 
