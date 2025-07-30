@@ -12,6 +12,7 @@ function DiaryRowCard({
   emotion_mains,
   likes,
   title,
+  is_analyzed,
 }: DiaryRowEntity) {
   const navigate = useNavigate();
 
@@ -21,7 +22,8 @@ function DiaryRowCard({
   };
 
   return (
-    <li>
+    <li className={S.rowCard}>
+      {is_analyzed && <div className={S.overlay} />}
       <a href={`/diary/${id}`} className={S.container} onClick={handleClick}>
         <div className={S.diaryContents}>
           <span>
