@@ -1,0 +1,22 @@
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 80px;
+  height: 80px;
+  font: var(--font-accent);
+  font-weight: 400;
+  font-size: var(--text-lg);
+}
+
+.tabButtons {
+  width: 132px;
+  height: 44px;
+  border-radius: var(--radius-6);
+  background-color: var(--secondary);
+  cursor: pointer;
+  color: white;
+}
+
+.tabButtons.activeTabButton {
+  background-color: var(--primary);
+}
