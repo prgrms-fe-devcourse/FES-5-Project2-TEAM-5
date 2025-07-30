@@ -5,6 +5,7 @@ export const transformDiaryData = (diaries: SupabaseDiaryResponse[]): DiaryRowEn
   return diaries.map((diary) => ({
     id: diary.id,
     title: diary.title,
+    is_analyzed: diary.is_analyzed,
     created_at: diary.created_at,
     is_public: diary.is_public,
     diary_image: diary.diary_image,
@@ -14,6 +15,6 @@ export const transformDiaryData = (diaries: SupabaseDiaryResponse[]): DiaryRowEn
       diary.diary_hashtags
         ?.flatMap((dh) => dh.hashtags)
         ?.map((hashtag) => ({ id: hashtag.id, name: hashtag.name })) || [],
-    emotion_mains: diary.emotion_mains,
+    emotion_mains: diary.emotion_mains[0] || diary.emotion_mains,
   }));
 };
