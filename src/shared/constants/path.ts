@@ -10,6 +10,7 @@ export const PATHS = {
   DIARY_DETAIL: '/diary/:id',
   DIARY_FORM: '/diary/form',
   USER: '/users',
+  USER_DETAIL: '/users/:slug',
   ABOUT: '/about',
   AUTH_CALLBACK: '/auth/callback',
 } as const;
