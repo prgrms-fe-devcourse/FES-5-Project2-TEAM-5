@@ -1,9 +1,13 @@
 import S from './style.module.css';
 import defaultProfile from '@/assets/defaultProfile.svg';
-import type { DbUser } from '@/shared/types/dbUser';
+import type { Tables } from '@/shared/api/supabase/types';
 import { formatToReadableDate } from '@/shared/utils/formatDate';
 
-const UserDetailInfoSection = ({ userInfo }: { userInfo: DbUser | null }) => {
+type Props = {
+  userInfo: Tables<'users'> | null;
+};
+
+const UserInfoSection = ({ userInfo }: Props) => {
   return (
     <section className={S.hero}>
       <h2 className="sr-only">사용자 정보</h2>
@@ -22,4 +26,4 @@ const UserDetailInfoSection = ({ userInfo }: { userInfo: DbUser | null }) => {
     </section>
   );
 };
-export default UserDetailInfoSection;
+export default UserInfoSection;
