@@ -73,44 +73,44 @@ export type Database = {
       };
       diaries: {
         Row: {
-          content: string;
-          created_at: string;
-          diary_image: string | null;
-          emotion_main_id: number;
-          id: string;
-          is_analyzed: boolean;
-          is_drafted: boolean;
-          is_public: boolean;
-          title: string;
-          updated_at: string | null;
-          user_id: string;
-        };
+          content: string
+          created_at: string
+          diary_image: string | null
+          emotion_main_id: number
+          id: string
+          is_analyzed: boolean
+          is_drafted: boolean
+          is_public: boolean
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
         Insert: {
-          content: string;
-          created_at: string;
-          diary_image?: string | null;
-          emotion_main_id: number;
-          id?: string;
-          is_analyzed?: boolean;
-          is_drafted?: boolean;
-          is_public: boolean;
-          title: string;
-          updated_at?: string | null;
-          user_id: string;
-        };
+          content: string
+          created_at: string
+          diary_image?: string | null
+          emotion_main_id: number
+          id?: string
+          is_analyzed?: boolean
+          is_drafted?: boolean
+          is_public: boolean
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
         Update: {
-          content?: string;
-          created_at?: string;
-          diary_image?: string | null;
-          emotion_main_id?: number;
-          id?: string;
-          is_analyzed?: boolean;
-          is_drafted?: boolean;
-          is_public?: boolean;
-          title?: string;
-          updated_at?: string | null;
-          user_id?: string;
-        };
+          content?: string
+          created_at?: string
+          diary_image?: string | null
+          emotion_main_id?: number
+          id?: string
+          is_analyzed?: boolean
+          is_drafted?: boolean
+          is_public?: boolean
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
         Relationships: [
           {
             foreignKeyName: 'diaries_emotion_main_id_fkey';
@@ -120,42 +120,42 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'diaries_user_id_fkey';
-            columns: ['user_id'];
-            isOneToOne: false;
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
+            foreignKeyName: "diaries_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
           },
-        ];
-      };
+        ]
+      }
       diary_analysis: {
         Row: {
-          created_at: string | null;
-          diary_id: string;
-          id: string;
-          is_public: boolean;
-          is_quest_accepted: boolean;
-          reason_text: string | null;
-          user_id: string;
-        };
+          created_at: string | null
+          diary_id: string
+          id: string
+          is_public: boolean
+          is_quest_accepted: boolean
+          reason_text: string | null
+          user_id: string
+        }
         Insert: {
-          created_at?: string | null;
-          diary_id: string;
-          id?: string;
-          is_public: boolean;
-          is_quest_accepted?: boolean;
-          reason_text?: string | null;
-          user_id: string;
-        };
+          created_at?: string | null
+          diary_id: string
+          id?: string
+          is_public: boolean
+          is_quest_accepted?: boolean
+          reason_text?: string | null
+          user_id: string
+        }
         Update: {
-          created_at?: string | null;
-          diary_id?: string;
-          id?: string;
-          is_public?: boolean;
-          is_quest_accepted?: boolean;
-          reason_text?: string | null;
-          user_id?: string;
-        };
+          created_at?: string | null
+          diary_id?: string
+          id?: string
+          is_public?: boolean
+          is_quest_accepted?: boolean
+          reason_text?: string | null
+          user_id?: string
+        }
         Relationships: [
           {
             foreignKeyName: 'diary_analysis_diary_id_fkey';
@@ -307,35 +307,35 @@ export type Database = {
       };
       notifications: {
         Row: {
-          diary_id: string;
-          id: string;
-          is_read: boolean;
-          message: string;
-          sender_id: string;
-          title: string;
-          type: Database['public']['Enums']['notification_type'];
-          user_id: string;
-        };
+          diary_id: string
+          id: string
+          is_read: boolean
+          message: string
+          sender_id: string
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
         Insert: {
-          diary_id: string;
-          id?: string;
-          is_read?: boolean;
-          message: string;
-          sender_id: string;
-          title: string;
-          type: Database['public']['Enums']['notification_type'];
-          user_id: string;
-        };
+          diary_id: string
+          id?: string
+          is_read?: boolean
+          message: string
+          sender_id: string
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
         Update: {
-          diary_id?: string;
-          id?: string;
-          is_read?: boolean;
-          message?: string;
-          sender_id?: string;
-          title?: string;
-          type?: Database['public']['Enums']['notification_type'];
-          user_id?: string;
-        };
+          diary_id?: string
+          id?: string
+          is_read?: boolean
+          message?: string
+          sender_id?: string
+          title?: string
+          type?: Database["public"]["Enums"]["notification_type"]
+          user_id?: string
+        }
         Relationships: [
           {
             foreignKeyName: 'notifications_diary_id_fkey';
@@ -345,14 +345,14 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'notifications_sender_id_fkey';
-            columns: ['sender_id'];
-            isOneToOne: false;
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
+            foreignKeyName: "notifications_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
           },
-        ];
-      };
+        ]
+      }
       quests: {
         Row: {
           content: string;
@@ -477,8 +477,8 @@ export type Database = {
       };
     };
     Views: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Functions: {
       [_ in never]: never;
     };
@@ -614,4 +614,4 @@ export const Constants = {
       notification_type: ['ai', '좋아요', '댓글'],
     },
   },
-} as const;
+} as const
