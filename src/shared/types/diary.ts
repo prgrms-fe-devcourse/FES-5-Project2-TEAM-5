@@ -6,9 +6,10 @@ export interface SupabaseDiaryResponse {
   content: string;
   created_at: string;
   is_public: boolean;
+  is_analyzed: boolean;
   diary_image: string | null;
-  emotion_mains: { name: string; icon_url: string };
-  diary_hashtags: { hashtags: { id: string; name: string } }[];
+  emotion_mains: { name: string; icon_url: string }[];
+  diary_hashtags: { hashtags: { id: string; name: string }[] }[];
   likes: { count: number }[];
   comments: { count: number }[];
 }
@@ -23,6 +24,7 @@ export interface DiaryRowEntity {
   comments: number;
   diary_hashtags: { name: string; id: string }[];
   emotion_mains: { name: string; icon_url: string };
+  is_analyzed?: boolean;
 }
 
 export type Diary = Database['public']['Tables']['diaries']['Row'];
