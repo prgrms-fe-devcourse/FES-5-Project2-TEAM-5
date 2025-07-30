@@ -30,40 +30,68 @@ const DiaryFormPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // 수정 모드 판단, 기존 일기 데이터
+  const existingDiary = location.state?.diary;
+
   const [diaryDate, setDiaryDate] = useState<string>(
-    () => location.state?.date ?? new Date().toISOString().split('T')[0],
+    () => existingDiary?.created_at?.split('T')[0] ?? new Date().toISOString().split('T')[0],
   );
 
+  // ID들 (접근성/레이블 속성 등)
   const titleId = useId();
   const contentId = useId();
   const imageId = useId();
   const tagId = useId();
 
-  // ref 추가 - 감정 선택 영역과 기존 필드들
+  // ref (스크롤 이동, focus용)
   const emotionSectionRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLTextAreaElement>(null);
 
-  const { onChange: handleImageChange, imageFile } = useUploadImage();
+  // useUploadImage 훅으로 새 이미지 파일 & 프리뷰 관리
+  const {
+    imagePreview, // 새로 선택한 이미지 로컬 URL (프리뷰)
+    imageFile, // 새로 선택한 이미지 File 객체
+    onChange: handleImageChange, // input change 핸들러
+    clearImage, // 이미지 초기화 함수
+  } = useUploadImage();
 
-  const [formData, setFormData] = useState<Props>({
-    emotion: '',
-    title: '',
-    content: '',
-    isPublic: true,
-    image: null,
-    tags: [],
-  });
+  // 기존 이미지 URL 프리뷰 (수정 시 기존 이미지가 있을때)
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(
+    existingDiary?.diary_image || null,
+  );
 
-  const [selected, setSelected] = useState<'public' | 'private'>('public');
-  const [selectedEmotionId, setSelectedEmotionId] = useState<number | null>(null);
-  const [tagInput, setTagInput] = useState<string>('');
-  const [tags, setTags] = useState<string[]>([]);
-
+  // 감정 리스트 로딩 상태 및 데이터
   const [emotions, setEmotions] = useState<EmotionMain[]>([]);
   const [isLoadingEmotions, setIsLoadingEmotions] = useState(true);
 
-  // 스크롤 이동 헬퍼 함수
+  // 폼 데이터 (기본 상태)
+  const [formData, setFormData] = useState<Props>({
+    emotion: existingDiary?.emotion_mains?.name || '',
+    title: existingDiary?.title || '',
+    content: existingDiary?.content || '',
+    isPublic: existingDiary?.is_public ?? true,
+    image: null, // 실제 파일 객체는 imageFile 사용
+    tags: existingDiary?.diary_hashtags?.map((h: any) => `#${h.hashtags.name}`) || [],
+  });
+
+  // 공개/비공개 설정 (‘public’ or ‘private’)
+  const [selected, setSelected] = useState<'public' | 'private'>(
+    existingDiary?.is_public ? 'public' : 'private',
+  );
+
+  // 선택된 감정 ID
+  const [selectedEmotionId, setSelectedEmotionId] = useState<number | null>(
+    existingDiary?.emotion_main_id || null,
+  );
+
+  // 태그 입력창 & 태그 상태
+  const [tagInput, setTagInput] = useState<string>(
+    formData.tags && formData.tags.length > 0 ? formData.tags.join(' ') : '',
+  );
+  const [tags, setTags] = useState<string[]>(formData.tags ?? []);
+
+  // 스크롤 이동 헬퍼
   const scrollToElement = (element: HTMLElement | null) => {
     if (element) {
       element.scrollIntoView({
@@ -75,19 +103,22 @@ const DiaryFormPage = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // 감정 데이터 fetch
+  useEffect(() => {
     const fetchEmotions = async () => {
       try {
         const { data, error } = await supabase
           .from('emotion_mains')
           .select('id, name, icon_url')
           .order('id');
-
         if (error) {
           console.error('감정 데이터 로드 실패:', error);
           toastUtils.error({ title: '실패', message: '감정 데이터를 불러오는데 실패했습니다.' });
           return;
         }
-
         setEmotions(data || []);
       } catch (error) {
         console.error('감정 데이터 로드 중 오류:', error);
@@ -100,18 +131,26 @@ const DiaryFormPage = () => {
     fetchEmotions();
   }, []);
 
+  // 기존 감정 데이터
   useEffect(() => {
-    setFormData((prev) => ({
-      ...prev,
-      image: imageFile,
-    }));
-  }, [imageFile]);
+    const emotionId = existingDiary?.emotion_main_id ?? existingDiary?.emotion_mains?.id;
 
+    if (emotionId && emotions.length > 0 && emotions.find((e) => e.id === emotionId)) {
+      setSelectedEmotionId(emotionId);
+      setFormData((prev) => ({
+        ...prev,
+        emotion: emotions.find((e) => e.id === emotionId)?.name || '',
+      }));
+    }
+  }, [existingDiary, emotions]);
+
+  // 폼 데이터 감지 (title, content)
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // 공개 설정 라디오 변경
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value as 'public' | 'private';
     setSelected(value);
@@ -121,45 +160,14 @@ const DiaryFormPage = () => {
     }));
   };
 
+  // 감정 선택 버튼 클릭
   const handleEmotionSelect = (id: number) => {
     setSelectedEmotionId((prev) => (prev === id ? null : id));
     const emotionName = emotions.find((emo) => emo.id === id)?.name || '';
     setFormData((prev) => ({ ...prev, emotion: emotionName }));
   };
 
-  const uploadImageToStorage = async (file: File) => {
-    if (!user?.id) {
-      toastUtils.error({
-        title: '실패',
-        message: '사용자 정보가 없습니다. 다시 로그인 해 주세요.',
-      });
-      return null;
-    }
-
-    const bucketName = 'diary-image';
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${user.id}/${Date.now()}.${fileExt}`;
-
-    const { data, error } = await supabase.storage.from(bucketName).upload(fileName, file);
-
-    if (error) {
-      console.error('이미지 업로드 실패', error.message);
-
-      if (error.message.includes('Bucket not found')) {
-        toastUtils.error({
-          title: '설정 오류',
-          message: 'Supabase Storage 버킷이 생성되지 않았습니다. 관리자에게 문의하세요.',
-        });
-      } else {
-        toastUtils.error({ title: '실패', message: '이미지 업로드에 실패했습니다.' });
-      }
-      return null;
-    }
-
-    const { data: publicUrlData } = supabase.storage.from(bucketName).getPublicUrl(data.path);
-    return publicUrlData.publicUrl;
-  };
-
+  // 해시태그 처리 함수 (기존과 동일)
   const processHashtags = async (tagStrings: string[]) => {
     if (tagStrings.length === 0) return [];
 
@@ -205,17 +213,51 @@ const DiaryFormPage = () => {
     return hashtagIds;
   };
 
+  // 이미지 스토리지 업로드 함수 (기존과 동일)
+  const uploadImageToStorage = async (file: File) => {
+    if (!user?.id) {
+      toastUtils.error({
+        title: '실패',
+        message: '사용자 정보가 없습니다. 다시 로그인 해 주세요.',
+      });
+      return null;
+    }
+
+    const bucketName = 'diary-image';
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+
+    const { data, error } = await supabase.storage.from(bucketName).upload(fileName, file);
+
+    if (error) {
+      console.error('이미지 업로드 실패', error.message);
+
+      if (error.message.includes('Bucket not found')) {
+        toastUtils.error({
+          title: '설정 오류',
+          message: 'Supabase Storage 버킷이 생성되지 않았습니다. 관리자에게 문의하세요.',
+        });
+      } else {
+        toastUtils.error({ title: '실패', message: '이미지 업로드에 실패했습니다.' });
+      }
+      return null;
+    }
+
+    const { data: publicUrlData } = supabase.storage.from(bucketName).getPublicUrl(data.path);
+    return publicUrlData.publicUrl;
+  };
+
+  // 폼 제출 처리 (신규 / 수정 모두 처리)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 감정 선택 체크 및 스크롤 이동
+    // 유효성 검사
     if (!selectedEmotionId) {
       toastUtils.error({ title: '실패', message: '감정을 선택해 주세요' });
       scrollToElement(emotionSectionRef.current);
       return;
     }
 
-    // 제목 체크 및 스크롤 이동
     if (!formData.title.trim()) {
       toastUtils.error({ title: '실패', message: '제목을 입력해 주세요' });
       titleRef.current?.focus();
@@ -223,7 +265,6 @@ const DiaryFormPage = () => {
       return;
     }
 
-    // 내용 체크 및 스크롤 이동
     if (!formData.content.trim()) {
       toastUtils.error({ title: '실패', message: '내용을 입력해 주세요' });
       contentRef.current?.focus();
@@ -240,10 +281,11 @@ const DiaryFormPage = () => {
     }
 
     try {
-      // 이미지 업로드
-      let imageUrl = '';
-      if (formData.image) {
-        const uploadedUrl = await uploadImageToStorage(formData.image as File);
+      // 이미지 업로드 처리
+      let imageUrl = imagePreviewUrl || '';
+      if (imageFile) {
+        // 새로 선택한 이미지만 업로드 진행
+        const uploadedUrl = await uploadImageToStorage(imageFile);
         if (!uploadedUrl) {
           toastUtils.error({ title: '실패', message: '이미지 업로드에 실패했습니다.' });
           return;
@@ -251,33 +293,54 @@ const DiaryFormPage = () => {
         imageUrl = uploadedUrl;
       }
 
-      // 날짜 처리
+      // 날짜 ISO 처리
       const selectedLocalDay = new Date(diaryDate);
       selectedLocalDay.setHours(0, 0, 0, 0);
       const createdAtISOString = selectedLocalDay.toISOString();
 
-      // 일기 저장
-      const { data: diaryData, error: diaryError } = await supabase
-        .from('diaries')
-        .insert([
-          {
-            user_id: user.id,
+      let diaryData = null;
+
+      if (existingDiary?.id) {
+        // 수정 모드: update
+        const { data, error } = await supabase
+          .from('diaries')
+          .update({
             emotion_main_id: selectedEmotionId,
             title: formData.title,
             content: formData.content,
             is_public: formData.isPublic,
             diary_image: imageUrl,
-            created_at: createdAtISOString,
-            is_drafted: false,
-          },
-        ])
-        .select('id')
-        .single();
+          })
+          .eq('id', existingDiary.id)
+          .select('id')
+          .single();
 
-      if (diaryError) {
-        console.error('일기 저장 에러:', diaryError);
-        toastUtils.error({ title: '실패', message: '일기 저장에 실패했습니다.' });
-        return;
+        if (error) throw error;
+        diaryData = data;
+
+        // 기존 해시태그 모두 삭제 후 새로운 해시태그 재등록
+        await supabase.from('diary_hashtags').delete().eq('diary_id', existingDiary.id);
+      } else {
+        // 신규 작성 모드: insert
+        const { data, error } = await supabase
+          .from('diaries')
+          .insert([
+            {
+              user_id: user.id,
+              emotion_main_id: selectedEmotionId,
+              title: formData.title,
+              content: formData.content,
+              is_public: formData.isPublic,
+              diary_image: imageUrl,
+              created_at: createdAtISOString,
+              is_drafted: false,
+            },
+          ])
+          .select('id')
+          .single();
+
+        if (error) throw error;
+        diaryData = data;
       }
 
       // 해시태그 처리
@@ -295,7 +358,6 @@ const DiaryFormPage = () => {
             .insert(diaryHashtagsData);
 
           if (hashtagError) {
-            console.error('해시태그 연결 실패:', hashtagError);
             toastUtils.error({
               title: '경고',
               message: '일기는 저장되었으나 일부 해시태그 처리에 실패했습니다.',
@@ -306,13 +368,12 @@ const DiaryFormPage = () => {
 
       toastUtils.success({ title: '성공', message: '일기가 저장되었습니다.' });
       navigate('/diary');
-    } catch (error) {
-      console.error('일기 저장 중 오류:', error);
+    } catch (error: any) {
       toastUtils.error({ title: '실패', message: '일기 저장 중 오류가 발생했습니다.' });
+      console.error('일기 저장 중 오류:', error);
     }
   };
 
-  // 로딩 상태 처리
   if (isLoadingEmotions) {
     return (
       <main className={S.container}>
@@ -328,10 +389,10 @@ const DiaryFormPage = () => {
     <main className={S.container}>
       <DiaryWeather />
       <div className={S.inner}>
-        <h3 className={S.pageTitle}>새로운 씨앗 기록</h3>
+        <h3 className={S.pageTitle}>{existingDiary ? '씨앗 기록 수정' : '새로운 씨앗 기록'}</h3>
         <form onSubmit={handleSubmit}>
           <div className={S.formArea}>
-            {/* 감정 선택 - ref 추가 */}
+            {/* 감정 선택 */}
             <div ref={emotionSectionRef}>
               <label className={S.itemTitle}>
                 오늘의 감정 씨앗을 선택해 주세요<span className={S.required}></span>
@@ -433,11 +494,12 @@ const DiaryFormPage = () => {
               </div>
             </div>
 
-            {/* 이미지 업로드 */}
             <div>
               <label htmlFor={imageId} className={S.itemTitle}>
                 이미지
               </label>
+
+              {/* 파일명, 첨부 버튼 등 UI는 fileAttachBox 내부에 유지 */}
               <div className={S.fileAttachBox}>
                 <input
                   type="file"
@@ -453,25 +515,60 @@ const DiaryFormPage = () => {
                 >
                   이미지 첨부
                 </button>
-                {!formData.image && <p className={S.placeholderText}>이미지를 첨부해 주세요</p>}
-                {formData.image && (
-                  <div className={S.fileInfo}>
-                    <p className={S.fileName}>{(formData.image as File).name}</p>
+
+                {/* 새로 선택한 이미지가 있을 때 파일명만 보여주기 */}
+                {imageFile && (
+                  <div className={S.fileNameBox}>
+                    <p className={S.fileName}>{imageFile.name}</p>
                     <button
                       type="button"
-                      onClick={() =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          image: null,
-                        }))
-                      }
                       className={S.deleteButton}
+                      onClick={() => {
+                        clearImage();
+                        setImagePreviewUrl(null);
+                        setFormData((prev) => ({ ...prev, image: null }));
+                      }}
                     >
                       <CgClose className={S.deleteIcon} size={24} />
                     </button>
                   </div>
                 )}
+
+                {/* 기존에 파일명 보여주고 싶으면 여기에 추가 가능 */}
+                {!imageFile && imagePreviewUrl && (
+                  <div className={S.fileNameBox}>
+                    <p className={S.fileName}>
+                      {/* 기존 이미지 URL에서 파일명만 추출해서 보여주기 */}
+                      {imagePreviewUrl.split('/').pop()}
+                    </p>
+                    <button
+                      type="button"
+                      className={S.deleteButton}
+                      onClick={() => {
+                        setImagePreviewUrl(null);
+                        setFormData((prev) => ({ ...prev, image: null }));
+                      }}
+                    >
+                      <CgClose className={S.deleteIcon} size={24} />
+                    </button>
+                  </div>
+                )}
+                {/* 이미지가 없을 때 placeholder */}
+                {!imageFile && !imagePreviewUrl && (
+                  <p className={S.placeholderText}>이미지를 첨부해 주세요</p>
+                )}
               </div>
+
+              {/* 이미지 미리보기는 fileAttachBox 바깥, 별도 영역에 렌더링 */}
+              {(imagePreview || (!imagePreview && imagePreviewUrl)) && (
+                <div className={S.imagePreviewBox}>
+                  <img
+                    src={imagePreview || imagePreviewUrl || ''}
+                    alt="선택된 이미지"
+                    style={{ maxWidth: '100%', maxHeight: 200 }}
+                  />
+                </div>
+              )}
             </div>
 
             {/* 태그 */}
@@ -501,7 +598,7 @@ const DiaryFormPage = () => {
             </div>
           </div>
 
-          {/* 버튼 */}
+          {/* 버튼 그룹 */}
           <div className={S.buttonGroup}>
             <button type="button" className={S.bgGrayBtn} onClick={() => navigate(-1)}>
               취소

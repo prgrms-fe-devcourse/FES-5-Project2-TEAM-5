@@ -219,3 +219,22 @@
     color: white;
   }
 }
+.errorWrap {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  p {
+    font-size: var(--text-xl);
+  }
+  .bgGrayBtn {
+    min-width: 110px;
+    height: 44px;
+    border-radius: var(--radius-2);
+    font-size: var(--text-xl);
+    cursor: pointer;
+    margin-right: auto;
+    background-color: var(--gray-100);
+    color: var(--gray-900);
+  }
+}

@@ -1,4 +1,4 @@
-import type { DiaryRowEntity, SupabaseDiaryResponse } from '../types/diary';
+import type { DiaryRowEntity, SupabaseDiaryResponse, UpdateDiaryData } from '../types/diary';
 import { transformDiaryData } from '../utils/formatSupabase';
 import supabase from './supabase/client';
 

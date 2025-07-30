@@ -156,6 +156,21 @@
       cursor: pointer;
     }
   }
+  .fileNameBox {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    position: absolute;
+    left: 130px;
+    top: 50%;
+    transform: translateY(-50%);
+    .deleteButton {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+  }
 }
 .buttonGroup {
   display: flex;
