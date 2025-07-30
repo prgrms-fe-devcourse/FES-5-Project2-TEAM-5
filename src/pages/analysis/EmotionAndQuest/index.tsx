@@ -52,6 +52,7 @@ function EmotionAndQuest() {
           user_id: user.id,
           reason_text: reason || null,
           is_quest_accepted: accepted,
+          is_public: true // 임시로 true로 했음!!!!!!!!!!!!!!!!!!!!!
         })
         .select()
         .single();
@@ -80,6 +81,18 @@ function EmotionAndQuest() {
           user_id: user.id,
         }));
         await supabase.from('user_accepted_quests').insert(questRows);
+      }
+
+      // 4. diaries 테이블 is_analyzed 컬럼 true로 저장
+      const {error: updateError} = await supabase
+        .from('diaries')
+        .update({ is_analyzed: true })
+        .eq('id', diaryId)
+        .eq('user_id', user.id);
+
+      if (updateError) {
+        console.error('is_analyzed 업데이트 실패:', updateError);
+        return;
       }
 
       toastUtils.success({ title: '성공', message: '분석이 저장되었습니다.' })
