@@ -6,7 +6,7 @@ import { useUserContext } from '@/shared/context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { useDiaries } from './hooks/useDiaries';
 import Spinner from '@/shared/components/Spinner';
-import { getTodayDateForForm } from './utils/date';
+import { getTodayDateForForm } from '@/shared/utils/dateUtils';
 
 function SelectDiary() {
   const { user, isAuth } = useUserContext();
@@ -56,7 +56,7 @@ function SelectDiary() {
       <main className={S.container}>
       <div className={S.noDiaryState}>
         <img 
-          src="/src/assets/icon_sad.svg" 
+          src="https://ttqedeydfvolnyrivpvg.supabase.co/storage/v1/object/public/emotions/icon_sad.svg" 
           alt="일기 없음 아이콘" 
           className={S.noDiaryIcon} 
         />
