@@ -28,3 +28,9 @@ export interface DiaryRowEntity {
 }
 
 export type Diary = Database['public']['Tables']['diaries']['Row'];
+
+export interface UpdateDiaryData {
+  title: string;
+  content: string;
+  is_public: boolean;
+}

@@ -7,6 +7,7 @@ import DiaryWeather from '@/shared/components/DiaryWeather';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDiaryDetail } from '../DiaryMain/hooks/useDiaryDetail';
 import { formatToSimpleDate } from '@/shared/utils/formatDate';
+import Spinner from '@/shared/components/Spinner';
 
 const DiaryDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -26,21 +27,19 @@ const DiaryDetailPage = () => {
 
   const [newCommentInput, setNewCommentInput] = useState('');
 
-  // 댓글 추가 시 훅의 handleAddComment 호출
   const onAddComment = () => {
     handleAddComment(newCommentInput);
     setNewCommentInput('');
   };
 
-  // 일기 삭제 시
   const onDeleteDiary = async () => {
     if (!id || !window.confirm('정말로 일기를 삭제하시겠습니까?')) {
       return;
     }
     try {
-      await handleDelete(); // 훅의 handleDelete 함수 호출
+      await handleDelete();
       alert('일기가 성공적으로 삭제되었습니다.');
-      navigate('/diary'); // 일기 목록 페이지로 이동
+      navigate('/diary');
     } catch (err: any) {
       console.error('일기 삭제 실패:', err.message);
       alert('일기 삭제에 실패했습니다: ' + err.message);
@@ -50,7 +49,7 @@ const DiaryDetailPage = () => {
   if (loading) {
     return (
       <main className={S.container}>
-        <p>일기를 불러오는 중이에요... 🌱</p>
+        <Spinner />
       </main>
     );
   }
@@ -117,13 +116,11 @@ const DiaryDetailPage = () => {
             </figure>
           )}
 
-          {/* Hashtags */}
           <div className={S.hashtag}>
             {diary.diary_hashtags &&
               diary.diary_hashtags.map((h) => <span key={h.hashtags.id}>#{h.hashtags.name}</span>)}
           </div>
 
-          {/* 좋아요 및 댓글 섹션 */}
           <section className={S.commnetArea}>
             <h4 className="sr-only">댓글 영역</h4>
             <div className={S.commentHead}>
@@ -138,7 +135,6 @@ const DiaryDetailPage = () => {
             </div>
 
             <div className={S.commentBox}>
-              {/* 댓글 내용 */}
               {comments.length > 0 ? (
                 <div className={S.commnetItem}>
                   {comments.map((comment) => (
@@ -164,7 +160,6 @@ const DiaryDetailPage = () => {
                 <p className={S.noComments}>아직 댓글이 없어요. 첫 댓글을 남겨주세요! 😊</p>
               )}
 
-              {/* 댓글 입력창 */}
               <div className={S.commentPrompt}>
                 <input
                   type="text"
@@ -172,7 +167,9 @@ const DiaryDetailPage = () => {
                   value={newCommentInput}
                   onChange={(e) => setNewCommentInput(e.target.value)}
                   placeholder="응원과 공감의 글을 보내 주세요"
-                  onKeyPress={(e) => e.key === 'Enter' && onAddComment()}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') onAddComment();
+                  }}
                 />
                 <button onClick={onAddComment} className={S.commentBtn}>
                   <IoArrowUpCircleOutline size={24} />
@@ -182,7 +179,6 @@ const DiaryDetailPage = () => {
           </section>
         </div>
 
-        {/* 버튼 */}
         <div className={S.buttonGroup}>
           <button type="button" className={S.bgGrayBtn} onClick={() => navigate('/diary')}>
             목록으로
@@ -190,7 +186,14 @@ const DiaryDetailPage = () => {
           <button type="button" className={S.lineBtn} onClick={onDeleteDiary}>
             삭제
           </button>
-          <button type="button" className={S.bgPrimaryBtn}>
+          <button
+            type="button"
+            className={S.bgPrimaryBtn}
+            onClick={() => {
+              if (!diary) return;
+              navigate('/diary/form', { state: { diary } });
+            }}
+          >
             수정
           </button>
         </div>

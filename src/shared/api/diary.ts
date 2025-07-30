@@ -1,4 +1,4 @@
-import type { DiaryRowEntity, SupabaseDiaryResponse } from '../types/diary';
+import type { DiaryRowEntity, SupabaseDiaryResponse, UpdateDiaryData } from '../types/diary';
 import { transformDiaryData } from '../utils/formatSupabase';
 import supabase from './supabase/client';
 
@@ -149,4 +149,29 @@ export const checkUserLikedDiary = async (diaryId: string, userId: string) => {
   }
 
   return !!data;
+};
+
+export const updateDiaryById = async (diaryId: string, updateData: SupabaseDiaryResponse) => {
+  try {
+    const { data, error } = await supabase
+      .from('diaries')
+      .update({
+        title: updateData.title,
+        content: updateData.content,
+        is_public: updateData.is_public,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', diaryId)
+      .select()
+      .single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return data;
+  } catch (error: any) {
+    console.error('일기 수정 Supabase 에러:', error);
+    throw new Error(error.message || '일기 수정에 실패했습니다.');
+  }
 };

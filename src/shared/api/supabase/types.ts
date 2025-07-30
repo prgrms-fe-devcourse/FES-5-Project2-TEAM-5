@@ -68,6 +68,13 @@ export type Database = {
             referencedRelation: "diaries"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "comments_diary_id_fkey"
+            columns: ["diary_id"]
+            isOneToOne: false
+            referencedRelation: "diaries_unanalyzed"
+            referencedColumns: ["id"]
+          },
         ]
       }
       diaries: {
@@ -85,7 +92,7 @@ export type Database = {
         }
         Insert: {
           content: string
-          created_at?: string
+          created_at: string
           diary_image?: string | null
           emotion_main_id: number
           id?: string
@@ -115,6 +122,13 @@ export type Database = {
             referencedRelation: "emotion_mains"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "diaries_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
         ]
       }
       diary_analysis: {
@@ -122,6 +136,7 @@ export type Database = {
           created_at: string | null
           diary_id: string
           id: string
+          is_public: boolean
           is_quest_accepted: boolean
           reason_text: string | null
           user_id: string
@@ -130,6 +145,7 @@ export type Database = {
           created_at?: string | null
           diary_id: string
           id?: string
+          is_public: boolean
           is_quest_accepted?: boolean
           reason_text?: string | null
           user_id: string
@@ -138,6 +154,7 @@ export type Database = {
           created_at?: string | null
           diary_id?: string
           id?: string
+          is_public?: boolean
           is_quest_accepted?: boolean
           reason_text?: string | null
           user_id?: string
@@ -148,6 +165,13 @@ export type Database = {
             columns: ["diary_id"]
             isOneToOne: false
             referencedRelation: "diaries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "diary_analysis_diary_id_fkey"
+            columns: ["diary_id"]
+            isOneToOne: false
+            referencedRelation: "diaries_unanalyzed"
             referencedColumns: ["id"]
           },
         ]
@@ -171,6 +195,13 @@ export type Database = {
             columns: ["diary_id"]
             isOneToOne: false
             referencedRelation: "diaries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "diary_hashtags_diary_id_fkey"
+            columns: ["diary_id"]
+            isOneToOne: false
+            referencedRelation: "diaries_unanalyzed"
             referencedColumns: ["id"]
           },
           {
@@ -268,6 +299,13 @@ export type Database = {
             referencedRelation: "diaries"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "likes_diary_id_fkey"
+            columns: ["diary_id"]
+            isOneToOne: false
+            referencedRelation: "diaries_unanalyzed"
+            referencedColumns: ["id"]
+          },
         ]
       }
       notifications: {
@@ -276,6 +314,7 @@ export type Database = {
           id: string
           is_read: boolean
           message: string
+          sender_id: string
           title: string
           type: Database["public"]["Enums"]["notification_type"]
           user_id: string
@@ -285,6 +324,7 @@ export type Database = {
           id?: string
           is_read?: boolean
           message: string
+          sender_id: string
           title: string
           type: Database["public"]["Enums"]["notification_type"]
           user_id: string
@@ -294,6 +334,7 @@ export type Database = {
           id?: string
           is_read?: boolean
           message?: string
+          sender_id?: string
           title?: string
           type?: Database["public"]["Enums"]["notification_type"]
           user_id?: string
@@ -304,6 +345,20 @@ export type Database = {
             columns: ["diary_id"]
             isOneToOne: false
             referencedRelation: "diaries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_diary_id_fkey"
+            columns: ["diary_id"]
+            isOneToOne: false
+            referencedRelation: "diaries_unanalyzed"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -433,7 +488,34 @@ export type Database = {
     }
     Views: {
       diaries_unanalyzed: {
-        Row: Database['public']['Tables']['diaries']['Row'];
+        Row: {
+          content: string | null
+          created_at: string | null
+          diary_image: string | null
+          emotion_main_id: number | null
+          id: string | null
+          is_drafted: boolean | null
+          is_public: boolean | null
+          title: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "diaries_emotion_main_id_fkey"
+            columns: ["emotion_main_id"]
+            isOneToOne: false
+            referencedRelation: "emotion_mains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "diaries_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Functions: {
