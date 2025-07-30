@@ -1,10 +1,13 @@
 import S from './style.module.css';
 import defaultProfile from '@/assets/defaultProfile.svg';
-import { useUserContext } from '@/shared/context/UserContext';
+import type { Tables } from '@/shared/api/supabase/types';
 import { formatToReadableDate } from '@/shared/utils/formatDate';
 
-const UserInfoSection = () => {
-  const { userInfo } = useUserContext();
+type Props = {
+  userInfo: Tables<'users'> | null;
+};
+
+const UserInfoSection = ({ userInfo }: Props) => {
   return (
     <section className={S.hero}>
       <h2 className="sr-only">사용자 정보</h2>

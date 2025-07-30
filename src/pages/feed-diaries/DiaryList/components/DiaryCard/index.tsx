@@ -36,7 +36,7 @@ const DiaryCard = ({
     // 드래그 시 무시
     if (window.getSelection()?.toString()) return;
     const slug = diary.id;
-    navigate(`/users/${slug}`);
+    navigate(`/community/${slug}`);
   };
 
   return (

@@ -20,6 +20,7 @@ import Home from './pages/Home';
 import { ProtectedLayout } from './shared/components/ProtectedLayout';
 import About from './pages/About';
 import AuthCallback from './pages/auth/AuthCallback';
+import UserDetail from './pages/users/UserDetail';
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
 
             <Route path={PATHS.COMMUNITY} element={<DiaryList />} />
             <Route path={PATHS.USER} element={<UserPage />} />
+            <Route path={PATHS.USER_DETAIL} element={<UserDetail />} />
           </Routes>
         </BrowserRouter>
       </WeatherProvider>

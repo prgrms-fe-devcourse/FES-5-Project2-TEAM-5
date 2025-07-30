@@ -151,27 +151,164 @@ export const checkUserLikedDiary = async (diaryId: string, userId: string) => {
   return !!data;
 };
 
-export const updateDiaryById = async (diaryId: string, updateData: SupabaseDiaryResponse) => {
-  try {
-    const { data, error } = await supabase
-      .from('diaries')
-      .update({
-        title: updateData.title,
-        content: updateData.content,
-        is_public: updateData.is_public,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', diaryId)
-      .select()
-      .single();
+/**
+ * 특정 사용자가 작성한 전체 일기 불러오기
+ */
+export const getUserDiaries = async (userId: string) => {
+  const { data, error } = await supabase
+    .from('diaries')
+    .select(
+      `
+    id,
+    title,
+    created_at,
+    diary_image,
+    is_public,
+    is_drafted,
+    emotion_mains (
+      icon_url,
+      name
+    ),
+    diary_hashtags (
+      hashtags (
+        id,
+        name
+      )
+    ),
+    likes (
+      id
+    ),
+    comments (
+      id
+    )
+  `,
+    )
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
 
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    return data;
-  } catch (error: any) {
-    console.error('일기 수정 Supabase 에러:', error);
-    throw new Error(error.message || '일기 수정에 실패했습니다.');
+  if (error) {
+    throw new Error(`관계 포함 다이어리 조회 실패`);
   }
+
+  const result = data.map((diary) => ({
+    ...diary,
+    likes: Array.isArray(diary.likes) ? diary.likes.length : 0,
+    comments: Array.isArray(diary.comments) ? diary.comments.length : 0,
+    emotion_mains: Array.isArray(diary.emotion_mains)
+      ? diary.emotion_mains[0]
+      : diary.emotion_mains,
+    diary_hashtags: diary.diary_hashtags?.flatMap((h) => h.hashtags) || [],
+  }));
+
+  return result;
+};
+
+/**
+ * 특정 사용자가 좋아요한 전체 일기 불러오기
+ */
+export const getUserLikedDiaries = async (userId: string) => {
+  const { data, error } = await supabase
+    .from('likes')
+    .select(
+      `
+      diary_id,
+      diaries (
+        id,
+        title,
+        created_at,
+        diary_image,
+        is_public,
+        is_drafted,
+        emotion_mains (
+          icon_url,
+          name
+        ),
+        diary_hashtags (
+          hashtags (
+            id,
+            name
+          )
+        ),
+        likes (
+          id
+        ),
+        comments (
+          id
+        )
+      )
+    `,
+    )
+    .eq('user_id', userId);
+
+  if (error) throw new Error(`좋아요한 다이어리 조회 실패`);
+
+  const result = data
+    .map((like) => like.diaries)
+    .filter(Boolean)
+    .map((diary) => ({
+      ...diary,
+      likes: Array.isArray(diary.likes) ? diary.likes.length : 0,
+      comments: Array.isArray(diary.comments) ? diary.comments.length : 0,
+      emotion_mains: Array.isArray(diary.emotion_mains)
+        ? diary.emotion_mains[0]
+        : diary.emotion_mains,
+      diary_hashtags: diary.diary_hashtags?.flatMap((h) => h.hashtags) || [],
+    }));
+
+  return result;
+};
+
+/**
+ * 특정 사용자가 댓글단 전체 일기 불러오기
+ */
+export const getUserCommentedDiaries = async (userId: string) => {
+  const { data, error } = await supabase
+    .from('comments')
+    .select(
+      `
+      diary_id,
+      diaries (
+        id,
+        title,
+        created_at,
+        diary_image,
+        is_public,
+        is_drafted,
+        emotion_mains (
+          icon_url,
+          name
+        ),
+        diary_hashtags (
+          hashtags (
+            id,
+            name
+          )
+        ),
+        likes (
+          id
+        ),
+        comments (
+          id
+        )
+      )
+    `,
+    )
+    .eq('user_id', userId);
+
+  if (error) throw new Error(`댓글단 다이어리 조회 실패`);
+
+  const result = data
+    .map((like) => like.diaries)
+    .filter(Boolean)
+    .map((diary) => ({
+      ...diary,
+      likes: Array.isArray(diary.likes) ? diary.likes.length : 0,
+      comments: Array.isArray(diary.comments) ? diary.comments.length : 0,
+      emotion_mains: Array.isArray(diary.emotion_mains)
+        ? diary.emotion_mains[0]
+        : diary.emotion_mains,
+      diary_hashtags: diary.diary_hashtags?.flatMap((h) => h.hashtags) || [],
+    }));
+
+  return result;
 };
