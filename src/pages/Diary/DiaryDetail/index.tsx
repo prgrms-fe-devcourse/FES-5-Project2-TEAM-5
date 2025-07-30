@@ -57,10 +57,12 @@ const DiaryDetailPage = () => {
   if (error) {
     return (
       <main className={S.container}>
-        <p>에러가 발생했습니다: {error}</p>
-        <button type="button" className={S.bgGrayBtn} onClick={() => navigate('/diary')}>
-          목록으로
-        </button>
+        <div className={S.errorWrap}>
+          <p>에러가 발생했습니다: {error}</p>
+          <button type="button" className={S.bgGrayBtn} onClick={() => navigate('/diary')}>
+            목록으로
+          </button>
+        </div>
       </main>
     );
   }
@@ -68,10 +70,12 @@ const DiaryDetailPage = () => {
   if (!diary) {
     return (
       <main className={S.container}>
-        <p>일기 데이터가 없습니다.</p>
-        <button type="button" className={S.bgGrayBtn} onClick={() => navigate('/diary')}>
-          목록으로
-        </button>
+        <div className={S.errorWrap}>
+          <p>일기 데이터가 없습니다.</p>
+          <button type="button" className={S.bgGrayBtn} onClick={() => navigate('/diary')}>
+            목록으로
+          </button>
+        </div>
       </main>
     );
   }
