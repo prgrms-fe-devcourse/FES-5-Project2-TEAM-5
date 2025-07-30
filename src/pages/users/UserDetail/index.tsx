@@ -4,7 +4,7 @@ import DiaryRowCard from '@/shared/components/DiaryRowCard';
 import { useEffect, useState } from 'react';
 import { getUserCommentedDiaries, getUserDiaries, getUserLikedDiaries } from '@/shared/api/diary';
 import { useNavigate, useParams } from 'react-router-dom';
-import Tabs from './Tab';
+import Tabs from './components/Tab';
 import { getUserDataById } from '@/shared/api/user';
 import UserInfoSection from '@/shared/components/UserInfoSection';
 import { toastUtils } from '@/shared/components/Toast';
