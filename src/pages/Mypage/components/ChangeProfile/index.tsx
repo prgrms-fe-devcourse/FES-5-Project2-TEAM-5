@@ -89,7 +89,7 @@ const ChangeProfile = () => {
         role="button"
         tabIndex={0}
         id={profileId}
-        onPointerDown={handleProfileClick}
+        onClick={handleProfileClick}
         onKeyDown={handleProfileKeyDown}
         aria-label="프로필 선택"
       >

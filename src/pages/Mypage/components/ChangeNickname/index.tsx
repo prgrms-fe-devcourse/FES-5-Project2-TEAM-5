@@ -25,6 +25,12 @@ const ChangeNickname = () => {
   const handleChangeNickname = async () => {
     if (!userInfo) return;
     try {
+      const errorMessage = nameValidator(nickname);
+      if (errorMessage) {
+        setError(errorMessage);
+        return;
+      }
+
       const user = await uploadUserNickname({ id: userInfo.id, nickname });
       toastUtils.success({ title: '성공', message: '닉네임 변경 성공!' });
       updateUserInfo(user);
@@ -61,7 +67,7 @@ const ChangeNickname = () => {
         />
         <button
           type="button"
-          onPointerDown={handleChangeNickname}
+          onClick={handleChangeNickname}
           onKeyDown={handleKeyDown}
           disabled={!isFormValid}
           aria-label="닉네임 변경"
