@@ -27,7 +27,7 @@ function App() {
     <UserProvider>
       <WeatherProvider>
         <BrowserRouter>
-          <Toaster position="top-center" toastOptions={{ duration: 4000 }} />
+          <Toaster position="top-center" toastOptions={{ duration: 2000 }} />
           <Header />
           <Routes>
             {/* 로그인 필요 없는 페이지 */}

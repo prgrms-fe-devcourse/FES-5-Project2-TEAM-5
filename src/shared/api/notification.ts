@@ -1,4 +1,9 @@
+import type {
+  RealtimePostgresInsertPayload,
+  RealtimePostgresUpdatePayload,
+} from '@supabase/supabase-js';
 import supabase from './supabase/client';
+import type { Tables } from './supabase/types';
 /**
  *  다이어리에 좋아요 시 알림
  */
@@ -63,4 +68,87 @@ export const postCommentNotification = async (
   if (error) {
     throw new Error('좋아요 알림 생성 실패');
   }
+};
+
+/**
+ * 알림 목록 조회
+ */
+export const getNotificationList = async (userId: string) => {
+  const { data, error } = await supabase
+    .from('notifications')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('is_deleted', false);
+
+  if (error) {
+    console.error('알림 목록 조회 실패');
+  }
+
+  return data;
+};
+
+/**
+ * 알림 삭제
+ */
+export const updateNotificationDelete = async (userId: string) => {
+  const { error } = await supabase
+    .from('notifications')
+    .update({ is_deleted: true })
+    .eq('user_id', userId);
+
+  if (error) {
+    throw new Error('메시지 삭제 에러');
+  }
+};
+
+/**
+ * 알림 모두 읽음
+ */
+export const updateNotificationAllRead = async (userId: string) => {
+  const { error } = await supabase
+    .from('notifications')
+    .update({ is_read: true })
+    .eq('user_id', userId);
+
+  if (error) {
+    throw new Error('메시지 모두 읽음 에러');
+  }
+};
+
+/**
+ * 단일 읽음 처리
+ */
+export const updateNotificationRead = async (userId: string, notifId: string) => {
+  const { error } = await supabase
+    .from('notifications')
+    .update({ is_read: true })
+    .eq('user_id', userId)
+    .eq('id', notifId);
+
+  if (error) {
+    throw new Error('메시지 읽음 에러');
+  }
+};
+
+/**
+ * 알림 실시간 구독  채널 생성
+ */
+export const createNotificationChannel = (
+  userId: string,
+  onNewNotification: (payload: RealtimePostgresInsertPayload<Tables<'notifications'>>) => void,
+  onUpdateState: (payload: RealtimePostgresUpdatePayload<Tables<'notifications'>>) => void,
+) => {
+  return supabase
+    .channel(`notification_${userId}`)
+    .on(
+      'postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${userId}` },
+      onNewNotification,
+    )
+    .on(
+      'postgres_changes',
+      { event: 'UPDATE', schema: 'public', table: 'notifications', filter: `user_id=eq.${userId}` },
+      onUpdateState,
+    )
+    .subscribe();
 };
