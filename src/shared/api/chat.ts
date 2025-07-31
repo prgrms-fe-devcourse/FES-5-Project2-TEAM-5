@@ -1,6 +1,7 @@
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import supabase from './supabase/client';
 import type { Tables } from './supabase/types';
+import { formatUTCToKorean } from '../utils/dateUtils';
 
 /**
  * 채팅 입력 api
@@ -25,16 +26,14 @@ export const insertChatMessage = async ({
  * 오늘 날짜 채팅 내역 불러오기
  */
 export const fetchTodayChatMessages = async (id: string): Promise<Tables<'chat_messages'>[]> => {
-  const now = new Date();
-  const koreaTime = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-  const today = koreaTime.toISOString().split('T')[0];
+  const [start, end] = formatUTCToKorean();
 
   const { data, error } = await supabase
     .from('chat_messages')
     .select('*')
     .eq('user_id', id)
-    .gte('created_at', `${today}T00:00:00+09:00`)
-    .lt('created_at', `${today}T23:59:59+09:00`)
+    .gte('created_at', start.toISOString())
+    .lt('created_at', end.toISOString())
     .order('created_at', { ascending: true });
 
   if (error) {
