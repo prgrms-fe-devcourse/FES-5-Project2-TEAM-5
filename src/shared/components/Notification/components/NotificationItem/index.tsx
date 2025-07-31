@@ -21,12 +21,12 @@ const NotificationItem = ({ notification }: Props) => {
 
   return (
     <li className={style.notificationItem} onClick={handleClick}>
+      {!notification.is_read && <div className={style.notificationBadge} aria-hidden="true" />}
       <div className={style.icon}>
         {notification.type === '댓글' && <FcComments size={25} />}
         {notification.type === '좋아요' && <FcLike size={25} />}
       </div>
       <div className={style.notificationContents}>
-        {!notification.is_read && <div className={style.notificationBadge} aria-hidden="true" />}
         <span className={style.notificationTitle}> {notification.title}</span>
         <span className={style.notificationMessage}>{notification.message}</span>
       </div>
