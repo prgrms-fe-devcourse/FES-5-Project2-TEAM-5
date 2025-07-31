@@ -35,3 +35,21 @@ export const getTodayDateForForm = () => {
   const localToUTC = new Date(now.getTime() - offset * 60 * 1000);
   return localToUTC.toISOString().split('T')[0];
 };
+
+// 한국시간 기준으로 UTC 시간 start end 시간 가져오기
+export const formatUTCToKorean = () => {
+  const now = new Date();
+  const koreaOffsetMs = 9 * 60 * 60 * 1000;
+
+  // 오늘 KST 00:00
+  const startOfTodayKst = new Date(now);
+  startOfTodayKst.setHours(0, 0, 0, 0);
+  const startOfTodayUtc = new Date(startOfTodayKst.getTime() - koreaOffsetMs);
+
+  // 오늘 KST 23:59:59
+  const endOfTodayKst = new Date(now);
+  endOfTodayKst.setHours(23, 59, 59, 999);
+  const endOfTodayUtc = new Date(endOfTodayKst.getTime() - koreaOffsetMs);
+
+  return [startOfTodayUtc, endOfTodayUtc];
+};

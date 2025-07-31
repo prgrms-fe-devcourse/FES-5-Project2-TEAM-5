@@ -3,6 +3,7 @@ import ChatInput from './components/ChatInput';
 import ChatMessages from './components/ChatMessages';
 import Molly from './components/Molly';
 import S from './style.module.css';
+import QuestSection from './components/QuestSection';
 
 const Home = () => {
   const [isChatActive, setIsChatActive] = useState<boolean>(false);
@@ -18,6 +19,8 @@ const Home = () => {
   return (
     <main className={S.container}>
       <div className={S.overlay}>
+        {/* 퀘스트 */}
+        <QuestSection />
         {isChatActive ? (
           <ChatMessages onClose={handleChatClose} />
         ) : (
