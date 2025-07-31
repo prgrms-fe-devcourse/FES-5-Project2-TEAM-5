@@ -19,7 +19,6 @@ export const withConditionalRender = <P extends object = {}>(
     const shouldHide = hideOnPath.some((path) => {
       if (path === '*') {
         const validPaths = Object.values(PATHS).filter((p) => p !== '*');
-        console.log(validPaths);
         return !validPaths.some((validPath) => matchPath({ path: validPath }, pathname));
       }
 
