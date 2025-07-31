@@ -124,43 +124,6 @@
     cursor: pointer;
   }
 
-  .bellButton {
-    position: relative;
-    display: flex;
-    align-items: center;
-    padding-inline: 0;
-
-    .notificationBadge {
-      position: absolute;
-      background-color: var(--point);
-      top: 5px;
-      right: 3px;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-    }
-  }
-
-  /* 툴팁  */
-  .bellButton::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    background-color: var(--gray-50);
-    bottom: -30px;
-    right: -90%;
-    border-radius: var(--radius-1);
-    padding: 4px 12px;
-    white-space: nowrap;
-    transition: opacity 0.5s ease;
-    visibility: hidden;
-    font-size: var(--text-sm);
-    opacity: 0;
-  }
-  .bellButton:hover::after {
-    visibility: visible;
-    opacity: 1;
-  }
-
   svg {
     stroke-width: 1.2; /* 더 얇게 */
     cursor: pointer;
