@@ -2,136 +2,61 @@ import S from './style.module.css';
 import { useEffect, useId, useRef, useState } from 'react';
 import { useUploadImage } from '@/shared/hooks';
 import { BsCheckSquare, BsCheckSquareFill } from 'react-icons/bs';
-import { CgClose } from 'react-icons/cg';
 import DiaryWeather from '@/shared/components/DiaryWeather';
-import supabase from '@/shared/api/supabase/client';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { toastUtils } from '@/shared/components/Toast';
-import { useUserContext } from '@/shared/context/UserContext';
 import Spinner from '@/shared/components/Spinner';
-import type { EmotionMain } from '@/shared/types/diary';
 
-interface Props {
-  emotion: string;
-  title: string;
-  content: string;
-  isPublic: boolean;
-  image?: File | null;
-  tags?: string[];
-}
+import { useDiaryForm } from './hooks/useDiaryForm';
+import { useEmotions } from './hooks/useEmotions';
+import { useTags } from './hooks/useTags';
+import { processHashtags, uploadImageToStorage, scrollToElement } from './utils/diaryFormUtils';
+import { ImageUpload } from './components/ImageUpload';
+import supabase from '@/shared/api/supabase/client';
 
 const DiaryFormPage = () => {
-  const { user } = useUserContext();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const {
+    formData,
+    setFormData,
+    selectedEmotionId,
+    diaryDate,
+    imagePreviewUrl,
+    setImagePreviewUrl,
+    hasUnsavedChanges,
+    existingDiary,
+    isEditMode,
+    user,
+    navigate,
+    clearDraft,
+    handleInputChange,
+    saveToLocalStorage,
+  } = useDiaryForm();
 
-  // 수정 모드 판단, 기존 일기 데이터
-  const existingDiary = location.state?.diary;
-
-  const [diaryDate, setDiaryDate] = useState<string>(
-    () => existingDiary?.created_at?.split('T')[0] ?? new Date().toISOString().split('T')[0],
-  );
+  const { emotions, isLoadingEmotions } = useEmotions();
+  const { tagInput, tags, handleTagInputChange } = useTags(formData.tags);
 
   const titleId = useId();
   const contentId = useId();
   const imageId = useId();
   const tagId = useId();
 
-  // ref (스크롤 이동, focus용)
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
+  }, []);
+
   const emotionSectionRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLTextAreaElement>(null);
 
   const { imagePreview, imageFile, onChange: handleImageChange, clearImage } = useUploadImage();
 
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(
-    existingDiary?.diary_image || null,
-  );
-
-  const [emotions, setEmotions] = useState<EmotionMain[]>([]);
-  const [isLoadingEmotions, setIsLoadingEmotions] = useState(true);
-
-  const [formData, setFormData] = useState<Props>({
-    emotion: existingDiary?.emotion_mains?.name || '',
-    title: existingDiary?.title || '',
-    content: existingDiary?.content || '',
-    isPublic: existingDiary?.is_public ?? true,
-    image: null,
-    tags: existingDiary?.diary_hashtags?.map((h: any) => `#${h.hashtags.name}`) || [],
-  });
-
   const [selected, setSelected] = useState<'public' | 'private'>(
-    existingDiary?.is_public ? 'public' : 'private',
+    formData.isPublic ? 'public' : 'private',
   );
 
-  const [selectedEmotionId, setSelectedEmotionId] = useState<number | null>(
-    existingDiary?.emotion_main_id || null,
-  );
-
-  // 태그 입력창 & 태그 상태
-  const [tagInput, setTagInput] = useState<string>(
-    formData.tags && formData.tags.length > 0 ? formData.tags.join(' ') : '',
-  );
-  const [tags, setTags] = useState<string[]>(formData.tags ?? []);
-
-  // 스크롤 이동 헬퍼
-  const scrollToElement = (element: HTMLElement | null) => {
-    if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-        inline: 'nearest',
-      });
-    }
-  };
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
-    const fetchEmotions = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('emotion_mains')
-          .select('id, name, icon_url')
-          .order('id');
-        if (error) {
-          console.error('감정 데이터 로드 실패:', error);
-          toastUtils.error({ title: '실패', message: '감정 데이터를 불러오는데 실패했습니다.' });
-          return;
-        }
-        setEmotions(data || []);
-      } catch (error) {
-        console.error('감정 데이터 로드 중 오류:', error);
-        toastUtils.error({ title: '실패', message: '감정 데이터를 불러오는데 실패했습니다.' });
-      } finally {
-        setIsLoadingEmotions(false);
-      }
-    };
-
-    fetchEmotions();
-  }, []);
-
-  // 기존 감정 데이터
-  useEffect(() => {
-    const emotionId = existingDiary?.emotion_main_id ?? existingDiary?.emotion_mains?.id;
-
-    if (emotionId && emotions.length > 0 && emotions.find((e) => e.id === emotionId)) {
-      setSelectedEmotionId(emotionId);
-      setFormData((prev) => ({
-        ...prev,
-        emotion: emotions.find((e) => e.id === emotionId)?.name || '',
-      }));
-    }
-  }, [existingDiary, emotions]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // 공개 설정
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value as 'public' | 'private';
     setSelected(value);
@@ -141,88 +66,10 @@ const DiaryFormPage = () => {
     }));
   };
 
-  const handleEmotionSelect = (id: number) => {
-    setSelectedEmotionId((prev) => (prev === id ? null : id));
-    const emotionName = emotions.find((emo) => emo.id === id)?.name || '';
-    setFormData((prev) => ({ ...prev, emotion: emotionName }));
-  };
-
-  const processHashtags = async (tagStrings: string[]) => {
-    if (tagStrings.length === 0) return [];
-
-    const tagNames = tagStrings.map((tag) => (tag.startsWith('#') ? tag.slice(1) : tag));
-    const hashtagIds: string[] = [];
-
-    for (const tagName of tagNames) {
-      try {
-        const { data: existingTag, error: selectError } = await supabase
-          .from('hashtags')
-          .select('id')
-          .eq('name', tagName)
-          .single();
-
-        if (selectError && selectError.code !== 'PGRST116') {
-          console.error('해시태그 조회 실패:', selectError);
-          continue;
-        }
-
-        if (existingTag) {
-          hashtagIds.push(existingTag.id);
-        } else {
-          const { data: newTag, error: insertError } = await supabase
-            .from('hashtags')
-            .insert({ name: tagName })
-            .select('id')
-            .single();
-
-          if (insertError) {
-            console.error('해시태그 생성 실패:', insertError);
-            continue;
-          }
-
-          if (newTag) {
-            hashtagIds.push(newTag.id);
-          }
-        }
-      } catch (error) {
-        console.error('해시태그 처리 중 오류:', error);
-      }
-    }
-
-    return hashtagIds;
-  };
-
-  const uploadImageToStorage = async (file: File) => {
-    if (!user?.id) {
-      toastUtils.error({
-        title: '실패',
-        message: '사용자 정보가 없습니다. 다시 로그인 해 주세요.',
-      });
-      return null;
-    }
-
-    const bucketName = 'diary-image';
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${user.id}/${Date.now()}.${fileExt}`;
-
-    const { data, error } = await supabase.storage.from(bucketName).upload(fileName, file);
-
-    if (error) {
-      console.error('이미지 업로드 실패', error.message);
-
-      if (error.message.includes('Bucket not found')) {
-        toastUtils.error({
-          title: '설정 오류',
-          message: 'Supabase Storage 버킷이 생성되지 않았습니다. 관리자에게 문의하세요.',
-        });
-      } else {
-        toastUtils.error({ title: '실패', message: '이미지 업로드에 실패했습니다.' });
-      }
-      return null;
-    }
-
-    const { data: publicUrlData } = supabase.storage.from(bucketName).getPublicUrl(data.path);
-    return publicUrlData.publicUrl;
+  const handleSaveDraft = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    saveToLocalStorage();
+    toastUtils.success({ title: '성공', message: '임시 저장되었습니다.' });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -248,7 +95,7 @@ const DiaryFormPage = () => {
       return;
     }
 
-    if (!user || !user.id) {
+    if (!user?.id) {
       toastUtils.error({
         title: '실패',
         message: '사용자 정보가 없습니다. 다시 로그인 후 시도해 주세요.',
@@ -257,17 +104,14 @@ const DiaryFormPage = () => {
     }
 
     try {
-      // 이미지 업로드 처리
       let imageUrl = imagePreviewUrl || '';
       if (imageFile) {
-        const uploadedUrl = await uploadImageToStorage(imageFile);
-        if (!uploadedUrl) {
-          toastUtils.error({ title: '실패', message: '이미지 업로드에 실패했습니다.' });
-          return;
-        }
+        const uploadedUrl = await uploadImageToStorage(imageFile, user.id);
+        if (!uploadedUrl) return;
         imageUrl = uploadedUrl;
       }
 
+      // 날짜 ISO 처리
       const selectedLocalDay = new Date(diaryDate);
       selectedLocalDay.setHours(0, 0, 0, 0);
       const createdAtISOString = selectedLocalDay.toISOString();
@@ -275,7 +119,7 @@ const DiaryFormPage = () => {
       let diaryData = null;
 
       if (existingDiary?.id) {
-        // 수정 모드: update
+        // 수정 모드
         const { data, error } = await supabase
           .from('diaries')
           .update({
@@ -294,6 +138,7 @@ const DiaryFormPage = () => {
 
         await supabase.from('diary_hashtags').delete().eq('diary_id', existingDiary.id);
       } else {
+        // 신규 작성 모드
         const { data, error } = await supabase
           .from('diaries')
           .insert([
@@ -338,21 +183,24 @@ const DiaryFormPage = () => {
         }
       }
 
+      if (isEditMode) {
+        clearDraft();
+      }
+
       toastUtils.success({ title: '성공', message: '일기가 저장되었습니다.' });
       navigate('/diary');
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : '일기 저장 중 오류가 발생했습니다.';
       toastUtils.error({ title: '실패', message: '일기 저장 중 오류가 발생했습니다.' });
-      console.error('일기 저장 중 오류:', error);
+      console.error('일기 저장 중 오류:', errorMessage);
     }
   };
 
   if (isLoadingEmotions) {
     return (
       <main className={S.container}>
-        <DiaryWeather />
-        <div className={S.inner}>
-          <Spinner />
-        </div>
+        <Spinner />
       </main>
     );
   }
@@ -361,37 +209,9 @@ const DiaryFormPage = () => {
     <main className={S.container}>
       <DiaryWeather />
       <div className={S.inner}>
-        <h3 className={S.pageTitle}>{existingDiary ? '씨앗 기록 수정' : '새로운 씨앗 기록'}</h3>
         <form onSubmit={handleSubmit}>
+          <h3 className={S.pageTitle}>{isEditMode ? '씨앗 기록 수정' : '새로운 씨앗 기록'}</h3>
           <div className={S.formArea}>
-            {/* 감정 선택 */}
-            <div ref={emotionSectionRef}>
-              <label className={S.itemTitle}>
-                오늘의 감정 씨앗을 선택해 주세요<span className={S.required}></span>
-              </label>
-              <div className={S.emotionGroup}>
-                {emotions.map((emotion) => (
-                  <button
-                    key={emotion.id}
-                    type="button"
-                    onClick={() => handleEmotionSelect(emotion.id)}
-                    className={selectedEmotionId === emotion.id ? S.active : ''}
-                  >
-                    <img
-                      src={emotion.icon_url}
-                      alt={emotion.name}
-                      width={18}
-                      height={20}
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
-                    {emotion.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-
             {/* 제목 */}
             <div>
               <label htmlFor={titleId} className={S.itemTitle}>
@@ -466,72 +286,22 @@ const DiaryFormPage = () => {
               </div>
             </div>
 
-            {/* 이미지 */}
-            <div>
-              <label htmlFor={imageId} className={S.itemTitle}>
-                이미지
-              </label>
-              <div className={S.fileAttachBox}>
-                <input
-                  type="file"
-                  accept="image/*"
-                  id={imageId}
-                  className="sr-only"
-                  onChange={handleImageChange}
-                />
-                <button
-                  type="button"
-                  onClick={() => document.getElementById(imageId)?.click()}
-                  className={S.uploadButton}
-                >
-                  이미지 첨부
-                </button>
-                {imageFile && (
-                  <div className={S.fileNameBox}>
-                    <p className={S.fileName}>{imageFile.name}</p>
-                    <button
-                      type="button"
-                      className={S.deleteButton}
-                      onClick={() => {
-                        clearImage();
-                        setImagePreviewUrl(null);
-                        setFormData((prev) => ({ ...prev, image: null }));
-                      }}
-                    >
-                      <CgClose className={S.deleteIcon} size={24} />
-                    </button>
-                  </div>
-                )}
-                {!imageFile && imagePreviewUrl && (
-                  <div className={S.fileNameBox}>
-                    <p className={S.fileName}>{imagePreviewUrl.split('/').pop()}</p>
-                    <button
-                      type="button"
-                      className={S.deleteButton}
-                      onClick={() => {
-                        setImagePreviewUrl(null);
-                        setFormData((prev) => ({ ...prev, image: null }));
-                      }}
-                    >
-                      <CgClose className={S.deleteIcon} size={24} />
-                    </button>
-                  </div>
-                )}
-                {!imageFile && !imagePreviewUrl && (
-                  <p className={S.placeholderText}>이미지를 첨부해 주세요</p>
-                )}
-              </div>
-
-              {(imagePreview || (!imagePreview && imagePreviewUrl)) && (
-                <div className={S.imagePreviewBox}>
-                  <img
-                    src={imagePreview || imagePreviewUrl || ''}
-                    alt="선택된 이미지"
-                    style={{ maxWidth: '100%', maxHeight: 200 }}
-                  />
-                </div>
-              )}
-            </div>
+            <ImageUpload
+              imageId={imageId}
+              imageFile={imageFile}
+              imagePreview={imagePreview}
+              imagePreviewUrl={imagePreviewUrl}
+              onImageChange={handleImageChange}
+              onClearImage={() => {
+                clearImage();
+                setImagePreviewUrl(null);
+                setFormData((prev) => ({ ...prev, image: null }));
+              }}
+              onClearPreviewUrl={() => {
+                setImagePreviewUrl(null);
+                setFormData((prev) => ({ ...prev, image: null }));
+              }}
+            />
 
             {/* 태그 */}
             <div>
@@ -545,25 +315,24 @@ const DiaryFormPage = () => {
                 value={tagInput}
                 placeholder="#태그 형식으로 입력해주세요 (예: #일상 #행복 #여행)"
                 onChange={(e) => {
-                  const value = e.target.value;
-                  setTagInput(value);
-
-                  const parsedTags = value
-                    .split(' ')
-                    .map((tag) => tag.trim())
-                    .filter((tag) => tag.startsWith('#') && tag.length > 1);
-
-                  setTags(parsedTags);
-                  setFormData((prev) => ({ ...prev, tags: parsedTags }));
+                  handleTagInputChange(e.target.value);
+                  setFormData((prev) => ({ ...prev, tags }));
                 }}
               />
             </div>
           </div>
 
-          {/* 버튼 */}
           <div className={S.buttonGroup}>
             <button type="button" className={S.bgGrayBtn} onClick={() => navigate(-1)}>
               취소
+            </button>
+            <button
+              type="button"
+              className={S.lineBtn}
+              onClick={handleSaveDraft}
+              disabled={!hasUnsavedChanges}
+            >
+              임시 저장
             </button>
             <button type="submit" className={S.bgPrimaryBtn}>
               저장

@@ -1,5 +1,6 @@
 import type { DiaryDetailEntity, DiaryRowEntity, SupabaseDiaryResponse } from '../types/diary';
 import { transformDiaryData } from '../utils/formatSupabase';
+import { getAllDiariesLikesData } from './like';
 import supabase from './supabase/client';
 
 /**
@@ -142,22 +143,16 @@ export const deleteDiaryById = async (diaryId: string) => {
 };
 
 /**
- * 현재 사용자가 특정 일기에 좋아요를 했는지 확인
+ * 특정 사용자가 특정 일기에 좋아요했는지 확인
  */
 export const checkUserLikedDiary = async (diaryId: string, userId: string) => {
-  const { data, error } = await supabase
-    .from('likes')
-    .select('id')
-    .eq('diary_id', diaryId)
-    .eq('user_id', userId)
-    .single();
-
-  if (error && error.code !== 'PGRST116') {
-    // PGRST116: no rows returned
-    throw new Error('좋아요 상태 확인 실패');
+  try {
+    const { userLikes } = await getAllDiariesLikesData(userId);
+    return userLikes.has(diaryId);
+  } catch (error) {
+    console.error('좋아요 상태 확인 에러:', error);
+    return false;
   }
-
-  return !!data;
 };
 
 /**

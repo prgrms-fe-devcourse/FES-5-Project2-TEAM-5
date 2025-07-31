@@ -89,9 +89,15 @@ export const useDiaryDetail = (diaryId: string | undefined) => {
       setIsLiked(likedStatus);
 
       await fetchComments(diaryId);
-    } catch (err: any) {
-      console.error('일기 상세 정보 불러오기 실패:', err.message);
-      setError('일기를 불러오는 데 실패했습니다: ' + err.message);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.';
+      console.error('일기 상세 정보 불러오기 실패:', errorMessage);
+      setError('일기를 불러오는 데 실패했습니다.');
+      toastUtils.error({
+        title: '실패',
+        message: '일기를 불러오는 데 실패했습니다. 다시 시도해주세요.',
+      });
     } finally {
       setLoading(false);
     }
@@ -186,6 +192,58 @@ export const useDiaryDetail = (diaryId: string | undefined) => {
     [diary, userInfo, diaryId],
   );
 
+  // 댓글 수정 함수 추가
+  const handleEditComment = useCallback(
+    async (commentId: string, content: string) => {
+      if (!userInfo || !content.trim()) return;
+
+      try {
+        const { error: updateError } = await supabase
+          .from('comments')
+          .update({ content: content.trim() })
+          .eq('id', commentId)
+          .eq('user_id', userInfo.id); // 본인 댓글만 수정 가능
+
+        if (updateError) throw updateError;
+
+        // 댓글 목록 업데이트
+        setComments((prev) =>
+          prev.map((comment) =>
+            comment.id === commentId ? { ...comment, content: content.trim() } : comment,
+          ),
+        );
+      } catch (error) {
+        console.error('댓글 수정 실패:', error);
+        throw error;
+      }
+    },
+    [userInfo],
+  );
+
+  // 댓글 삭제 함수 추가
+  const handleDeleteComment = useCallback(
+    async (commentId: string) => {
+      if (!userInfo) return;
+
+      try {
+        const { error: deleteError } = await supabase
+          .from('comments')
+          .delete()
+          .eq('id', commentId)
+          .eq('user_id', userInfo.id); // 본인 댓글만 삭제 가능
+
+        if (deleteError) throw deleteError;
+
+        // 댓글 목록에서 제거
+        setComments((prev) => prev.filter((comment) => comment.id !== commentId));
+      } catch (error) {
+        console.error('댓글 삭제 실패:', error);
+        throw error;
+      }
+    },
+    [userInfo],
+  );
+
   const handleDelete = useCallback(async () => {
     if (!diaryId) {
       throw new Error('삭제할 일기 ID가 없습니다.');
@@ -204,8 +262,11 @@ export const useDiaryDetail = (diaryId: string | undefined) => {
     isLiked,
     likesCount,
     comments,
+    currentUser: userInfo, // 현재 사용자 정보 추가
     handleLike,
     handleAddComment,
+    handleEditComment, // 댓글 수정 함수 추가
+    handleDeleteComment, // 댓글 삭제 함수 추가
     handleDelete,
     fetchDiaryDetail,
   };
