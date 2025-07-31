@@ -1,4 +1,5 @@
 import { useRive } from '@rive-app/react-canvas';
+import { memo } from 'react';
 
 const Molly = () => {
   const { RiveComponent } = useRive({
@@ -13,4 +14,4 @@ const Molly = () => {
     </div>
   );
 };
-export default Molly;
+export default memo(Molly);
