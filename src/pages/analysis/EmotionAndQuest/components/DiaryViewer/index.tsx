@@ -1,4 +1,4 @@
-import S from '../style.module.css';
+import S from '@/pages/analysis/EmotionAndQuest/style.module.css';
 
 interface Props {
   content: string;

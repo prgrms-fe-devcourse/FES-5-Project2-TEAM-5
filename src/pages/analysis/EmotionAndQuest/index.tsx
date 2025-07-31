@@ -11,6 +11,7 @@ import QuestSelector from './components/QuestSelector';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useToggleList } from './hooks/useToggleList';
 import { toastUtils } from '@/shared/components/Toast';
+import PublicDecision from './components/PublicDecision';
 
 function EmotionAndQuest() {
   const location = useLocation();
@@ -24,6 +25,8 @@ function EmotionAndQuest() {
   const questSelection = useToggleList(); // 퀘스트 선택
   const [questAccepted, setQuestAccepted] = useState<boolean | null>(null);
   const [reason, setReason] = useState('');
+
+  const [isPublic, setIsPublic] = useState(false);
 
 
   useEffect(() => {
@@ -52,7 +55,7 @@ function EmotionAndQuest() {
           user_id: user.id,
           reason_text: reason || null,
           is_quest_accepted: accepted,
-          is_public: true // 임시로 true로 했음!!!!!!!!!!!!!!!!!!!!!
+          is_public: isPublic  // 토글 상태로 저장
         })
         .select()
         .single();
@@ -124,6 +127,7 @@ function EmotionAndQuest() {
         onToggle={emotionSelection.toggle}
       />
       <ReasonInput value={reason} onChange={setReason} />
+      
       <QuestDecision
         accepted={questAccepted}
         onAccept={() => setQuestAccepted(true)}
@@ -136,17 +140,24 @@ function EmotionAndQuest() {
           onToggle={questSelection.toggle}
         />
       )}
+
       {questAccepted !== null && (
-        <section className={S.submitSection}>
-          <button
-            type="button"
-            className={S.submit}
-            onClick={handleSubmit}
-            disabled={emotionSelection.selected.length === 0}
-          >
-            완료
-          </button>
-        </section>
+        <>
+          <PublicDecision
+              isPublic={isPublic}
+              onChange={setIsPublic}
+          />
+          <section className={S.submitSection}>
+            <button
+              type="button"
+              className={S.submit}
+              onClick={handleSubmit}
+              disabled={emotionSelection.selected.length === 0}
+            >
+              완료
+            </button>
+          </section>
+        </>
       )}
     </main>
   );
