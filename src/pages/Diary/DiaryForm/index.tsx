@@ -12,6 +12,7 @@ import { useTags } from './hooks/useTags';
 import { processHashtags, uploadImageToStorage, scrollToElement } from './utils/diaryFormUtils';
 import { ImageUpload } from './components/ImageUpload';
 import supabase from '@/shared/api/supabase/client';
+import { EmotionSelector } from './components/EmotionSelector';
 
 const DiaryFormPage = () => {
   const {
@@ -28,6 +29,7 @@ const DiaryFormPage = () => {
     navigate,
     clearDraft,
     handleInputChange,
+    handleEmotionSelect,
     saveToLocalStorage,
   } = useDiaryForm();
 
@@ -104,11 +106,14 @@ const DiaryFormPage = () => {
     }
 
     try {
-      let imageUrl = imagePreviewUrl || '';
+      let imageUrl: string | null = null;
+
       if (imageFile) {
         const uploadedUrl = await uploadImageToStorage(imageFile, user.id);
         if (!uploadedUrl) return;
         imageUrl = uploadedUrl;
+      } else if (imagePreviewUrl && imagePreviewUrl.trim() !== '') {
+        imageUrl = imagePreviewUrl;
       }
 
       // 날짜 ISO 처리
@@ -212,6 +217,12 @@ const DiaryFormPage = () => {
         <form onSubmit={handleSubmit}>
           <h3 className={S.pageTitle}>{isEditMode ? '씨앗 기록 수정' : '새로운 씨앗 기록'}</h3>
           <div className={S.formArea}>
+            <EmotionSelector
+              ref={emotionSectionRef}
+              emotions={emotions}
+              selectedEmotionId={selectedEmotionId}
+              onEmotionSelect={(id) => handleEmotionSelect(id, emotions)}
+            />
             {/* 제목 */}
             <div>
               <label htmlFor={titleId} className={S.itemTitle}>

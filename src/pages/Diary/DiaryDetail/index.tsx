@@ -1,5 +1,4 @@
 import S from './style.module.css';
-import { useState } from 'react';
 import DiaryWeather from '@/shared/components/DiaryWeather';
 import { useNavigate, useParams } from 'react-router-dom';
 import { formatToSimpleDate } from '@/shared/utils/formatDate';

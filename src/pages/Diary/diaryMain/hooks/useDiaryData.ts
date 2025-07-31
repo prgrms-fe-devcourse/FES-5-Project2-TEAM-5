@@ -31,6 +31,8 @@ export const useDiaryData = (userId: string | null, selectedDate: Date) => {
         startOfNextDay.setHours(0, 0, 0, 0);
         const startOfNextDayUTC = startOfNextDay.toISOString();
 
+        fetchDiariesByDate(userId, startOfDayUTC, startOfNextDayUTC);
+
         // 병렬로 데이터 가져오기
         const [rawDiaries, likesCount, commentsCount] = await Promise.all([
           fetchDiariesByDate(userId, startOfDayUTC, startOfNextDayUTC),

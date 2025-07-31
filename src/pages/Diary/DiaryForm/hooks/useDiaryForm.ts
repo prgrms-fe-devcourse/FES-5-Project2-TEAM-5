@@ -30,6 +30,7 @@ export const useDiaryForm = () => {
   const { user } = useUserContext();
   const navigate = useNavigate();
   const location = useLocation();
+  const dateInState = location.state?.date;
 
   const existingDiary = location.state?.diary;
   const isEditMode = !!existingDiary?.id;
@@ -61,7 +62,6 @@ export const useDiaryForm = () => {
       content: existingDiary?.content || '',
       isPublic: existingDiary?.is_public ?? true,
       image: null,
-
       tags:
         (existingDiary?.diary_hashtags as Array<{ hashtags: { name: string } }> | undefined)?.map(
           (h) => `#${h.hashtags.name}`,
@@ -74,9 +74,12 @@ export const useDiaryForm = () => {
     return existingDiary?.emotion_main_id || null;
   });
 
-  const [diaryDate, setDiaryDate] = useState<string>(() => {
+  const [diaryDate, setDiaryDate] = useState(() => {
+    // 수정 모드면 해당 일기 날짜 사용
     if (isEditMode && draftData) return draftData.diaryDate;
-    return existingDiary?.created_at?.split('T')[0] ?? new Date().toISOString().split('T')[0];
+    if (isEditMode && existingDiary) return existingDiary.created_at?.split('T')[0];
+    // 신규면 달력에서 온 날짜(state) 아니면 오늘
+    return dateInState || new Date().toISOString().split('T')[0];
   });
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(() => {
