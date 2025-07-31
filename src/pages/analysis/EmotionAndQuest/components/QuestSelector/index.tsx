@@ -1,4 +1,4 @@
-import S from '../style.module.css';
+import S from '@/pages/analysis/EmotionAndQuest/style.module.css';
 import type { Database } from '@/shared/api/supabase/types';
 
 type Quest = Database['public']['Tables']['quests']['Row'];

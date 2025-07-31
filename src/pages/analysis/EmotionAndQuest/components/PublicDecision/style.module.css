@@ -1,0 +1,9 @@
+
+
+.publicSection {
+  margin-bottom: 60px;
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
