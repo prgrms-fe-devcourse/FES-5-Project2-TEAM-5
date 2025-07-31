@@ -62,6 +62,8 @@
       font-weight: 700;
       margin-bottom: var(--space-3);
       line-height: 28px;
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
 
     .content{
@@ -70,6 +72,8 @@
       font-weight: 400;
       line-height: 26px;
       /* max-width: 700px; */
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
   }
 }

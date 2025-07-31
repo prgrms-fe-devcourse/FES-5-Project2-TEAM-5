@@ -41,6 +41,9 @@
     line-height: var(--space-6);
 
     overflow-y: auto;
+
+    word-break: keep-all;
+    overflow-wrap: break-word;
   }
 }
 
