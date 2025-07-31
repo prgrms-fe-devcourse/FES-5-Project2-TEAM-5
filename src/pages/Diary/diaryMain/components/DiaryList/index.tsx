@@ -8,7 +8,6 @@ type Props = {
 
 const DiaryList = ({ diaries }: Props) => {
   if (!diaries.length) return null;
-  console.log(diaries.map((d) => d.created_at));
   return (
     <ul className={S.diaryList}>
       {diaries.map((diary) => {

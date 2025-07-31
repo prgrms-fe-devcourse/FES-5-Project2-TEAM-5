@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BsPlusLg } from 'react-icons/bs';
 
@@ -56,6 +56,10 @@ const DiaryPage = () => {
     navigate('/diary/form', { state: { date: dateStr } });
   };
 
+  const handleMonthChange = useCallback((newDate: Date) => {
+    setSelectedDate(newDate);
+  }, []);
+
   return (
     <main className={S.container}>
       {/* 날씨 영역 */}
@@ -78,6 +82,7 @@ const DiaryPage = () => {
               date={selectedDate}
               onDateChange={setSelectedDate}
               entries={monthEntries}
+              onMonthChange={handleMonthChange}
             />
           </div>
 
