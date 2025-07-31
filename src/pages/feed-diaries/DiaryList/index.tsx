@@ -67,7 +67,7 @@ const DiaryList = () => {
       }
     };
     fetchDiaries();
-  }, []);
+  }, [currentUserId]);
 
   const handleSearch = useCallback((value: string) => {
     setSearchTerm(value);
@@ -77,25 +77,28 @@ const DiaryList = () => {
     setSelectedEmotions(emotions);
   }, []);
 
-  const handleLikeUpdate = useCallback((diaryId: string, isLiked: boolean, count: number) => {
-    if (!isAuth || !user) {
-      toastUtils.info({
-        title: '로그인 필요',
-        message: '좋아요를 누르려면 로그인해주세요.',
-      });
-    }
-    setLikesCount((prev) => ({ ...prev, [diaryId]: count }));
-
-    setCurrentUserLikes((prev) => {
-      const updateLikes = new Set(prev);
-      if (isLiked) {
-        updateLikes.add(diaryId);
-      } else {
-        updateLikes.delete(diaryId);
+  const handleLikeUpdate = useCallback(
+    (diaryId: string, isLiked: boolean, count: number) => {
+      if (!isAuth || !user) {
+        toastUtils.info({
+          title: '로그인 필요',
+          message: '좋아요를 누르려면 로그인해주세요.',
+        });
       }
-      return updateLikes;
-    });
-  }, []);
+      setLikesCount((prev) => ({ ...prev, [diaryId]: count }));
+
+      setCurrentUserLikes((prev) => {
+        const updateLikes = new Set(prev);
+        if (isLiked) {
+          updateLikes.add(diaryId);
+        } else {
+          updateLikes.delete(diaryId);
+        }
+        return updateLikes;
+      });
+    },
+    [isAuth, user],
+  );
 
   if (loading) {
     return (

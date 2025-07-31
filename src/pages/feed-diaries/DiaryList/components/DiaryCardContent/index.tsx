@@ -1,6 +1,7 @@
 import type { Diary } from '@/shared/types/diary';
 import S from './style.module.css';
 import type { Hashtag } from '@/shared/types/hashtag';
+import { truncateText } from '@/shared/utils/truncateText';
 
 interface Props {
   diary: Diary;
@@ -27,7 +28,7 @@ const DiaryCardContent = ({ diary, hashtags }: Props) => {
             ))}
           </div>
         )}
-        <p className={S.contentText}>{content}</p>
+        <p className={S.contentText}>{truncateText(content, 1000)}</p>
       </section>
     </div>
   );
