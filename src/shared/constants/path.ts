@@ -13,4 +13,5 @@ export const PATHS = {
   USER_DETAIL: '/users/:slug',
   ABOUT: '/about',
   AUTH_CALLBACK: '/auth/callback',
+  NOT_FOUND: '*',
 } as const;
