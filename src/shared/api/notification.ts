@@ -1,4 +1,9 @@
+import type {
+  RealtimePostgresInsertPayload,
+  RealtimePostgresUpdatePayload,
+} from '@supabase/supabase-js';
 import supabase from './supabase/client';
+import type { Tables } from './supabase/types';
 /**
  *  다이어리에 좋아요 시 알림
  */
@@ -123,4 +128,27 @@ export const updateNotificationRead = async (userId: string, notifId: string) =>
   if (error) {
     throw new Error('메시지 읽음 에러');
   }
+};
+
+/**
+ * 알림 실시간 구독  채널 생성
+ */
+export const createNotificationChannel = (
+  userId: string,
+  onNewNotification: (payload: RealtimePostgresInsertPayload<Tables<'notifications'>>) => void,
+  onUpdateState: (payload: RealtimePostgresUpdatePayload<Tables<'notifications'>>) => void,
+) => {
+  return supabase
+    .channel(`notification_${userId}`)
+    .on(
+      'postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${userId}` },
+      onNewNotification,
+    )
+    .on(
+      'postgres_changes',
+      { event: 'UPDATE', schema: 'public', table: 'notifications', filter: `user_id=eq.${userId}` },
+      onUpdateState,
+    )
+    .subscribe();
 };

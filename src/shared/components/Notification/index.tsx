@@ -10,7 +10,7 @@ interface Props {
 
 const Notification = ({ color }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { isLoading, notifications, onDelete, hasNewNotification, onAllRead } = useNotification();
+  const { isLoading, notifications, onDelete, hasNewNotification, onReadAll } = useNotification();
 
   const handleClick = () => {
     setIsOpen((prev) => !prev);
@@ -51,7 +51,7 @@ const Notification = ({ color }: Props) => {
                 <button
                   type="button"
                   className={style.notificationAllReadButton}
-                  onClick={onAllRead}
+                  onClick={onReadAll}
                   disabled={!(notifications.length > 0)}
                 >
                   모두 읽음
