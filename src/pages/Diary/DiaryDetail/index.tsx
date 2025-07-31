@@ -7,10 +7,12 @@ import { useDiaryDetail } from '../DiaryMain/hooks/useDiaryDetail';
 import { toastUtils } from '@/shared/components/Toast';
 import CommentSection from './components/CommentSection';
 import { IoLockClosedOutline, IoLockOpenOutline } from 'react-icons/io5';
+import { useUserContext } from '@/shared/context/UserContext';
 
 const DiaryDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useUserContext();
 
   const {
     diary,
@@ -77,6 +79,8 @@ const DiaryDetailPage = () => {
     );
   }
 
+  const isAuthor = user.id === diary.user_id;
+
   return (
     <main className={S.container}>
       <DiaryWeather />
@@ -95,19 +99,21 @@ const DiaryDetailPage = () => {
                     </>
                   )}
                 </li>
-                <li className={S.publicOrNot}>
-                  {diary.is_public ? (
-                    <>
-                      <IoLockOpenOutline />
-                      공개
-                    </>
-                  ) : (
-                    <>
-                      <IoLockClosedOutline />
-                      비공개
-                    </>
-                  )}
-                </li>
+                {isAuthor && (
+                  <li className={S.publicOrNot}>
+                    {diary.is_public ? (
+                      <>
+                        <IoLockOpenOutline />
+                        공개
+                      </>
+                    ) : (
+                      <>
+                        <IoLockClosedOutline />
+                        비공개
+                      </>
+                    )}
+                  </li>
+                )}
               </ul>
             </h3>
           </div>
@@ -145,19 +151,23 @@ const DiaryDetailPage = () => {
           <button type="button" className={S.bgGrayBtn} onClick={() => navigate('/diary')}>
             목록으로
           </button>
-          <button type="button" className={S.lineBtn} onClick={onDeleteDiary}>
-            삭제
-          </button>
-          <button
-            type="button"
-            className={S.bgPrimaryBtn}
-            onClick={() => {
-              if (!diary) return;
-              navigate('/diary/form', { state: { diary } });
-            }}
-          >
-            수정
-          </button>
+          {isAuthor && (
+            <>
+              <button type="button" className={S.lineBtn} onClick={onDeleteDiary}>
+                삭제
+              </button>
+              <button
+                type="button"
+                className={S.bgPrimaryBtn}
+                onClick={() => {
+                  if (!diary) return;
+                  navigate('/diary/form', { state: { diary } });
+                }}
+              >
+                수정
+              </button>
+            </>
+          )}
         </div>
       </div>
     </main>
