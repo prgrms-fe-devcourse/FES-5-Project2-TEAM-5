@@ -47,9 +47,17 @@ const QuestSection = () => {
       </div>
       {isOpen && (
         <ul className={style.questList}>
-          {quests.map((quest) => (
-            <QuestItem quest={quest} key={quest.quest_id} onUpdate={handleQuestUpdate} />
-          ))}
+          {isPending ? (
+            <div className={style.sinnerWrapper}>
+              <span>퀘스트 불러오는 중..</span>
+            </div>
+          ) : (
+            <>
+              {quests.map((quest) => (
+                <QuestItem quest={quest} key={quest.quest_id} onUpdate={handleQuestUpdate} />
+              ))}
+            </>
+          )}
         </ul>
       )}
     </div>
