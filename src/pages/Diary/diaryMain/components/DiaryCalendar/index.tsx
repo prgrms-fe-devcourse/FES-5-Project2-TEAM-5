@@ -26,7 +26,6 @@ const DiaryCalendar = ({ userId, date, onDateChange, entries, onMonthChange }: P
   const handleActiveStartDateChange = useCallback(
     ({ activeStartDate }: { activeStartDate: Date | null }) => {
       if (activeStartDate) {
-        // 부모 컴포넌트에 월 변경을 알림
         onMonthChange?.(activeStartDate);
       }
     },

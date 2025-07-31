@@ -30,6 +30,10 @@ const DiaryFormPage = () => {
     clearDraft,
     handleInputChange,
     handleEmotionSelect,
+    handleCancel,
+    showRestoreDialog,
+    handleRestoreConfirm,
+    handleRestoreCancel,
     saveToLocalStorage,
   } = useDiaryForm();
 
@@ -71,7 +75,6 @@ const DiaryFormPage = () => {
   const handleSaveDraft = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     saveToLocalStorage();
-    toastUtils.success({ title: '성공', message: '임시 저장되었습니다.' });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -218,6 +221,24 @@ const DiaryFormPage = () => {
 
   return (
     <main className={S.container}>
+      {/* 임시저장 복원 */}
+      {showRestoreDialog && (
+        <div className={S.dialogOverlay}>
+          <div className={S.dialog}>
+            <h4>임시저장 복원</h4>
+            <p>이전에 임시저장된 내용이 있습니다. 불러오시겠습니까?</p>
+            <div className={S.dialogButtons}>
+              <button onClick={handleRestoreCancel} className={S.lineBtn}>
+                아니오
+              </button>
+              <button onClick={handleRestoreConfirm} className={S.bgPrimaryBtn}>
+                예
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <DiaryWeather />
       <div className={S.inner}>
         <form onSubmit={handleSubmit}>
@@ -340,15 +361,10 @@ const DiaryFormPage = () => {
           </div>
 
           <div className={S.buttonGroup}>
-            <button type="button" className={S.bgGrayBtn} onClick={() => navigate(-1)}>
+            <button type="button" className={S.bgGrayBtn} onClick={handleCancel}>
               취소
             </button>
-            <button
-              type="button"
-              className={S.lineBtn}
-              onClick={handleSaveDraft}
-              disabled={!hasUnsavedChanges}
-            >
+            <button type="button" className={S.lineBtn} onClick={handleSaveDraft}>
               임시 저장
             </button>
             <button type="submit" className={S.bgPrimaryBtn}>

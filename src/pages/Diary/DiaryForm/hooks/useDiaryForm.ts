@@ -44,16 +44,6 @@ export const useDiaryForm = () => {
   } = useLocalStorage<DraftData | null>(draftKey, null);
 
   const [formData, setFormData] = useState<FormData>(() => {
-    if (isEditMode && draftData) {
-      return {
-        emotion: draftData.emotion,
-        title: draftData.title,
-        content: draftData.content,
-        isPublic: draftData.isPublic,
-        image: null,
-        tags: draftData.tags,
-      };
-    }
     return {
       emotion: existingDiary?.emotion_mains?.name || '',
       title: existingDiary?.title || '',
@@ -68,7 +58,6 @@ export const useDiaryForm = () => {
   });
 
   const [selectedEmotionId, setSelectedEmotionId] = useState<number | null>(() => {
-    if (isEditMode && draftData) return draftData.selectedEmotionId;
     return existingDiary?.emotion_main_id || null;
   });
 
@@ -81,9 +70,6 @@ export const useDiaryForm = () => {
   });
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(() => {
-    if (isEditMode && draftData?.imagePreviewUrl !== undefined) {
-      return draftData.imagePreviewUrl;
-    }
     return existingDiary?.diary_image || null;
   });
 
@@ -94,6 +80,19 @@ export const useDiaryForm = () => {
     }
     return null;
   });
+
+  const handleCancel = useCallback(() => {
+    if (hasUnsavedChanges) {
+      const confirmLeave = window.confirm(
+        '저장하지 않은 변경사항이 있습니다. 정말 나가시겠습니까?',
+      );
+      if (confirmLeave) {
+        navigate(-1);
+      }
+    } else {
+      navigate(-1);
+    }
+  }, [hasUnsavedChanges, navigate]);
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -111,6 +110,14 @@ export const useDiaryForm = () => {
 
   const saveToLocalStorage = useCallback(() => {
     if (!isEditMode) return;
+
+    if (!hasUnsavedChanges) {
+      toastUtils.info({
+        title: '알림',
+        message: '수정한 내용이 없습니다.',
+      });
+      return;
+    }
 
     const currentDraft: DraftData = {
       emotion: formData.emotion,
@@ -132,7 +139,15 @@ export const useDiaryForm = () => {
       title: '임시저장 완료',
       message: '수정 내용이 임시 저장되었습니다.',
     });
-  }, [isEditMode, formData, selectedEmotionId, diaryDate, imagePreviewUrl, saveDraft]);
+  }, [
+    isEditMode,
+    hasUnsavedChanges,
+    formData,
+    selectedEmotionId,
+    diaryDate,
+    imagePreviewUrl,
+    saveDraft,
+  ]);
 
   const restoreFromDraft = useCallback(() => {
     if (!isEditMode || !draftData) return;
@@ -156,8 +171,6 @@ export const useDiaryForm = () => {
       message: '임시저장된 내용을 복원했습니다.',
     });
   }, [isEditMode, draftData]);
-
-  // 변경사항 감지
   useEffect(() => {
     if (!isEditMode) return;
 
@@ -169,6 +182,60 @@ export const useDiaryForm = () => {
 
     setHasUnsavedChanges(hasChanges);
   }, [formData, selectedEmotionId, isEditMode, existingDiary]);
+
+  const [showRestoreDialog, setShowRestoreDialog] = useState(false);
+  const [hasCheckedDraft, setHasCheckedDraft] = useState(false);
+
+  // 임시저장된 내용이 현재 내용과 다른지 확인하는 함수
+  const isDraftDifferentFromCurrent = useCallback(
+    (draft: DraftData) => {
+      const currentData = {
+        title: existingDiary?.title || '',
+        content: existingDiary?.content || '',
+        isPublic: existingDiary?.is_public ?? true,
+        selectedEmotionId: existingDiary?.emotion_main_id || null,
+      };
+
+      return (
+        draft.title !== currentData.title ||
+        draft.content !== currentData.content ||
+        draft.isPublic !== currentData.isPublic ||
+        draft.selectedEmotionId !== currentData.selectedEmotionId
+      );
+    },
+    [existingDiary],
+  );
+
+  useEffect(() => {
+    if (hasCheckedDraft) return;
+
+    if (isEditMode && draftData && draftData.lastSaved) {
+      const lastSavedDate = new Date(draftData.lastSaved);
+      const now = new Date();
+      const timeDiff = now.getTime() - lastSavedDate.getTime();
+
+      // 24시간 이내 && 임시저장 내용이 현재 내용과 다를 때만 복원 제안
+      if (timeDiff < 24 * 60 * 60 * 1000 && isDraftDifferentFromCurrent(draftData)) {
+        setShowRestoreDialog(true);
+      }
+      setHasCheckedDraft(true);
+    } else {
+      setHasCheckedDraft(true);
+    }
+  }, [isEditMode, draftData, hasCheckedDraft, isDraftDifferentFromCurrent]);
+
+  const handleRestoreConfirm = useCallback(() => {
+    restoreFromDraft();
+    setShowRestoreDialog(false);
+  }, [restoreFromDraft]);
+
+  const handleRestoreCancel = useCallback(() => {
+    setShowRestoreDialog(false);
+    toastUtils.info({
+      title: '알림',
+      message: '원본 내용으로 진행합니다.',
+    });
+  }, []);
 
   return {
     formData,
@@ -193,5 +260,10 @@ export const useDiaryForm = () => {
     handleEmotionSelect,
     saveToLocalStorage,
     restoreFromDraft,
+    handleCancel,
+    showRestoreDialog,
+    handleRestoreConfirm,
+    handleRestoreCancel,
+    hasCheckedDraft,
   };
 };

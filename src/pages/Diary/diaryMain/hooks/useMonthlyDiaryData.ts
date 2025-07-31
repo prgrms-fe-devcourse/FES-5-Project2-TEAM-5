@@ -6,7 +6,6 @@ type MonthEntry = {
   created_at: string;
 };
 
-// useMonthlyDiaryData 훅 수정
 export const useMonthlyDiaryData = (userId: string | null, selectedDate: Date) => {
   const [monthEntries, setMonthEntries] = useState<MonthEntry[]>([]);
   const [currentMonthDiaryCount, setCurrentMonthDiaryCount] = useState(0);

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BsPlusLg } from 'react-icons/bs';
 
@@ -29,7 +29,14 @@ const DiaryPage = () => {
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-  const { diaryList, loading } = useDiaryData(user?.id ?? null, selectedDate);
+  const [currentCalendarMonth, setCurrentCalendarMonth] = useState(new Date());
+
+  const { diaryList, loading } = useDiaryData(user?.id ?? null, selectedDate, currentCalendarMonth);
+
+  const handleMonthChange = useCallback((newDate: Date) => {
+    setCurrentCalendarMonth(newDate);
+  }, []);
+
   const { monthEntries, currentMonthDiaryCount } = useMonthlyDiaryData(
     user?.id ?? null,
     selectedDate,
@@ -50,15 +57,10 @@ const DiaryPage = () => {
 
   const emotionStatsPercentage = calculateEmotionPercentages(emotionStatsData);
 
-  // 이벤트 핸들러
   const handleNewDiaryClick = () => {
     const dateStr = getLocalDateString(selectedDate);
     navigate('/diary/form', { state: { date: dateStr } });
   };
-
-  const handleMonthChange = useCallback((newDate: Date) => {
-    setSelectedDate(newDate);
-  }, []);
 
   return (
     <main className={S.container}>
