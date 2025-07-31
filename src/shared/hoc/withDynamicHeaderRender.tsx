@@ -6,7 +6,7 @@ type PathValues = (typeof PATHS)[keyof typeof PATHS];
 
 const whiteStyle: PathValues[] = [PATHS.HOME, PATHS.MYPAGE, PATHS.DIARY, PATHS.DIARY_FORM];
 
-const whiteDynamicPathPatterns = ['/diary/:id'];
+const whiteDynamicPathPatterns = ['/diary/:id', '/users/:id'];
 
 interface WithStyleProps {
   style: CSSProperties;

@@ -3,6 +3,7 @@ import default_image from '../../assets/default_image.svg';
 import { formatToReadableDate } from '@/shared/utils/formatDate';
 import type { DbUser } from '@/shared/types/dbUser';
 import type { Emotion } from '@/shared/types/emotion';
+import { useNavigate } from 'react-router-dom';
 
 const DEFAULT_IMAGE = default_image;
 
@@ -13,9 +14,15 @@ interface Props {
 }
 
 const DiaryCardHeader = ({ emotion, created_at, user }: Props) => {
+  const navigate = useNavigate();
+  const handleUserDetail = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/users/${user.id}`);
+  };
+
   return (
     <header className={S.header}>
-      <div className={S.userInfo}>
+      <div className={S.userInfo} onClick={handleUserDetail}>
         <img
           className={S.userProfile}
           src={user.profile_image || DEFAULT_IMAGE}

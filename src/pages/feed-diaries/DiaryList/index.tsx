@@ -15,6 +15,7 @@ import type { DbUser } from '@/shared/types/dbUser';
 import type { Diary } from '@/shared/types/diary';
 import { toastUtils } from '@/shared/components/Toast';
 import { useUserContext } from '@/shared/context/UserContext';
+import Spinner from '@/shared/components/Spinner';
 
 const breakpointColumns = {
   default: 2,
@@ -31,12 +32,14 @@ const DiaryList = () => {
   const [mainEmotions, setMainEmotions] = useState<Emotion[]>([]);
   const [currentUserLikes, setCurrentUserLikes] = useState<Set<string>>(new Set());
   const { filteredDiaries } = useDiariesSearch(diaries, searchTerm, selectedEmotions);
+  const [loading, setLoading] = useState(true);
   const { user, isAuth } = useUserContext();
   const currentUserId = user?.id || null;
 
   useEffect(() => {
     const fetchDiaries = async () => {
       try {
+        setLoading(true);
         const [userData, diaryData, emotionData, likesData, commentsCount] = await Promise.all([
           getAllUserData(),
           getAllDiaryData(),
@@ -53,6 +56,8 @@ const DiaryList = () => {
       } catch (error) {
         console.error('데이터 로딩 실패:', error);
         toastUtils.error({ title: '실패', message: '예상하지 못한 에러 발생' });
+      } finally {
+        setLoading(false);
       }
     };
     fetchDiaries();
@@ -86,6 +91,13 @@ const DiaryList = () => {
     });
   }, []);
 
+  if (loading) {
+    return (
+      <main className={S.container}>
+        <Spinner />
+      </main>
+    );
+  }
   return (
     <main className={S.container}>
       <h2 className="sr-only">전체 사용자 일기 목록</h2>

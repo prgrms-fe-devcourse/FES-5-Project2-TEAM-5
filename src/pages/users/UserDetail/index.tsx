@@ -10,18 +10,21 @@ import UserInfoSection from '@/shared/components/UserInfoSection';
 import { toastUtils } from '@/shared/components/Toast';
 import type { DiaryRowEntity } from '@/shared/types/diary';
 import type { Tables } from '@/shared/api/supabase/types';
+import Spinner from '@/shared/components/Spinner';
 
 const UserDetail = () => {
   const [diaries, setDiaries] = useState<DiaryRowEntity[]>([]);
   const [userInfo, setUserInfo] = useState<Tables<'users'> | null>(null);
   const { slug } = useParams<{ slug: string }>();
   const [activeTabId, setActiveTabId] = useState('diary');
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDiaries = async () => {
       if (!slug) return;
       try {
+        setLoading(true);
         const user = await getUserDataById(slug);
         if (!user) {
           navigate('/users');
@@ -47,12 +50,21 @@ const UserDetail = () => {
       } catch (error) {
         if (error instanceof Error)
           toastUtils.error({ title: '다이어리 정보 로드 실패', message: error.message });
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchDiaries();
   }, [activeTabId]);
 
+  if (loading) {
+    return (
+      <main className={S.container}>
+        <Spinner />
+      </main>
+    );
+  }
   return (
     <main className={S.container}>
       <DiaryWeather />

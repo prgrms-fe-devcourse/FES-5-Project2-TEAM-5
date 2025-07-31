@@ -7,20 +7,26 @@ import type { DbUser } from '@/shared/types/dbUser';
 import { debounce } from '@/shared/utils/debounce';
 import { getAllUserData } from '@/shared/api/user';
 import { toastUtils } from '@/shared/components/Toast';
+import Spinner from '@/shared/components/Spinner';
 
 const UserPage = () => {
   const [users, setUsers] = useState<DbUser[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const { filteredUsers } = useUserSearch(users, searchTerm);
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        setLoading(true);
         const data = await getAllUserData();
         setUsers(data);
       } catch (error) {
         console.error('데이터 로딩 실패:', error);
         toastUtils.error({ title: '실패', message: '예상하지 못한 에러 발생' });
+      }finally{
+        setLoading(false);
       }
     };
     fetchUsers();
@@ -32,6 +38,15 @@ const UserPage = () => {
     }),
     [],
   );
+
+
+  if (loading) {
+  return (
+    <main className={S.container}>
+      <Spinner />
+    </main>
+  );
+}
 
   return (
     <main className={S.container}>
