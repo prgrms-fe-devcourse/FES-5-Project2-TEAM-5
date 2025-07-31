@@ -2,11 +2,13 @@ import { useState } from 'react';
 import ChatInput from './components/ChatInput';
 import ChatMessages from './components/ChatMessages';
 import Molly from './components/Molly';
-import S from './style.module.css';
 import QuestSection from './components/QuestSection';
+import { useChatMessages } from './hooks/useChatMessages';
+import style from './style.module.css';
 
 const Home = () => {
   const [isChatActive, setIsChatActive] = useState<boolean>(false);
+  const { messages, isAiTyping, isLoading, ref, userProfileUrl } = useChatMessages();
 
   const handleOpenChat = () => {
     setIsChatActive(true);
@@ -17,24 +19,31 @@ const Home = () => {
   };
 
   return (
-    <main className={S.container}>
-      <div className={S.overlay}>
+    <main className={style.container}>
+      <div className={style.overlay}>
         {/* 퀘스트 */}
         <QuestSection />
         {isChatActive ? (
-          <ChatMessages onClose={handleChatClose} />
+          <ChatMessages
+            onClose={handleChatClose}
+            messages={messages}
+            isLoading={isLoading}
+            ref={ref}
+            isAiTyping={isAiTyping}
+            userProfileUrl={userProfileUrl ?? null}
+          />
         ) : (
-          <section className={S.cardSection}>
+          <section className={style.cardSection}>
             <h2 className="sr-only">AI 케릭터 섹션</h2>
-            <div className={S.cardImage}>
+            <div className={style.cardImage}>
               <Molly />
             </div>
-            <div className={S.letter}>
+            <div className={style.letter}>
               <span>My little garden looking into my heart</span>
             </div>
           </section>
         )}
-        <ChatInput onOpenChat={handleOpenChat} />
+        <ChatInput onOpenChat={handleOpenChat} disabled={isAiTyping} />
       </div>
     </main>
   );

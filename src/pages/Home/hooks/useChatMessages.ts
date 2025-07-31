@@ -4,26 +4,24 @@ import {
   requestAiResponse,
 } from '@/shared/api/chat';
 import type { Tables } from '@/shared/api/supabase/types';
+import { useUserContext } from '@/shared/context/UserContext';
 import type { RealtimePostgresInsertPayload } from '@supabase/supabase-js';
-import { useEffect, useRef, useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
+import { useChatScroll } from './useChatScroll';
 
-interface Props {
-  userId: string;
-  name: string;
-}
-
-export const useChatMessages = ({ name, userId }: Props) => {
+export const useChatMessages = () => {
+  const { userInfo } = useUserContext();
   const [messages, setMessages] = useState<Tables<'chat_messages'>[]>([]);
-  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const [isAiTyping, setIsAiTyping] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string>('');
 
   // 초기 메시지 fetch
   useEffect(() => {
+    if (!userInfo?.id) return;
     startTransition(async () => {
       try {
-        const message = await fetchTodayChatMessages(userId);
+        const message = await fetchTodayChatMessages(userInfo.id);
         setMessages(message);
       } catch (error) {
         if (error instanceof Error) {
@@ -33,12 +31,13 @@ export const useChatMessages = ({ name, userId }: Props) => {
         }
       }
     });
-  }, [userId]);
+  }, [userInfo?.id]);
 
   // 실시간 채팅
   useEffect(() => {
+    if (!userInfo?.id) return;
     try {
-      const subscription = createMessageSubscription(userId, handleNewMessage);
+      const subscription = createMessageSubscription(userInfo.id, handleNewMessage);
 
       return () => {
         subscription.unsubscribe();
@@ -48,19 +47,20 @@ export const useChatMessages = ({ name, userId }: Props) => {
         setError(error.message);
       }
     }
-  }, [userId]);
+  }, [userInfo?.id]);
 
   const handleNewMessage = (
     payload: RealtimePostgresInsertPayload<{
       [key: string]: any;
     }>,
   ) => {
+    if (!userInfo?.id) return;
     const { content, created_at, id, role, user_id } = payload.new as Tables<'chat_messages'>;
     setMessages((prev) => [...prev, { id, created_at, content, user_id, role }]);
 
     if (role === 'user') {
       setIsAiTyping(true);
-      requestAiResponse(userId, name);
+      requestAiResponse(userInfo.id, userInfo.name);
     }
     if (role === 'model') {
       setIsAiTyping(false);
@@ -68,21 +68,14 @@ export const useChatMessages = ({ name, userId }: Props) => {
   };
 
   // 스크롤 추적
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (messagesContainerRef.current) {
-        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
-      }
-    }, 50);
-
-    return () => clearTimeout(timer);
-  }, [messages, isAiTyping]);
+  const ref = useChatScroll(messages, isAiTyping);
 
   return {
     messages,
     isAiTyping,
     error,
     isLoading: isPending,
-    ref: messagesContainerRef,
+    ref: ref,
+    userProfileUrl: userInfo?.profile_image,
   };
 };
