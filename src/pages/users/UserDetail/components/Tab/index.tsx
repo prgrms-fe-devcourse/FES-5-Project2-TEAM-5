@@ -1,17 +1,14 @@
-import { useState } from 'react';
 import S from './style.module.css';
 import { tabs } from './constant';
 
 interface TabsProps {
-  onTabChange?: (id: string) => void;
+  activeTabId: string;
+  onTabChange: (id: string) => void;
 }
 
-const Tabs = ({ onTabChange }: TabsProps) => {
-  const [activeTabId, setActiveTabId] = useState(tabs[0]?.id || '');
-
+const Tabs = ({ activeTabId, onTabChange }: TabsProps) => {
   const handleClick = (id: string) => () => {
-    setActiveTabId(id);
-    if (onTabChange) onTabChange(id);
+    onTabChange(id);
   };
 
   return (

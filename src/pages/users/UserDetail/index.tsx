@@ -25,6 +25,7 @@ const UserDetail = () => {
       if (!slug) return;
       try {
         setLoading(true);
+        setDiaries([]);
         const user = await getUserDataById(slug);
         if (!user) {
           navigate('/users');
@@ -45,8 +46,12 @@ const UserDetail = () => {
           default:
             data = [];
         }
+        const uniqueData = data.filter(
+          (diary, index, self) => index === self.findIndex((d) => d.id === diary.id),
+        );
+
         setUserInfo(user);
-        setDiaries(data);
+        setDiaries(uniqueData);
       } catch (error) {
         if (error instanceof Error)
           toastUtils.error({ title: '다이어리 정보 로드 실패', message: error.message });
@@ -69,7 +74,7 @@ const UserDetail = () => {
     <main className={S.container}>
       <DiaryWeather />
       <UserInfoSection userInfo={userInfo} />
-      <Tabs onTabChange={setActiveTabId} />
+      <Tabs activeTabId={activeTabId} onTabChange={setActiveTabId} />
       <section className={S.section03}>
         <h2 className="sr-only">일기 배너 리스트 영역</h2>
 
@@ -87,7 +92,7 @@ const UserDetail = () => {
                 title: diary.title,
                 is_public: diary.is_public,
               };
-              return <DiaryRowCard {...cardProps} key={diary.id} />;
+              return <DiaryRowCard {...cardProps} key={`${activeTabId}-${diary.id}`} />;
             })}
           </ul>
         </div>

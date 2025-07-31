@@ -3,7 +3,7 @@ interface Tab {
   label: string;
 }
 
-export const tabs:Tab[] = [
+export const tabs: Tab[] = [
   {
     id: 'diary',
     label: 'Diary',
@@ -12,7 +12,7 @@ export const tabs:Tab[] = [
     id: 'like',
     label: 'Like',
   },
-    {
+  {
     id: 'comment',
     label: 'Comment',
   },
