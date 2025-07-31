@@ -42,31 +42,23 @@ export const postLikeNotification = async (
  *  다이어리에 댓글 작성 시 알림
  */
 export const postCommentNotification = async (
-  recipientUserId: string,
-  senderUserId: string,
+  receiverId: string,
+  senderId: string,
   diaryId: string,
-  senderUserName: string,
+  senderName: string,
 ) => {
-  const { data: senderUser } = await supabase
-    .from('users')
-    .select('name')
-    .eq('id', senderUserId)
-    .single();
-
-  if (!senderUser) return;
-
   const { error } = await supabase.from('notifications').insert({
-    user_id: recipientUserId,
+    user_id: receiverId,
+    sender_id: senderId,
     diary_id: diaryId,
-    title: '댓글 알림',
-    message: `${senderUserName}님이 댓글을 남겼습니다.`,
-    type: '댓글',
+    type: '댓글' as const,
+    title: '새로운 댓글',
+    message: `${senderName}님이 회원님의 일기에 댓글을 남겼습니다.`,
     is_read: false,
-    sender_id: senderUserId,
   });
 
   if (error) {
-    throw new Error('좋아요 알림 생성 실패');
+    throw new Error('댓글 알림 생성 실패: ' + error.message);
   }
 };
 

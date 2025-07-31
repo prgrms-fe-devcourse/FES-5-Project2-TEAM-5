@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { toastUtils } from '@/shared/components/Toast';
 import { transformDiaryData } from '@/shared/utils/formatSupabase';
-import type { DiaryRowEntity } from '@/shared/types/diary';
+import type { DiaryRowEntity, SupabaseDiaryResponse } from '@/shared/types/diary';
 import { fetchDiariesByDate } from '@/shared/api/diary';
 import { getAllDiariesLikesCount } from '@/shared/api/like';
 import { getAllDiariesCommentsCount } from '@/shared/api/comment';
@@ -31,6 +31,8 @@ export const useDiaryData = (userId: string | null, selectedDate: Date) => {
         startOfNextDay.setHours(0, 0, 0, 0);
         const startOfNextDayUTC = startOfNextDay.toISOString();
 
+        fetchDiariesByDate(userId, startOfDayUTC, startOfNextDayUTC);
+
         // 병렬로 데이터 가져오기
         const [rawDiaries, likesCount, commentsCount] = await Promise.all([
           fetchDiariesByDate(userId, startOfDayUTC, startOfNextDayUTC),
@@ -50,7 +52,9 @@ export const useDiaryData = (userId: string | null, selectedDate: Date) => {
           comments: [{ count: commentsCount[diary.id] || 0 }],
         }));
 
-        const transformedData = transformDiaryData(diariesWithCounts as any);
+        const transformedData = transformDiaryData(
+          diariesWithCounts as unknown as SupabaseDiaryResponse[],
+        );
         setDiaryList(transformedData || []);
       } catch (error) {
         console.error('Failed to load diaries:', error);

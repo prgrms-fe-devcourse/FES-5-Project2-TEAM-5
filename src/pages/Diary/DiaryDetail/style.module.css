@@ -11,6 +11,8 @@
     padding: var(--space-2) var(--space-4);
     font-size: var(--text-lg);
     font-family: var(--font-main);
+    word-break: keep-all;
+    overflow-wrap: break-word;
   }
   textarea.customTextarea {
     resize: vertical;
@@ -30,7 +32,7 @@
 .titleArea {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-2);
   padding: 0 var(--space-5) var(--space-6);
   margin-bottom: var(--space-6);
   border-bottom: 1px solid var(--gray-100);
@@ -49,6 +51,7 @@
     justify-content: center;
     align-items: center;
     margin-left: auto;
+    min-width: 162px;
   }
   li {
     position: relative;
@@ -90,8 +93,6 @@
   align-items: center;
   margin-bottom: 60px;
   img {
-    width: 100%;
-    height: 100%;
     max-width: 900px;
   }
 }
@@ -99,6 +100,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  padding: 0 var(--space-5);
 }
 .commnetArea {
   margin-top: var(--space-5);
@@ -147,6 +149,7 @@
   gap: var(--space-4);
   > div {
     display: flex;
+    width: 100%;
     gap: var(--space-2);
   }
   .profileImage {
@@ -189,6 +192,29 @@
     color: var(--gray-300);
   }
 }
+.commentContentArea {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.commentActions {
+  button {
+    cursor: pointer;
+  }
+}
+.editButtonGroup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  button {
+    cursor: pointer;
+  }
+}
+.editCommentArea {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 .buttonGroup {
   display: flex;
@@ -224,6 +250,12 @@
   left: 50%;
   top: 50%;
   translate: -50% -50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-4);
   p {
     font-size: var(--text-xl);
   }
@@ -233,7 +265,6 @@
     border-radius: var(--radius-2);
     font-size: var(--text-xl);
     cursor: pointer;
-    margin-right: auto;
     background-color: var(--gray-100);
     color: var(--gray-900);
   }

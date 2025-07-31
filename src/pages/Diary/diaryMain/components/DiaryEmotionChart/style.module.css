@@ -1,3 +1,7 @@
 .spinner_wrap {
   position: relative;
+  .spinnerWrapper {
+    height: 100%;
+    max-height: 300px;
+  }
 }
