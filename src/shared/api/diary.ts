@@ -57,7 +57,8 @@ export const fetchDiariesByDate = async (
     .eq('user_id', userId)
     .eq('is_drafted', false)
     .gte('created_at', startOfDayUTC)
-    .lt('created_at', startOfNextDayUTC);
+    .lt('created_at', startOfNextDayUTC)
+    .order('created_at', { ascending: false });
 
   if (error || !data) {
     throw new Error('날짜별 다이어리 불러오기 실패');

@@ -43,8 +43,6 @@ export const useDiaryForm = () => {
     resetStorage: clearDraft,
   } = useLocalStorage<DraftData | null>(draftKey, null);
 
-  // 폼 상태들
-
   const [formData, setFormData] = useState<FormData>(() => {
     if (isEditMode && draftData) {
       return {
@@ -97,7 +95,6 @@ export const useDiaryForm = () => {
     return null;
   });
 
-  // 입력 핸들러들
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
@@ -112,7 +109,6 @@ export const useDiaryForm = () => {
     setFormData((prev) => ({ ...prev, emotion: emotionName }));
   }, []);
 
-  // 임시저장 관련 함수들
   const saveToLocalStorage = useCallback(() => {
     if (!isEditMode) return;
 

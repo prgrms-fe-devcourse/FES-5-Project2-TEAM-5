@@ -116,11 +116,6 @@ const DiaryFormPage = () => {
         imageUrl = imagePreviewUrl;
       }
 
-      // 날짜 ISO 처리
-      const selectedLocalDay = new Date(diaryDate);
-      selectedLocalDay.setHours(0, 0, 0, 0);
-      const createdAtISOString = selectedLocalDay.toISOString();
-
       let diaryData = null;
 
       if (existingDiary?.id) {
@@ -144,6 +139,17 @@ const DiaryFormPage = () => {
         await supabase.from('diary_hashtags').delete().eq('diary_id', existingDiary.id);
       } else {
         // 신규 작성 모드
+        const selectedDate = new Date(diaryDate);
+        const now = new Date();
+
+        // 선택한 날짜는 유지하고, 시간만 현재 시간으로 설정
+        selectedDate.setHours(
+          now.getHours(),
+          now.getMinutes(),
+          now.getSeconds(),
+          now.getMilliseconds(),
+        );
+
         const { data, error } = await supabase
           .from('diaries')
           .insert([
@@ -154,7 +160,7 @@ const DiaryFormPage = () => {
               content: formData.content,
               is_public: formData.isPublic,
               diary_image: imageUrl,
-              created_at: createdAtISOString,
+              created_at: selectedDate.toISOString(),
               is_drafted: false,
             },
           ])
