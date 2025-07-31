@@ -52,7 +52,12 @@ export const createMessageSubscription = (
       .channel(`ai_conversation_${userId}`)
       .on(
         'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'chat_messages' },
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'chat_messages',
+          filter: `user_id=eq.${userId}`,
+        },
         onMessage,
       )
       .subscribe();
