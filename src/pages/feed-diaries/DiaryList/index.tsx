@@ -16,6 +16,8 @@ import type { Diary } from '@/shared/types/diary';
 import { toastUtils } from '@/shared/components/Toast';
 import { useUserContext } from '@/shared/context/UserContext';
 import Spinner from '@/shared/components/Spinner';
+import { getAllHashtagsData } from '@/shared/api/hashtag';
+import type { Hashtag } from '@/shared/types/hashtag';
 
 const breakpointColumns = {
   default: 2,
@@ -30,8 +32,9 @@ const DiaryList = () => {
   const [users, setUsers] = useState<DbUser[]>([]);
   const [diaries, setDiaries] = useState<Diary[]>([]);
   const [mainEmotions, setMainEmotions] = useState<Emotion[]>([]);
+  const [hashtagsData, setHashtagsData] = useState<Record<string, Hashtag[]>>({});
   const [currentUserLikes, setCurrentUserLikes] = useState<Set<string>>(new Set());
-  const { filteredDiaries } = useDiariesSearch(diaries, searchTerm, selectedEmotions);
+  const { filteredDiaries } = useDiariesSearch(diaries, hashtagsData, searchTerm, selectedEmotions);
   const [loading, setLoading] = useState(true);
   const { user, isAuth } = useUserContext();
   const currentUserId = user?.id || null;
@@ -40,19 +43,22 @@ const DiaryList = () => {
     const fetchDiaries = async () => {
       try {
         setLoading(true);
-        const [userData, diaryData, emotionData, likesData, commentsCount] = await Promise.all([
-          getAllUserData(),
-          getAllDiaryData(),
-          getAllEmotionMains(),
-          getAllDiariesLikesData(currentUserId),
-          getAllDiariesCommentsCount(),
-        ]);
+        const [userData, diaryData, emotionData, likesData, commentsCount, hashtagsDataResult] =
+          await Promise.all([
+            getAllUserData(),
+            getAllDiaryData(),
+            getAllEmotionMains(),
+            getAllDiariesLikesData(currentUserId),
+            getAllDiariesCommentsCount(),
+            getAllHashtagsData(),
+          ]);
         setUsers(userData);
         setDiaries(diaryData);
         setMainEmotions(emotionData);
         setLikesCount(likesData.likesCount);
         setCommentsCount(commentsCount);
         setCurrentUserLikes(likesData.userLikes);
+        setHashtagsData(hashtagsDataResult);
       } catch (error) {
         console.error('데이터 로딩 실패:', error);
         toastUtils.error({ title: '실패', message: '예상하지 못한 에러 발생' });
@@ -128,6 +134,7 @@ const DiaryList = () => {
                       user={user}
                       diary={diary}
                       emotions={mainEmotions}
+                      hashtags={hashtagsData[diary.id] || []}
                       likesCount={likesCount[diary.id] || 0}
                       commentsCount={commentsCount[diary.id] || 0}
                       isLiked={currentUserLikes.has(diary.id)}

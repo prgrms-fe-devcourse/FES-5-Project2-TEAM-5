@@ -16,6 +16,15 @@
     margin-bottom: var(--space-3);
   }
 
+  .hashtags {
+    margin-bottom: var(--space-4);
+    font-weight: 400;
+    font-size: var(--text-lg);
+  }
+
+  .tag {
+    margin-right: var(--space-1);
+  }
   .contentText {
     font-size: var(--text-lg);
     font-weight: 500;

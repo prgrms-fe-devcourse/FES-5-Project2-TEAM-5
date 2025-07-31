@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import type { DbUser } from '@/shared/types/dbUser';
 import type { Diary } from '@/shared/types/diary';
 import type { Emotion } from '@/shared/types/emotion';
+import type { Hashtag } from '@/shared/types/hashtag';
 
 interface Props {
   currentUser: string;
@@ -15,6 +16,7 @@ interface Props {
   likesCount: number;
   commentsCount: number;
   isLiked: boolean;
+  hashtags: Hashtag[];
   onLikeUpdate: (diaryId: string, isLiked: boolean, count: number) => void;
 }
 
@@ -23,6 +25,7 @@ const DiaryCard = ({
   user,
   diary,
   emotions,
+  hashtags,
   likesCount,
   commentsCount,
   isLiked,
@@ -36,13 +39,13 @@ const DiaryCard = ({
     // 드래그 시 무시
     if (window.getSelection()?.toString()) return;
     const slug = diary.id;
-    navigate(`/community/${slug}`);
+    navigate(`/diary/${slug}`);
   };
 
   return (
     <article className={S.card} onClick={handleDiaryDetail}>
       <DiaryCardHeader emotion={emotion} created_at={created_at} user={user} />
-      <DiaryCardContent diary={diary} />
+      <DiaryCardContent diary={diary} hashtags={hashtags} />
       <DiaryCardFooter
         diaryAuthor={user}
         currentUser={currentUser}

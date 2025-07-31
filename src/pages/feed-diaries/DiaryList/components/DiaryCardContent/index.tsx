@@ -1,11 +1,13 @@
 import type { Diary } from '@/shared/types/diary';
 import S from './style.module.css';
+import type { Hashtag } from '@/shared/types/hashtag';
 
 interface Props {
   diary: Diary;
+  hashtags: Hashtag[];
 }
 
-const DiaryCardContent = ({ diary }: Props) => {
+const DiaryCardContent = ({ diary, hashtags }: Props) => {
   const { diary_image, title, content } = diary;
   return (
     <div className={S.content}>
@@ -16,6 +18,15 @@ const DiaryCardContent = ({ diary }: Props) => {
       )}
       <section className={S.diaryInfo}>
         <h3 className={S.title}>{title}</h3>
+        {hashtags.length > 0 && (
+          <div className={S.hashtags}>
+            {hashtags.map((tag) => (
+              <span key={tag.id} className={S.tag}>
+                #{tag.name}
+              </span>
+            ))}
+          </div>
+        )}
         <p className={S.contentText}>{content}</p>
       </section>
     </div>
