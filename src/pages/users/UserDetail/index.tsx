@@ -4,24 +4,28 @@ import DiaryRowCard from '@/shared/components/DiaryRowCard';
 import { useEffect, useState } from 'react';
 import { getUserCommentedDiaries, getUserDiaries, getUserLikedDiaries } from '@/shared/api/diary';
 import { useNavigate, useParams } from 'react-router-dom';
-import Tabs from './Tab';
+import Tabs from './components/Tab';
 import { getUserDataById } from '@/shared/api/user';
 import UserInfoSection from '@/shared/components/UserInfoSection';
 import { toastUtils } from '@/shared/components/Toast';
 import type { DiaryRowEntity } from '@/shared/types/diary';
 import type { Tables } from '@/shared/api/supabase/types';
+import Spinner from '@/shared/components/Spinner';
 
 const UserDetail = () => {
   const [diaries, setDiaries] = useState<DiaryRowEntity[]>([]);
   const [userInfo, setUserInfo] = useState<Tables<'users'> | null>(null);
   const { slug } = useParams<{ slug: string }>();
   const [activeTabId, setActiveTabId] = useState('diary');
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDiaries = async () => {
       if (!slug) return;
       try {
+        setLoading(true);
+        setDiaries([]);
         const user = await getUserDataById(slug);
         if (!user) {
           navigate('/users');
@@ -42,22 +46,35 @@ const UserDetail = () => {
           default:
             data = [];
         }
+        const uniqueData = data.filter(
+          (diary, index, self) => index === self.findIndex((d) => d.id === diary.id),
+        );
+
         setUserInfo(user);
-        setDiaries(data);
+        setDiaries(uniqueData);
       } catch (error) {
         if (error instanceof Error)
           toastUtils.error({ title: '다이어리 정보 로드 실패', message: error.message });
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchDiaries();
   }, [activeTabId]);
 
+  if (loading) {
+    return (
+      <main className={S.container}>
+        <Spinner />
+      </main>
+    );
+  }
   return (
     <main className={S.container}>
       <DiaryWeather />
       <UserInfoSection userInfo={userInfo} />
-      <Tabs onTabChange={setActiveTabId} />
+      <Tabs activeTabId={activeTabId} onTabChange={setActiveTabId} />
       <section className={S.section03}>
         <h2 className="sr-only">일기 배너 리스트 영역</h2>
 
@@ -75,7 +92,7 @@ const UserDetail = () => {
                 title: diary.title,
                 is_public: diary.is_public,
               };
-              return <DiaryRowCard {...cardProps} key={diary.id} />;
+              return <DiaryRowCard {...cardProps} key={`${activeTabId}-${diary.id}`} />;
             })}
           </ul>
         </div>

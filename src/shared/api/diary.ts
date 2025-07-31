@@ -25,7 +25,10 @@ export const getDiariesById = async (id: string): Promise<DiaryRowEntity[]> => {
  * 전체 다이어리 리스트 조회
  */
 export const getAllDiaryData = async () => {
-  const { data, error } = await supabase.from('diaries').select('*');
+  const { data, error } = await supabase
+    .from('diaries')
+    .select('*')
+    .order('created_at', { ascending: false });
 
   if (error) {
     throw new Error(`전체 다이어리 정보 불러오기 실패: ${error}}`);
