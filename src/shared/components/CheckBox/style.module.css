@@ -4,7 +4,5 @@
 }
 
 .checkbox {
-  width: 30px;
-  height: 30px;
   accent-color: var(--primary);
 }
