@@ -31,43 +31,45 @@ const Notification = ({ color }: Props) => {
       </button>
 
       {isOpen && (
-        <ul className={style.notificationList}>
-          {isLoading ? (
-            <div className={style.spinnerWrapper}>
-              <div className={style.spinner} />
-            </div>
-          ) : (
-            <>
-              {notifications.length > 0 ? (
-                <>
-                  {notifications.map((notification) => (
-                    <NotificationItem notification={notification} key={notification.id} />
-                  ))}
-                </>
-              ) : (
-                <li className={style.emptyNotification}>알림 없음</li>
-              )}
-              <div className={style.buttonGroup}>
-                <button
-                  type="button"
-                  className={style.notificationAllReadButton}
-                  onClick={onReadAll}
-                  disabled={!(notifications.length > 0)}
-                >
-                  모두 읽음
-                </button>
-                <button
-                  type="button"
-                  className={style.notificationDeleteButton}
-                  onClick={onDelete}
-                  disabled={!(notifications.length > 0)}
-                >
-                  알림 삭제
-                </button>
+        <div className={style.notificationWrapper}>
+          <ul className={style.notificationList}>
+            {isLoading ? (
+              <div className={style.spinnerWrapper}>
+                <div className={style.spinner} />
               </div>
-            </>
-          )}
-        </ul>
+            ) : (
+              <>
+                {notifications.length > 0 ? (
+                  <>
+                    {notifications.map((notification) => (
+                      <NotificationItem notification={notification} key={notification.id} />
+                    ))}
+                  </>
+                ) : (
+                  <li className={style.emptyNotification}>알림 없음</li>
+                )}
+              </>
+            )}
+          </ul>
+          <div className={style.buttonGroup}>
+            <button
+              type="button"
+              className={style.notificationAllReadButton}
+              onClick={onReadAll}
+              disabled={!(notifications.length > 0)}
+            >
+              모두 읽음
+            </button>
+            <button
+              type="button"
+              className={style.notificationDeleteButton}
+              onClick={onDelete}
+              disabled={!(notifications.length > 0)}
+            >
+              알림 삭제
+            </button>
+          </div>
+        </div>
       )}
     </section>
   );
