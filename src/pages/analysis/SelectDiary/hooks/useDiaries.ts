@@ -31,7 +31,7 @@ export function useDiaries(userId?: string, isAuth?: boolean) {
         .eq('user_id', userId)
         .eq('is_analyzed', false)
         .gte('created_at', isoStartDate) // 14일 이내
-        .order('created_at', { ascending: false });
+        .order('sequence', { ascending: false });
 
       const loadTime = Date.now() - start;
       const minDelay = 700; // 스피너 최소 시간
