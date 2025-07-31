@@ -15,8 +15,8 @@
   .notificationBadge {
     position: absolute;
     background-color: var(--point);
-    top: 0;
-    right: 5px;
+    top: 5px;
+    right: 8px;
     width: 8px;
     height: 8px;
     border-radius: 50%;
@@ -44,8 +44,8 @@
   visibility: visible;
   opacity: 1;
 }
-.notificationList {
-  min-width: 100px;
+
+.notificationWrapper {
   position: absolute;
   top: 100%;
   right: 50%;
@@ -53,15 +53,29 @@
   border-radius: var(--radius-2);
   background-color: var(--gray-10);
   border: 1px solid var(--border);
-  padding: var(--space-2);
-  overflow: scroll;
-  max-height: 300px;
+  padding: var(--space-4) var(--space-2) var(--space-2) var(--space-2);
+
+  .notificationList {
+    min-width: 100px;
+    width: 300px;
+    overflow: scroll;
+    max-height: 300px;
+
+    .emptyNotification {
+      padding: var(--space-6);
+      white-space: nowrap;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: var(--text-sm);
+    }
+  }
 
   .buttonGroup {
     display: flex;
     gap: var(--space-2);
     border-top: 1px solid var(--border);
     padding-top: var(--space-1);
+
     > button {
       border-radius: var(--radius-2);
       white-space: nowrap;
@@ -79,14 +93,6 @@
         background-color: var(--gray-100);
       }
     }
-  }
-
-  .emptyNotification {
-    padding: var(--space-6);
-    white-space: nowrap;
-    text-align: center;
-    color: var(--gray-400);
-    font-size: var(--text-sm);
   }
 }
 

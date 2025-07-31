@@ -2,6 +2,8 @@
   display: flex;
   flex-direction: column;
   margin: 0 60px;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 
   .diaryImage {
     align-self: center;
@@ -16,6 +18,15 @@
     margin-bottom: var(--space-3);
   }
 
+  .hashtags {
+    margin-bottom: var(--space-4);
+    font-weight: 400;
+    font-size: var(--text-lg);
+  }
+
+  .tag {
+    margin-right: var(--space-1);
+  }
   .contentText {
     font-size: var(--text-lg);
     font-weight: 500;

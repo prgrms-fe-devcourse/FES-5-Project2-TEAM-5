@@ -15,6 +15,9 @@ import type { DbUser } from '@/shared/types/dbUser';
 import type { Diary } from '@/shared/types/diary';
 import { toastUtils } from '@/shared/components/Toast';
 import { useUserContext } from '@/shared/context/UserContext';
+import Spinner from '@/shared/components/Spinner';
+import { getAllHashtagsData } from '@/shared/api/hashtag';
+import type { Hashtag } from '@/shared/types/hashtag';
 
 const breakpointColumns = {
   default: 2,
@@ -29,34 +32,42 @@ const DiaryList = () => {
   const [users, setUsers] = useState<DbUser[]>([]);
   const [diaries, setDiaries] = useState<Diary[]>([]);
   const [mainEmotions, setMainEmotions] = useState<Emotion[]>([]);
+  const [hashtagsData, setHashtagsData] = useState<Record<string, Hashtag[]>>({});
   const [currentUserLikes, setCurrentUserLikes] = useState<Set<string>>(new Set());
-  const { filteredDiaries } = useDiariesSearch(diaries, searchTerm, selectedEmotions);
+  const { filteredDiaries } = useDiariesSearch(diaries, hashtagsData, searchTerm, selectedEmotions);
+  const [loading, setLoading] = useState(true);
   const { user, isAuth } = useUserContext();
   const currentUserId = user?.id || null;
 
   useEffect(() => {
     const fetchDiaries = async () => {
       try {
-        const [userData, diaryData, emotionData, likesData, commentsCount] = await Promise.all([
-          getAllUserData(),
-          getAllDiaryData(),
-          getAllEmotionMains(),
-          getAllDiariesLikesData(currentUserId),
-          getAllDiariesCommentsCount(),
-        ]);
+        setLoading(true);
+        const [userData, diaryData, emotionData, likesData, commentsCount, hashtagsDataResult] =
+          await Promise.all([
+            getAllUserData(),
+            getAllDiaryData(),
+            getAllEmotionMains(),
+            getAllDiariesLikesData(currentUserId),
+            getAllDiariesCommentsCount(),
+            getAllHashtagsData(),
+          ]);
         setUsers(userData);
         setDiaries(diaryData);
         setMainEmotions(emotionData);
         setLikesCount(likesData.likesCount);
         setCommentsCount(commentsCount);
         setCurrentUserLikes(likesData.userLikes);
+        setHashtagsData(hashtagsDataResult);
       } catch (error) {
         console.error('데이터 로딩 실패:', error);
         toastUtils.error({ title: '실패', message: '예상하지 못한 에러 발생' });
+      } finally {
+        setLoading(false);
       }
     };
     fetchDiaries();
-  }, []);
+  }, [currentUserId]);
 
   const handleSearch = useCallback((value: string) => {
     setSearchTerm(value);
@@ -66,26 +77,36 @@ const DiaryList = () => {
     setSelectedEmotions(emotions);
   }, []);
 
-  const handleLikeUpdate = useCallback((diaryId: string, isLiked: boolean, count: number) => {
-    if (!isAuth || !user) {
-      toastUtils.info({
-        title: '로그인 필요',
-        message: '좋아요를 누르려면 로그인해주세요.',
-      });
-    }
-    setLikesCount((prev) => ({ ...prev, [diaryId]: count }));
-
-    setCurrentUserLikes((prev) => {
-      const updateLikes = new Set(prev);
-      if (isLiked) {
-        updateLikes.add(diaryId);
-      } else {
-        updateLikes.delete(diaryId);
+  const handleLikeUpdate = useCallback(
+    (diaryId: string, isLiked: boolean, count: number) => {
+      if (!isAuth || !user) {
+        toastUtils.info({
+          title: '로그인 필요',
+          message: '좋아요를 누르려면 로그인해주세요.',
+        });
       }
-      return updateLikes;
-    });
-  }, []);
+      setLikesCount((prev) => ({ ...prev, [diaryId]: count }));
 
+      setCurrentUserLikes((prev) => {
+        const updateLikes = new Set(prev);
+        if (isLiked) {
+          updateLikes.add(diaryId);
+        } else {
+          updateLikes.delete(diaryId);
+        }
+        return updateLikes;
+      });
+    },
+    [isAuth, user],
+  );
+
+  if (loading) {
+    return (
+      <main className={S.container}>
+        <Spinner />
+      </main>
+    );
+  }
   return (
     <main className={S.container}>
       <h2 className="sr-only">전체 사용자 일기 목록</h2>
@@ -116,6 +137,7 @@ const DiaryList = () => {
                       user={user}
                       diary={diary}
                       emotions={mainEmotions}
+                      hashtags={hashtagsData[diary.id] || []}
                       likesCount={likesCount[diary.id] || 0}
                       commentsCount={commentsCount[diary.id] || 0}
                       isLiked={currentUserLikes.has(diary.id)}

@@ -1,13 +1,12 @@
 import S from './style.module.css';
-import { useState } from 'react';
-import { IoArrowUpCircleOutline, IoLockClosedOutline, IoLockOpenOutline } from 'react-icons/io5';
-import { BsChat } from 'react-icons/bs';
-import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 import DiaryWeather from '@/shared/components/DiaryWeather';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useDiaryDetail } from '../DiaryMain/hooks/useDiaryDetail';
 import { formatToSimpleDate } from '@/shared/utils/formatDate';
 import Spinner from '@/shared/components/Spinner';
+import { useDiaryDetail } from '../DiaryMain/hooks/useDiaryDetail';
+import { toastUtils } from '@/shared/components/Toast';
+import CommentSection from './components/CommentSection';
+import { IoLockClosedOutline, IoLockOpenOutline } from 'react-icons/io5';
 
 const DiaryDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,17 +19,13 @@ const DiaryDetailPage = () => {
     isLiked,
     likesCount,
     comments,
+    currentUser,
     handleLike,
     handleAddComment,
+    handleEditComment,
+    handleDeleteComment,
     handleDelete,
   } = useDiaryDetail(id);
-
-  const [newCommentInput, setNewCommentInput] = useState('');
-
-  const onAddComment = () => {
-    handleAddComment(newCommentInput);
-    setNewCommentInput('');
-  };
 
   const onDeleteDiary = async () => {
     if (!id || !window.confirm('정말로 일기를 삭제하시겠습니까?')) {
@@ -38,11 +33,13 @@ const DiaryDetailPage = () => {
     }
     try {
       await handleDelete();
-      alert('일기가 성공적으로 삭제되었습니다.');
+      toastUtils.success({ title: '성공', message: '일기가 성공적으로 삭제되었습니다.' });
       navigate('/diary');
-    } catch (err: any) {
-      console.error('일기 삭제 실패:', err.message);
-      alert('일기 삭제에 실패했습니다: ' + err.message);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.';
+      console.error('일기 삭제 실패:', errorMessage);
+      toastUtils.error({ title: '실패', message: '일기 삭제에 실패했습니다.' });
     }
   };
 
@@ -91,8 +88,12 @@ const DiaryDetailPage = () => {
               {diary.title}
               <ul>
                 <li>
-                  <img src={diary.emotion_mains.icon_url} alt={diary.emotion_mains.name} />
-                  {diary.emotion_mains.name}
+                  {diary.emotion_mains && (
+                    <>
+                      <img src={diary.emotion_mains.icon_url} alt={diary.emotion_mains.name} />
+                      {diary.emotion_mains.name}
+                    </>
+                  )}
                 </li>
                 <li className={S.publicOrNot}>
                   {diary.is_public ? (
@@ -122,65 +123,22 @@ const DiaryDetailPage = () => {
 
           <div className={S.hashtag}>
             {diary.diary_hashtags &&
-              diary.diary_hashtags.map((h) => <span key={h.hashtags.id}>#{h.hashtags.name}</span>)}
+              diary.diary_hashtags.length > 0 &&
+              diary.diary_hashtags.map((dh) => (
+                <span key={dh.hashtags.id}>#{dh.hashtags.name}</span>
+              ))}
           </div>
 
-          <section className={S.commnetArea}>
-            <h4 className="sr-only">댓글 영역</h4>
-            <div className={S.commentHead}>
-              <span>
-                <BsChat size={20} />
-                댓글 {comments.length}
-              </span>
-              <button onClick={handleLike}>
-                {isLiked ? <IoMdHeart color="red" size={24} /> : <IoMdHeartEmpty size={24} />}
-                {likesCount}
-              </button>
-            </div>
-
-            <div className={S.commentBox}>
-              {comments.length > 0 ? (
-                <div className={S.commnetItem}>
-                  {comments.map((comment) => (
-                    <div key={comment.id}>
-                      <div className={S.profileImage}>
-                        {comment.profile_image_url ? (
-                          <img src={comment.profile_image_url} alt={`${comment.author}의 프로필`} />
-                        ) : (
-                          <span>{comment.author.charAt(0)}</span>
-                        )}
-                      </div>
-                      <div className={S.commentInfo}>
-                        <div className={S.userInfo}>
-                          <span>{comment.author}</span>
-                          <span className={S.createDate}>{comment.timestamp}</span>
-                        </div>
-                        <p className={S.commnetContent}>{comment.content}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className={S.noComments}>아직 댓글이 없어요. 첫 댓글을 남겨주세요! 😊</p>
-              )}
-
-              <div className={S.commentPrompt}>
-                <input
-                  type="text"
-                  className={S.customInput}
-                  value={newCommentInput}
-                  onChange={(e) => setNewCommentInput(e.target.value)}
-                  placeholder="응원과 공감의 글을 보내 주세요"
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') onAddComment();
-                  }}
-                />
-                <button onClick={onAddComment} className={S.commentBtn}>
-                  <IoArrowUpCircleOutline size={24} />
-                </button>
-              </div>
-            </div>
-          </section>
+          <CommentSection
+            comments={comments}
+            currentUser={currentUser}
+            isLiked={isLiked}
+            likesCount={likesCount}
+            onLike={handleLike}
+            onAddComment={handleAddComment}
+            onEditComment={handleEditComment}
+            onDeleteComment={handleDeleteComment}
+          />
         </div>
 
         <div className={S.buttonGroup}>

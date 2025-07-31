@@ -2,12 +2,7 @@ import { useState, useEffect } from 'react';
 import { toastUtils } from '@/shared/components/Toast';
 import { getMonthRange } from '@/shared/utils/dateUtils';
 import { fetchEmotionStats as getEmotionStatsFromSupabase } from '@/shared/api/diary';
-
-interface EmotionMain {
-  id: number;
-  name: string;
-  icon_url: string;
-}
+import type { EmotionMain } from '@/shared/types/diary';
 
 export const useEmotionStats = (
   userId: string | null,

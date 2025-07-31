@@ -1,5 +1,6 @@
-import type { DiaryRowEntity, SupabaseDiaryResponse, UpdateDiaryData } from '../types/diary';
+import type { DiaryDetailEntity, DiaryRowEntity, SupabaseDiaryResponse } from '../types/diary';
 import { transformDiaryData } from '../utils/formatSupabase';
+import { getAllDiariesLikesData } from './like';
 import supabase from './supabase/client';
 
 /**
@@ -24,7 +25,10 @@ export const getDiariesById = async (id: string): Promise<DiaryRowEntity[]> => {
  * 전체 다이어리 리스트 조회
  */
 export const getAllDiaryData = async () => {
-  const { data, error } = await supabase.from('diaries').select('*');
+  const { data, error } = await supabase
+    .from('diaries')
+    .select('*')
+    .order('created_at', { ascending: false });
 
   if (error) {
     throw new Error(`전체 다이어리 정보 불러오기 실패: ${error}}`);
@@ -100,15 +104,16 @@ export const fetchEmotionStats = async (userId: string, startUTC: string, endUTC
 /**
  * 특정 일기의 상세 정보 불러오기
  */
-export const getDiaryDetailById = async (diaryId: string) => {
+export const getDiaryDetailById = async (diaryId: string): Promise<DiaryDetailEntity> => {
   const { data, error } = await supabase
     .from('diaries')
     .select(
       `
-      id, title, content, created_at, is_public, diary_image,
-      emotion_mains(id, name, icon_url),
-      diary_hashtags(hashtags(id, name)), 
-      ikes:likes(count),comments:comments(count)
+      *,
+      emotion_mains(*),
+      diary_hashtags(hashtags(*)), 
+      likes(*),
+      comments(*)
     `,
     )
     .eq('id', diaryId)
@@ -117,7 +122,15 @@ export const getDiaryDetailById = async (diaryId: string) => {
   if (error || !data) {
     throw new Error('일기 상세 정보 불러오기 실패');
   }
-  return data;
+
+  // 타입 변환
+  const transformedData: DiaryDetailEntity = {
+    ...data,
+    likes_count: Array.isArray(data.likes) ? data.likes.length : 0,
+    comments_count: Array.isArray(data.comments) ? data.comments.length : 0,
+  };
+
+  return transformedData;
 };
 
 /**
@@ -133,22 +146,16 @@ export const deleteDiaryById = async (diaryId: string) => {
 };
 
 /**
- * 현재 사용자가 특정 일기에 좋아요를 했는지 확인
+ * 특정 사용자가 특정 일기에 좋아요했는지 확인
  */
 export const checkUserLikedDiary = async (diaryId: string, userId: string) => {
-  const { data, error } = await supabase
-    .from('likes')
-    .select('id')
-    .eq('diary_id', diaryId)
-    .eq('user_id', userId)
-    .single();
-
-  if (error && error.code !== 'PGRST116') {
-    // PGRST116: no rows returned
-    throw new Error('좋아요 상태 확인 실패');
+  try {
+    const { userLikes } = await getAllDiariesLikesData(userId);
+    return userLikes.has(diaryId);
+  } catch (error) {
+    console.error('좋아요 상태 확인 에러:', error);
+    return false;
   }
-
-  return !!data;
 };
 
 /**
