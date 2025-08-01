@@ -134,28 +134,43 @@ export type Database = {
         Row: {
           created_at: string | null
           diary_id: string
+          emotionalTriggers: string | null
+          emotionInterpretation: string | null
+          empathy: string | null
           id: string
           is_public: boolean
           is_quest_accepted: boolean
           reason_text: string | null
+          reminderMessage: string | null
+          selfReflectionSuggestion: string | null
           user_id: string
         }
         Insert: {
           created_at?: string | null
           diary_id: string
+          emotionalTriggers?: string | null
+          emotionInterpretation?: string | null
+          empathy?: string | null
           id?: string
           is_public: boolean
           is_quest_accepted?: boolean
           reason_text?: string | null
+          reminderMessage?: string | null
+          selfReflectionSuggestion?: string | null
           user_id: string
         }
         Update: {
           created_at?: string | null
           diary_id?: string
+          emotionalTriggers?: string | null
+          emotionInterpretation?: string | null
+          empathy?: string | null
           id?: string
           is_public?: boolean
           is_quest_accepted?: boolean
           reason_text?: string | null
+          reminderMessage?: string | null
+          selfReflectionSuggestion?: string | null
           user_id?: string
         }
         Relationships: [
@@ -414,6 +429,7 @@ export type Database = {
           message_count: number
           selected_message_pair_id: number
           user_id: string
+          warning_sent: boolean
           warning_threshold: number
         }
         Insert: {
@@ -424,6 +440,7 @@ export type Database = {
           message_count?: number
           selected_message_pair_id?: number
           user_id?: string
+          warning_sent?: boolean
           warning_threshold?: number
         }
         Update: {
@@ -434,6 +451,7 @@ export type Database = {
           message_count?: number
           selected_message_pair_id?: number
           user_id?: string
+          warning_sent?: boolean
           warning_threshold?: number
         }
         Relationships: []
