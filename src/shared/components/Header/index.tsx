@@ -1,6 +1,6 @@
 import Logo from '@/assets/logo.svg';
 import { withConditionalRender, withDynamicHeaderRender } from '@/shared/hoc';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FiUser, FiLogOut } from 'react-icons/fi';
 import { PiUserCircleThin } from 'react-icons/pi';
 import { MENU_LIST } from './constants';
@@ -12,6 +12,7 @@ import Notification from '../Notification';
 
 const Header = ({ style }: { style: CSSProperties }) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { logout, isAuth, userInfo } = useUserContext();
 
   const { color, border } = style;
@@ -60,6 +61,10 @@ const Header = ({ style }: { style: CSSProperties }) => {
             <Link
               to={menu.path}
               aria-label={menu.label}
+              style={{
+                color: menu.path === pathname ? '#f6c915' : 'inherit',
+                fontWeight: menu.path === pathname ? '700' : '400',
+              }}
               onClick={handleLinkClick(menu.requireAuth)}
               className={menu.requireAuth && !isAuth ? S.disabled : ''}
             >

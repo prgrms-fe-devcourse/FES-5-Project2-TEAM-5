@@ -48,7 +48,7 @@
   }
   ul {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     margin-left: auto;
     min-width: 162px;

@@ -21,6 +21,7 @@ import { ProtectedLayout } from './shared/components/ProtectedLayout';
 import About from './pages/About';
 import AuthCallback from './pages/auth/AuthCallback';
 import UserDetail from './pages/users/UserDetail';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
             <Route path={PATHS.COMMUNITY} element={<DiaryList />} />
             <Route path={PATHS.USER} element={<UserPage />} />
             <Route path={PATHS.USER_DETAIL} element={<UserDetail />} />
+            <Route path={PATHS.NOT_FOUND} element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </WeatherProvider>
