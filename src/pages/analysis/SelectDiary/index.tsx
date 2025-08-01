@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDiaries } from './hooks/useDiaries';
 import Spinner from '@/shared/components/Spinner';
 import { getTodayDateForForm } from '@/shared/utils/dateUtils';
+import ConfirmModal from '@/shared/components/Modal/ConfirmModal';
 
 function SelectDiary() {
   const { user, isAuth } = useUserContext();
@@ -15,6 +16,8 @@ function SelectDiary() {
   const [visibleCount, setVisibleCount] = useState(3);
   const [selectedDiaryId, setSelectedDiaryId] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const [showModal, setShowModal] = useState(false)
 
   useEffect(() => {
     if (visibleCount > 3) {
@@ -31,10 +34,18 @@ function SelectDiary() {
 
   const handleNext = () => {
     if (!selectedDiaryId) return;
+    setShowModal(true);
+  };
 
+  const handleConfirm = () => {
+    setShowModal(false);
     navigate('/analysis/emotion-and-quest', {
-      state: { diaryId: selectedDiaryId }, // 선택한 일기 ID 전달
+      state: { diaryId: selectedDiaryId },
     });
+  };
+
+  const handleCancel = () => {
+    setShowModal(false);
   };
 
   // --- 화면 렌더링 ---
@@ -100,6 +111,16 @@ function SelectDiary() {
         disabled={!selectedDiaryId}
         className={S.stickyBtn}
       />
+      {showModal && (
+        <ConfirmModal
+          title="감정 분석 시작"
+          message="선택한 일기를 바탕으로 감정 분석을 진행합니다.
+          계속 진행하시겠습니까?"
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+        />
+      )}
+
     </main>
   );
 }
