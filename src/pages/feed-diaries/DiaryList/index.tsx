@@ -10,7 +10,7 @@ import { getAllEmotionMains } from '@/shared/api/emotionMain';
 import { getAllDiariesLikesData } from '@/shared/api/like';
 import { getAllDiariesCommentsCount } from '@/shared/api/comment';
 import { getAllDiaryData } from '@/shared/api/diary';
-import { getAllUserData } from '@/shared/api/user';
+import { getAllUser } from '@/shared/api/user';
 import type { DbUser } from '@/shared/types/dbUser';
 import type { Diary } from '@/shared/types/diary';
 import { toastUtils } from '@/shared/components/Toast';
@@ -45,7 +45,7 @@ const DiaryList = () => {
         setLoading(true);
         const [userData, diaryData, emotionData, likesData, commentsCount, hashtagsDataResult] =
           await Promise.all([
-            getAllUserData(),
+            getAllUser(),
             getAllDiaryData(),
             getAllEmotionMains(),
             getAllDiariesLikesData(currentUserId),

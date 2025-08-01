@@ -162,7 +162,8 @@ export const checkUserLikedDiary = async (diaryId: string, userId: string) => {
 /**
  * 특정 사용자가 작성한 전체 일기 불러오기
  */
-export const getUserDiaries = async (userId: string) => {
+export const getUserDiaries = async (userId: string, page: number = 1, limit: number = 20) => {
+  const offset = (page - 1) * limit;
   const { data, error } = await supabase
     .from('diaries')
     .select(
@@ -192,7 +193,8 @@ export const getUserDiaries = async (userId: string) => {
   `,
     )
     .eq('user_id', userId)
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
+    .range(offset, offset + limit - 1);
 
   if (error) {
     throw new Error(`관계 포함 다이어리 조회 실패`);
@@ -214,7 +216,8 @@ export const getUserDiaries = async (userId: string) => {
 /**
  * 특정 사용자가 좋아요한 전체 일기 불러오기
  */
-export const getUserLikedDiaries = async (userId: string) => {
+export const getUserLikedDiaries = async (userId: string, page: number = 1, limit: number = 20) => {
+  const offset = (page - 1) * limit;
   const { data, error } = await supabase
     .from('likes')
     .select(
@@ -246,7 +249,8 @@ export const getUserLikedDiaries = async (userId: string) => {
       )
     `,
     )
-    .eq('user_id', userId);
+    .eq('user_id', userId)
+    .range(offset, offset + limit - 1);
 
   if (error) throw new Error(`좋아요한 다이어리 조회 실패`);
 
@@ -262,14 +266,18 @@ export const getUserLikedDiaries = async (userId: string) => {
         : diary.emotion_mains,
       diary_hashtags: diary.diary_hashtags?.flatMap((h) => h.hashtags) || [],
     }));
-
   return result;
 };
 
 /**
  * 특정 사용자가 댓글단 전체 일기 불러오기
  */
-export const getUserCommentedDiaries = async (userId: string) => {
+export const getUserCommentedDiaries = async (
+  userId: string,
+  page: number = 1,
+  limit: number = 20,
+) => {
+  const offset = (page - 1) * limit;
   const { data, error } = await supabase
     .from('comments')
     .select(
@@ -301,7 +309,8 @@ export const getUserCommentedDiaries = async (userId: string) => {
       )
     `,
     )
-    .eq('user_id', userId);
+    .eq('user_id', userId)
+    .range(offset, offset + limit - 1);
 
   if (error) throw new Error(`댓글단 다이어리 조회 실패`);
 
@@ -317,6 +326,5 @@ export const getUserCommentedDiaries = async (userId: string) => {
         : diary.emotion_mains,
       diary_hashtags: diary.diary_hashtags?.flatMap((h) => h.hashtags) || [],
     }));
-
   return result;
 };
