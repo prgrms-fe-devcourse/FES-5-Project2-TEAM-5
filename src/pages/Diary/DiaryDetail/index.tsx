@@ -7,6 +7,7 @@ import { useDiaryDetail } from '../DiaryMain/hooks/useDiaryDetail';
 import { toastUtils } from '@/shared/components/Toast';
 import CommentSection from './components/CommentSection';
 import { IoLockClosedOutline, IoLockOpenOutline } from 'react-icons/io5';
+import AnalysisResult from './components/AnalysisResult';
 
 const DiaryDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -128,6 +129,12 @@ const DiaryDetailPage = () => {
                 <span key={dh.hashtags.id}>#{dh.hashtags.name}</span>
               ))}
           </div>
+
+          {diary.is_analyzed && (
+            <div className={S.divider}>
+              <AnalysisResult diaryId={diary.id} />
+            </div>
+          )}
 
           <CommentSection
             comments={comments}

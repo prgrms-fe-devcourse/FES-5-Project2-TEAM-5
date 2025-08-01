@@ -269,3 +269,9 @@
     color: var(--gray-900);
   }
 }
+
+.divider {
+  border-top: 1px solid var(--gray-100);
+  margin-top: 20px;
+  padding-top: 20px;
+}
