@@ -6,7 +6,11 @@ type MonthEntry = {
   created_at: string;
 };
 
-export const useMonthlyDiaryData = (userId: string | null, selectedDate: Date) => {
+export const useMonthlyDiaryData = (
+  userId: string | null,
+  selectedDate: Date,
+  refreshTrigger?: number,
+) => {
   const [monthEntries, setMonthEntries] = useState<MonthEntry[]>([]);
   const [currentMonthDiaryCount, setCurrentMonthDiaryCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -70,7 +74,7 @@ export const useMonthlyDiaryData = (userId: string | null, selectedDate: Date) =
     };
 
     fetchMonthEntries();
-  }, [selectedDate, userId]);
+  }, [selectedDate, userId, refreshTrigger]);
 
   return { monthEntries, currentMonthDiaryCount, loading };
 };

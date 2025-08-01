@@ -17,6 +17,7 @@ const DiaryDetailPage = () => {
 
   const {
     diary,
+    author,
     loading,
     error,
     isLiked,
@@ -80,7 +81,7 @@ const DiaryDetailPage = () => {
     );
   }
 
-  const isAuthor = user.id === diary.user_id;
+  const isAuthor = user?.id === diary.user_id;
 
   return (
     <main className={S.container}>
@@ -88,7 +89,10 @@ const DiaryDetailPage = () => {
       <div className={S.inner}>
         <div>
           <div className={S.titleArea}>
-            <span className={S.date}>{formatToSimpleDate(diary.created_at)}</span>
+            <div>
+              <span className={S.date}>{formatToSimpleDate(diary.created_at)}</span>
+              <span className={S.userNickname}>{author?.name || '알 수 없는 사용자'}</span>
+            </div>
             <h3>
               {diary.title}
               <ul>
