@@ -1,5 +1,7 @@
 .rowCard {
   position: relative;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 
   .overlay {
     width: 100%;
@@ -22,6 +24,7 @@
 
 .diaryContents {
   flex: 1;
+  min-width: 0;
   color: var(--gray-900);
   > span {
     display: flex;
@@ -36,6 +39,8 @@
     padding: var(--space-3) 0;
     font-size: var(--text-xl);
     font-weight: 500;
+    word-break: keep-all;
+    overflow-wrap: break-word;
   }
 }
 .tagList {
