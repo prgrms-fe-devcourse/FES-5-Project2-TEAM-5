@@ -13,11 +13,11 @@ export const useUserLoader = (searchTerm: string) => {
       try {
         // 테스트 딜레이
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        const apiPage = page + 1;
-        const data = await getAllUserData(apiPage, 20, searchTerm.trim() || undefined);
+        const apiPage = page;
+        const data = await getAllUserData(apiPage, 10, searchTerm.trim() || undefined);
 
         setUsers((prev) => {
-          if (page === 0) return data;
+          if (page === 1) return data;
           const combined = [...prev, ...data];
           return combined.filter(
             (user, index, self) => index === self.findIndex((u) => u.id === user.id),
@@ -26,7 +26,7 @@ export const useUserLoader = (searchTerm: string) => {
 
         return {
           data,
-          hasMore: data.length === 20,
+          hasMore: data.length === 10,
         };
       } catch (error) {
         console.error('데이터 로딩 실패:', error);
@@ -38,14 +38,13 @@ export const useUserLoader = (searchTerm: string) => {
   );
 
   const { targetRef, isLoading, hasMore, reset } = useInfiniteScroll(loadUsers, {
-    enabled: true,
+    enabled: !initialLoading,
     rootMargin: '100px',
   });
 
   // 초기 로드
   useEffect(() => {
     const initialLoad = async () => {
-      await loadUsers(0);
       setInitialLoading(false);
     };
     initialLoad();
@@ -56,7 +55,6 @@ export const useUserLoader = (searchTerm: string) => {
     if (!initialLoading) {
       setUsers([]);
       reset();
-      loadUsers(0);
     }
   }, [searchTerm, reset, loadUsers, initialLoading]);
 

@@ -38,6 +38,79 @@ export const getAllDiaryData = async () => {
 };
 
 /**
+ * 전체 다이어리 리스트 조회 (페이지네이션 및 필터링 지원)
+ */
+export const getAllDiaryDataByPage = async (
+  page: number = 1,
+  limit: number = 20,
+  filters?: {
+    search?: string;
+    emotions?: number[];
+    userId?: string;
+  },
+) => {
+  const isHashtagSearch = filters?.search?.trim().startsWith('#');
+
+  // 기본 쿼리 설정
+  let query = supabase
+    .from('diaries')
+    .select(
+      isHashtagSearch
+        ? `*, diary_hashtags!inner(hashtags!inner(name))`
+        : `*, diary_hashtags(hashtags(name))`,
+    )
+    .eq('is_public', true)
+    .eq('is_drafted', false)
+    .order('created_at', { ascending: false });
+
+  // 검색 조건 적용
+  if (filters?.search?.trim()) {
+    const searchTerm = filters.search.trim();
+
+    if (isHashtagSearch) {
+      // 해시태그 검색
+      const hashtagName = searchTerm.slice(1).trim();
+      if (hashtagName) {
+        query = query.eq('diary_hashtags.hashtags.name', hashtagName);
+      }
+    } else {
+      // 일반 검색 (제목, 내용)
+      const searchTerms = searchTerm
+        .toLowerCase()
+        .split(' ')
+        .filter((term) => term.length > 0);
+
+      if (searchTerms.length > 0) {
+        const searchConditions = searchTerms
+          .map((term) => `title.ilike.%${term}%,content.ilike.%${term}%`)
+          .join(',');
+
+        query = query.or(searchConditions);
+      }
+    }
+  }
+
+  // 감정 필터링
+  if (filters?.emotions && filters.emotions.length > 0) {
+    query = query.in('emotion_main_id', filters.emotions);
+  }
+
+  // 페이지네이션
+  const offset = (page - 1) * limit;
+  query = query.range(offset, offset + limit - 1);
+
+  // 쿼리 실행
+  const { data, error } = await query;
+
+  if (error) {
+    const searchType = isHashtagSearch ? '해시태그' : '일반';
+    throw new Error(`${searchType} 검색 실패: ${error.message}`);
+  }
+
+  return data || [];
+};
+
+/**
  * 특정 날짜의 다이어리 목록 불러오기
  */
 export const fetchDiariesByDate = async (

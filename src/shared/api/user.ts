@@ -142,7 +142,6 @@ export const getAllUserData = async (page: number = 1, limit: number = 20, searc
 
   const { data, error } = await query;
 
-  console.log('search:', search);
   if (error) {
     throw new Error(`전체 유저 정보 조회 실패: ${error.message}`);
   }
