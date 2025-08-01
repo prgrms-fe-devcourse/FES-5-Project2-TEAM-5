@@ -6,7 +6,11 @@ import { fetchDiariesByDate } from '@/shared/api/diary';
 import { getAllDiariesLikesCount } from '@/shared/api/like';
 import { getAllDiariesCommentsCount } from '@/shared/api/comment';
 
-export const useDiaryData = (userId: string | null, selectedDate: Date) => {
+export const useDiaryData = (
+  userId: string | null,
+  selectedDate: Date,
+  currentCalendarMonth: Date,
+) => {
   const [diaryList, setDiaryList] = useState<DiaryRowEntity[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -20,22 +24,22 @@ export const useDiaryData = (userId: string | null, selectedDate: Date) => {
       setLoading(true);
 
       try {
-        // 시작 일시 (UTC)
-        const startOfDay = new Date(selectedDate);
-        startOfDay.setHours(0, 0, 0, 0);
-        const startOfDayUTC = startOfDay.toISOString();
+        // 선택된 날짜의 월 기준으로 데이터 가져오기
+        const selectedYear = selectedDate.getFullYear();
+        const selectedMonth = selectedDate.getMonth();
 
-        // 다음날 시작 일시 (UTC)
-        const startOfNextDay = new Date(selectedDate);
-        startOfNextDay.setDate(startOfNextDay.getDate() + 1);
-        startOfNextDay.setHours(0, 0, 0, 0);
-        const startOfNextDayUTC = startOfNextDay.toISOString();
+        // 선택된 날짜가 속한 달의 전체 데이터 가져오기
+        const startOfMonth = new Date(selectedYear, selectedMonth, 1);
+        startOfMonth.setHours(0, 0, 0, 0);
+        const startOfMonthUTC = startOfMonth.toISOString();
 
-        fetchDiariesByDate(userId, startOfDayUTC, startOfNextDayUTC);
+        const endOfMonth = new Date(selectedYear, selectedMonth + 1, 0);
+        endOfMonth.setHours(23, 59, 59, 999);
+        const endOfMonthUTC = endOfMonth.toISOString();
 
         // 병렬로 데이터 가져오기
         const [rawDiaries, likesCount, commentsCount] = await Promise.all([
-          fetchDiariesByDate(userId, startOfDayUTC, startOfNextDayUTC),
+          fetchDiariesByDate(userId, startOfMonthUTC, endOfMonthUTC),
           getAllDiariesLikesCount(),
           getAllDiariesCommentsCount(),
         ]);
@@ -45,8 +49,15 @@ export const useDiaryData = (userId: string | null, selectedDate: Date) => {
           return;
         }
 
+        // 선택된 날짜의 일기만 필터링
+        const selectedDateStr = selectedDate.toISOString().split('T')[0];
+        const filteredDiaries = rawDiaries.filter((diary) => {
+          const diaryDateStr = new Date(diary.created_at).toISOString().split('T')[0];
+          return diaryDateStr === selectedDateStr;
+        });
+
         // 좋아요 및 댓글 수 추가
-        const diariesWithCounts = rawDiaries.map((diary) => ({
+        const diariesWithCounts = filteredDiaries.map((diary) => ({
           ...diary,
           likes: [{ count: likesCount[diary.id] || 0 }],
           comments: [{ count: commentsCount[diary.id] || 0 }],
@@ -69,7 +80,7 @@ export const useDiaryData = (userId: string | null, selectedDate: Date) => {
     };
 
     fetchDiaryForDate();
-  }, [userId, selectedDate]);
+  }, [userId, selectedDate]); // currentCalendarMonth 의존성 제거
 
   return { diaryList, loading };
 };

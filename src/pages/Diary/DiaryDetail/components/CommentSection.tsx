@@ -7,6 +7,7 @@ import { toastUtils } from '@/shared/components/Toast';
 import type { DisplayComment } from '@/shared/types/diary';
 import S from '../style.module.css';
 import type { Tables } from '@/shared/api/supabase/types';
+import { formatToSimpleDate } from '@/shared/utils/formatDate';
 
 interface CommentSectionProps {
   comments: DisplayComment[];
@@ -119,7 +120,7 @@ export const CommentSection = ({
                 <div className={S.commentInfo}>
                   <div className={S.userInfo}>
                     <span>{comment.author}</span>
-                    <span className={S.createDate}>{comment.timestamp}</span>
+                    <span className={S.createDate}>{formatToSimpleDate(comment.timestamp)}</span>
                   </div>
 
                   {editingCommentId === comment.id ? (
