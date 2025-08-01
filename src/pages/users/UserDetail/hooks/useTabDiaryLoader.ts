@@ -20,17 +20,17 @@ export const useUserDiaryLoader = (
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         let data: DiaryRowEntity[] = [];
-        const apiPage = page + 1;
+        const apiPage = page;
 
         switch (activeTabId) {
           case 'diary':
-            data = await getUserDiaries(slug, apiPage, 10);
+            data = await getUserDiaries(slug, apiPage, 5);
             break;
           case 'like':
-            data = await getUserLikedDiaries(slug, apiPage, 10);
+            data = await getUserLikedDiaries(slug, apiPage, 5);
             break;
           case 'comment':
-            data = await getUserCommentedDiaries(slug, apiPage, 10);
+            data = await getUserCommentedDiaries(slug, apiPage, 5);
             break;
         }
 
@@ -39,17 +39,22 @@ export const useUserDiaryLoader = (
         );
 
         setDiaries((prev) => {
-          if (page === 0) return uniqueData;
+          if (page === 1) {
+            return uniqueData;
+          }
 
           const combined = [...prev, ...uniqueData];
-          return combined.filter(
+          const filtered = combined.filter(
             (diary, index, self) => index === self.findIndex((d) => d.id === diary.id),
           );
+          return filtered;
         });
+
+        const hasMore = uniqueData.length === 5;
 
         return {
           data: uniqueData,
-          hasMore: uniqueData.length === 10,
+          hasMore: hasMore,
         };
       } catch (error) {
         if (error instanceof Error)
@@ -65,14 +70,13 @@ export const useUserDiaryLoader = (
     rootMargin: '50px',
   });
 
-  // 초기 로드 및 탭 변경 시 리셋
   useEffect(() => {
     if (!loading && slug) {
       setDiaries([]);
       reset();
       loadDiaries(0);
     }
-  }, [activeTabId, loading, slug, loadDiaries, reset]);
+  }, [activeTabId, slug, reset]);
 
-  return { diaries, loadDiaries, targetRef, isLoading, hasMore };
+  return { diaries, targetRef, isLoading, hasMore };
 };

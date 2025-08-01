@@ -74,7 +74,7 @@ const UserDetail = () => {
               return <DiaryRowCard {...cardProps} key={diary.id} />;
             })}
           </ul>
-          {diaries.length > 0 && hasMore && <div ref={targetRef}>{isLoading && <Spinner />}</div>}
+          {hasMore && <div ref={targetRef}>{isLoading && <Spinner />}</div>}
         </div>
       </section>
     </main>

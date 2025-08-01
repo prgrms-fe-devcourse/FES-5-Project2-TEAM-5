@@ -5,7 +5,7 @@ import { getUserDiaries } from '@/shared/api/diary';
 import { useInfiniteScroll } from '@/shared/hooks/useInfiniteScroll';
 import type { DbUser } from '../types/dbUser';
 
-export const useDiaryLoader = (userInfo: DbUser, isPending: boolean) => {
+export const useDiaryLoader = (userInfo: DbUser | null, isPending: boolean) => {
   const [diaries, setDiaries] = useState<DiaryRowEntity[]>([]);
 
   const loadDiaries = useCallback(
