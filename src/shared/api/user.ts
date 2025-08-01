@@ -154,6 +154,7 @@ export const getAllUserData = async (page: number = 1, limit: number = 20, searc
  * 사용자가 처음 로그인하면 DB에 프로필을 생성
  */
 export const insertUserProfileOnLogin = async (user: User): Promise<void> => {
+  // users 테이블 확인
   const { data: existingProfile, error: selectError } = await supabase
     .from('users')
     .select('id')
@@ -163,13 +164,14 @@ export const insertUserProfileOnLogin = async (user: User): Promise<void> => {
   if (selectError) {
     throw new Error('사용자 프로필 조회 중 에러 발생');
   }
-
+  // 존재 시 return
   if (existingProfile) {
     return;
   }
 
   const { full_name, name, avatar_url } = user.user_metadata;
 
+  // upsert users 테이블
   const { error: insertError } = await supabase.from('users').upsert({
     id: user.id,
     name: name || full_name,

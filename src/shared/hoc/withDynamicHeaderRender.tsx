@@ -9,7 +9,7 @@ const whiteStyle: PathValues[] = [PATHS.HOME, PATHS.MYPAGE, PATHS.DIARY, PATHS.D
 const whiteDynamicPathPatterns = ['/diary/:id', '/users/:id'];
 
 interface WithStyleProps {
-  style: CSSProperties;
+  cssOption: CSSProperties;
 }
 
 export const withDynamicHeaderRender = <P extends object = {}>(
@@ -32,6 +32,6 @@ export const withDynamicHeaderRender = <P extends object = {}>(
       border: isWhite ? '1px solid #fff' : '1px solid #1f1f1f',
     };
 
-    return <WrappedComponent {...props} style={style} />;
+    return <WrappedComponent {...props} cssOption={style} />;
   };
 };
