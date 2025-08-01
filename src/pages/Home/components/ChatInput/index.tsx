@@ -17,14 +17,17 @@ const ChatInput = ({ onOpenChat, disabled, isMessageLimitExceeded }: Props) => {
   const { userInfo } = useUserContext();
   const chatId = useId();
 
+  // 채팅 쓰로틀링 제한
   const throttledInsertMessage = useCallback(
     throttle(async (content: string, userId) => {
       try {
+        // 메시지 insert
         await insertChatMessage({ content, id: userId });
-        // 하루 메시지 제한 업데이트
+        // 하루 메시지 제한 카운트
         void updateMessageCount(userId);
         messageRef.current!.value = '';
         messageRef.current!.focus();
+        // 에러 처리
       } catch (error) {
         if (error instanceof Error) {
           toastUtils.error({ title: '실패', message: error.message });
@@ -44,6 +47,7 @@ const ChatInput = ({ onOpenChat, disabled, isMessageLimitExceeded }: Props) => {
     const content = messageRef.current.value.trim();
     if (!content) return;
     if (!userInfo) return;
+
     throttledInsertMessage(content, userInfo.id);
   };
 

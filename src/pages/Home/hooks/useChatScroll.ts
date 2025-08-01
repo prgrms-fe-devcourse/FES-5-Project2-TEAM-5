@@ -1,6 +1,7 @@
 import type { Tables } from '@/shared/api/supabase/types';
 import { useEffect, useRef } from 'react';
 
+// 스크롤 감지
 export const useChatScroll = (messages: Tables<'chat_messages'>[], isAiTyping: boolean) => {
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
 

@@ -13,20 +13,25 @@ const ChangePassword = () => {
   const newPwdId = useId();
   const confirmNewPwdId = useId();
 
+  // 현재 비밀번호
   const currentPasswordRef = useRef<HTMLInputElement>(null);
+  // 새 비밀번호
   const { formData, onChange, error, setFormData } = useForm<ChangePasswordForm>({
     initialData: { confirmPassword: '', password: '' },
     validator,
   });
 
+  // 새 비밀번호 validation
   const isFormValid = formData.password && formData.confirmPassword && !error;
 
+  // 비밀번호 변경
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!userInfo || !currentPasswordRef.current) {
       toastUtils.error({ title: '실패', message: '사용자 정보를 확인할 수 없습니다.' });
       return;
     }
+    // 현재 비밀번호
     const currentPassword = currentPasswordRef.current.value;
 
     // 현재 비밀번호 입력 확인

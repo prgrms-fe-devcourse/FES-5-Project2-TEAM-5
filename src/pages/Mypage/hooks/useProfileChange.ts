@@ -8,11 +8,14 @@ export const useProfileChange = () => {
   ): Promise<Tables<'users'>> => {
     try {
       const oldProfilePath = userInfo.profile_image?.split('/').pop();
+      // storage 이미지 삭제
       if (oldProfilePath) {
         await removeProfileImage(oldProfilePath);
       }
+      // 이미지 업로드
       const publicUrl = file ? await uploadProfileImage({ file, userId: userInfo.id }) : null;
 
+      // users 테이블 업데이트
       const user = await updateProfileImage({ url: publicUrl, id: userInfo.id });
 
       return user;

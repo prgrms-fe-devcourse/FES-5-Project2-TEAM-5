@@ -25,16 +25,20 @@ const ChangeNickname = () => {
   const handleChangeNickname = async () => {
     if (!userInfo) return;
     try {
+      // 닉네임 validation
       const errorMessage = nameValidator(nickname);
       if (errorMessage) {
         setError(errorMessage);
         return;
       }
 
+      // 닉네임 변경
       const user = await uploadUserNickname({ id: userInfo.id, nickname });
+      // 성공 로직
       toastUtils.success({ title: '성공', message: '닉네임 변경 성공!' });
-      updateUserInfo(user);
+      updateUserInfo(user); // 세션 업데이트
       setNickname('');
+      // 에러 처리
     } catch (error) {
       if (error instanceof Error) {
         toastUtils.error({ title: '실패', message: error.message });

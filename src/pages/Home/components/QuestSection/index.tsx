@@ -9,7 +9,7 @@ import style from './style.module.css';
 const QuestSection = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
-  const [quests, setQuests] = useState<Quest[]>([]);
+  const [questList, setQuestList] = useState<Quest[]>([]);
   const { userInfo } = useUserContext();
 
   const handleToggle = () => {
@@ -19,14 +19,15 @@ const QuestSection = () => {
   useEffect(() => {
     if (!userInfo?.id) return;
     startTransition(async () => {
-      const data = await getTodayAcceptedQuestList(userInfo.id);
-      setQuests(data);
+      // 퀘스트 리스트 fetch
+      const questList = await getTodayAcceptedQuestList(userInfo.id);
+      setQuestList(questList);
     });
   }, [userInfo?.id]);
 
   // 낙관적 업데이트
   const handleQuestUpdate = useCallback((questId: number) => {
-    setQuests((prev) =>
+    setQuestList((prev) =>
       prev.map((quest) =>
         quest.quest_id === questId ? { ...quest, is_completed: !quest.is_completed } : quest,
       ),
@@ -53,7 +54,7 @@ const QuestSection = () => {
             </div>
           ) : (
             <>
-              {quests.map((quest) => (
+              {questList.map((quest) => (
                 <QuestItem quest={quest} key={quest.quest_id} onUpdate={handleQuestUpdate} />
               ))}
             </>

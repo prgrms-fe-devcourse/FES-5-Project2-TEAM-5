@@ -12,14 +12,17 @@ interface Props {
 const MessageItem = ({ message, userProfileUrl }: Props) => {
   const { role, content, created_at } = message;
 
+  // AI 메시지
   if (role === 'model') {
     return <AiChat content={content} created_at={created_at} />;
   }
 
+  // user 메시지
   return <UserChat content={content} created_at={created_at} profileUrl={userProfileUrl} />;
 };
 export default MessageItem;
 
+// AI 채팅 컴포넌트
 const AiChat = ({ content, created_at }: { content: string; created_at: string }) => {
   return (
     <div className={S.modalContainer}>
@@ -30,6 +33,7 @@ const AiChat = ({ content, created_at }: { content: string; created_at: string }
   );
 };
 
+// 유저 채팅 컴포넌트
 const UserChat = ({
   content,
   profileUrl,
