@@ -23,7 +23,7 @@
     color: var(--gray-200);
   }
   .inner {
-    width: 1280px;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 60px 0;
   }
@@ -73,6 +73,7 @@
 .emotionGroup {
   display: flex;
   gap: var(--space-1);
+  flex-wrap: wrap;
   button {
     display: flex;
     justify-content: center;
@@ -158,12 +159,19 @@
   }
   .fileNameBox {
     display: flex;
+    width: calc(100% - 140px);
     align-items: center;
     gap: var(--space-1);
     position: absolute;
     left: 130px;
     top: 50%;
     transform: translateY(-50%);
+    p {
+      height: 17px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     .deleteButton {
       display: flex;
       justify-content: center;
@@ -240,5 +248,23 @@
     border-radius: var(--radius-2);
     font-size: var(--text-xl);
     cursor: pointer;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .container {
+    .inner {
+      padding: 60px var(--space-8);
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .buttonGroup {
+    flex-direction: column;
+    button {
+      flex: initial;
+      min-width: 100%;
+    }
   }
 }

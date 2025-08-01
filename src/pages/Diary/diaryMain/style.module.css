@@ -4,7 +4,7 @@
 .inner {
   display: flex;
   gap: var(--space-7);
-  width: 1280px;
+  max-width: 1280px;
   margin: 0 auto;
 }
 .section02 {
@@ -87,21 +87,68 @@
   justify-content: space-between;
 }
 
-@media screen and (max-width: 1295px) {
+@media screen and (max-width: 1280px) {
   .inner {
-    width: 100%;
     padding: 0 50px;
+    .stats {
+      width: calc(41.4% - 28px);
+    }
   }
-
   .section02 {
     .calendar {
-      width: 58.59%;
+      width: 58.6%;
     }
   }
 }
 
-@media screen and (max-width: 980px) {
+@media screen and (max-width: 1200px) {
   .inner {
+    padding: 0 var(--space-8);
+    .stats {
+      width: calc(44% - 28px);
+    }
+  }
+  .section02 {
+    .calendar {
+      width: 56%;
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .inner {
+    flex-direction: column;
     padding: 0 var(--space-5);
+    .stats {
+      width: 100%;
+    }
+  }
+  .section02 {
+    padding: 40px 0;
+    h3 {
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      > button {
+        margin-left: auto;
+        margin-top: var(--space-3);
+      }
+    }
+    .calendar {
+      width: 100%;
+      figure {
+        img {
+          width: 130px;
+        }
+      }
+    }
+    .stats {
+      > div {
+        height: 300px;
+      }
+    }
+  }
+  .section03 {
+    padding: 40px 0;
   }
 }

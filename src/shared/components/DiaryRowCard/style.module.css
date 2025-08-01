@@ -69,3 +69,16 @@
   object-position: center;
   border-radius: var(--radius-3);
 }
+
+@media screen and (max-width: 767px) {
+  .rowCard {
+    figure {
+      width: 100%;
+      height: 150px;
+    }
+    .thumbImage {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
