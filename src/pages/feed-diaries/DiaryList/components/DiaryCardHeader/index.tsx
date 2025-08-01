@@ -4,6 +4,7 @@ import { formatToReadableDate } from '@/shared/utils/formatDate';
 import type { DbUser } from '@/shared/types/dbUser';
 import type { Emotion } from '@/shared/types/emotion';
 import { useNavigate } from 'react-router-dom';
+import { useUserContext } from '@/shared/context/UserContext';
 
 const DEFAULT_IMAGE = default_image;
 
@@ -14,10 +15,12 @@ interface Props {
 }
 
 const DiaryCardHeader = ({ emotion, created_at, user }: Props) => {
+  const { userInfo } = useUserContext();
   const navigate = useNavigate();
   const handleUserDetail = (e: React.MouseEvent) => {
     e.stopPropagation();
-    navigate(`/users/${user.id}`);
+    if (userInfo?.id === user.id) navigate(`/mypage`);
+    else navigate(`/users/${user.id}`);
   };
 
   return (

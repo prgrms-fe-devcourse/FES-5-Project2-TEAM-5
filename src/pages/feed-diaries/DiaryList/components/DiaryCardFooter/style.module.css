@@ -17,6 +17,7 @@
   color: var(--gray-300);
   width: 20px;
   height: 20px;
+  padding-right: var(--space-1);
 }
 
 .likeIconFill {
@@ -26,7 +27,7 @@
 }
 
 .likeIcon {
-  color: var(--gray-30);
+  color: var(--gray-300);
   width: 20px;
   height: 20px;
 }
@@ -38,6 +39,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: var(--space-2) var(--space-1) var(--space-2) var(--space-2);
 }
 
 .count {

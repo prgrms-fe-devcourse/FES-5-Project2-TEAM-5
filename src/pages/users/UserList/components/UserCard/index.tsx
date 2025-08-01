@@ -3,6 +3,7 @@ import default_profile from '../../assets/default_profile.svg';
 import { GrFormNextLink } from 'react-icons/gr';
 import { useNavigate } from 'react-router-dom';
 import type { DbUser } from '@/shared/types/dbUser';
+import { useUserContext } from '@/shared/context/UserContext';
 
 const default_image = default_profile;
 
@@ -12,11 +13,13 @@ interface Props {
 
 const UserCard = ({ user }: Props) => {
   const { id, name, email, profile_image } = user;
+  const { userInfo } = useUserContext();
   const navigate = useNavigate();
 
   const handleUserDetail = () => {
     const slug = id;
-    navigate(`/users/${slug}`);
+    if (userInfo?.id === slug) navigate(`/mypage`);
+    else navigate(`/users/${slug}`);
   };
 
   return (
