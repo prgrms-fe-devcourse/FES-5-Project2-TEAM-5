@@ -117,13 +117,36 @@ export const getUserDataById = async (id: string) => {
 /**
  * 전체 유저정보 조회
  */
-export const getAllUserData = async () => {
+export const getAllUser = async () => {
   const { data, error } = await supabase.from('users').select('*');
 
   if (error) {
     throw new Error(`전체 유저 정보 조회 실패: ${error}}`);
   }
   return data;
+};
+
+/**
+ * 전체 유저정보 조회 (검색 포함)
+ */
+export const getAllUserData = async (page: number = 1, limit: number = 20, search?: string) => {
+  const offset = (page - 1) * limit;
+
+  let query = supabase.from('users').select('*');
+
+  if (search?.trim()) {
+    query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%`);
+  }
+
+  query = query.range(offset, offset + limit - 1);
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw new Error(`전체 유저 정보 조회 실패: ${error.message}`);
+  }
+
+  return data || [];
 };
 
 /**

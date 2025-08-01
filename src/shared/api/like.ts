@@ -25,27 +25,37 @@ export const getAllDiariesLikesData = async (
   return { likesCount, userLikes };
 };
 
-export const fetchDiaryInteractions = async (diaryId: string) => {
-  const [{ data: likesData, error: likesError }, { data: commentsData, error: commentsError }] =
-    await Promise.all([
-      supabase.from('likes').select('id', { count: 'exact', head: true }).eq('diary_id', diaryId),
-      supabase
-        .from('comments')
-        .select('id', { count: 'exact', head: true })
-        .eq('diary_id', diaryId),
-    ]);
+/**
+ * 특정 diary들의 좋아요 수 및 현재 유저의 좋아요 다이어리 조회
+ */
+export const getAllDiariesLikesDataByPage = async (
+  userId?: string | null,
+  diaryIds?: string[],
+): Promise<{ likesCount: Record<string, number>; userLikes: Set<string> }> => {
+  let query = supabase.from('likes').select('diary_id, user_id');
 
-  if (likesError || commentsError) {
-    throw new Error('다이어리 좋아요/댓글 정보 불러오기 실패');
+  // 특정 다이어리 ID들만 조회
+  if (diaryIds && diaryIds.length > 0) {
+    query = query.in('diary_id', diaryIds);
   }
 
-  const likesCount = (likesData as unknown as { count: number }[])[0]?.count || 0;
-  const commentsCount = (commentsData as unknown as { count: number }[])[0]?.count || 0;
+  const { data, error } = await query;
 
-  return {
-    likesCount,
-    commentsCount,
-  };
+  if (error) {
+    throw new Error('좋아요 데이터 조회 실패');
+  }
+
+  const likesCount: Record<string, number> = {};
+  const userLikes = new Set<string>();
+
+  data.forEach((like) => {
+    likesCount[like.diary_id] = (likesCount[like.diary_id] || 0) + 1;
+    if (userId && like.user_id === userId) {
+      userLikes.add(like.diary_id);
+    }
+  });
+
+  return { likesCount, userLikes };
 };
 
 /**

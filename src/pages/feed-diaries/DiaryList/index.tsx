@@ -3,21 +3,12 @@ import DiaryCard from './components/DiaryCard';
 import Masonry from 'react-masonry-css';
 import EmotionSelectBox from './components/EmotionSelectBox';
 import SearchBox from './components/SearchBox';
-import { useCallback, useEffect, useState } from 'react';
-import { useDiariesSearch } from './hooks/useDiarySearch';
+import { useCallback, useState } from 'react';
 import type { Emotion } from '../../../shared/types/emotion';
-import { getAllEmotionMains } from '@/shared/api/emotionMain';
-import { getAllDiariesLikesData } from '@/shared/api/like';
-import { getAllDiariesCommentsCount } from '@/shared/api/comment';
-import { getAllDiaryData } from '@/shared/api/diary';
-import { getAllUserData } from '@/shared/api/user';
-import type { DbUser } from '@/shared/types/dbUser';
-import type { Diary } from '@/shared/types/diary';
 import { toastUtils } from '@/shared/components/Toast';
 import { useUserContext } from '@/shared/context/UserContext';
 import Spinner from '@/shared/components/Spinner';
-import { getAllHashtagsData } from '@/shared/api/hashtag';
-import type { Hashtag } from '@/shared/types/hashtag';
+import { useDiaryListLoader } from './hooks/useDiaryListLoader';
 
 const breakpointColumns = {
   default: 2,
@@ -27,47 +18,23 @@ const breakpointColumns = {
 const DiaryList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedEmotions, setSelectedEmotions] = useState<Emotion[]>([]);
-  const [likesCount, setLikesCount] = useState<Record<string, number>>({});
-  const [commentsCount, setCommentsCount] = useState<Record<string, number>>({});
-  const [users, setUsers] = useState<DbUser[]>([]);
-  const [diaries, setDiaries] = useState<Diary[]>([]);
-  const [mainEmotions, setMainEmotions] = useState<Emotion[]>([]);
-  const [hashtagsData, setHashtagsData] = useState<Record<string, Hashtag[]>>({});
-  const [currentUserLikes, setCurrentUserLikes] = useState<Set<string>>(new Set());
-  const { filteredDiaries } = useDiariesSearch(diaries, hashtagsData, searchTerm, selectedEmotions);
-  const [loading, setLoading] = useState(true);
   const { user, isAuth } = useUserContext();
   const currentUserId = user?.id || null;
 
-  useEffect(() => {
-    const fetchDiaries = async () => {
-      try {
-        setLoading(true);
-        const [userData, diaryData, emotionData, likesData, commentsCount, hashtagsDataResult] =
-          await Promise.all([
-            getAllUserData(),
-            getAllDiaryData(),
-            getAllEmotionMains(),
-            getAllDiariesLikesData(currentUserId),
-            getAllDiariesCommentsCount(),
-            getAllHashtagsData(),
-          ]);
-        setUsers(userData);
-        setDiaries(diaryData);
-        setMainEmotions(emotionData);
-        setLikesCount(likesData.likesCount);
-        setCommentsCount(commentsCount);
-        setCurrentUserLikes(likesData.userLikes);
-        setHashtagsData(hashtagsDataResult);
-      } catch (error) {
-        console.error('데이터 로딩 실패:', error);
-        toastUtils.error({ title: '실패', message: '예상하지 못한 에러 발생' });
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchDiaries();
-  }, [currentUserId]);
+  const {
+    users,
+    diaries,
+    mainEmotions,
+    likesCount,
+    commentsCount,
+    hashtagsData,
+    currentUserLikes,
+    initialLoading,
+    isLoading,
+    hasMore,
+    targetRef,
+    handleLikeUpdate: updateLike,
+  } = useDiaryListLoader(currentUserId, searchTerm, selectedEmotions);
 
   const handleSearch = useCallback((value: string) => {
     setSearchTerm(value);
@@ -84,23 +51,14 @@ const DiaryList = () => {
           title: '로그인 필요',
           message: '좋아요를 누르려면 로그인해주세요.',
         });
+        return;
       }
-      setLikesCount((prev) => ({ ...prev, [diaryId]: count }));
-
-      setCurrentUserLikes((prev) => {
-        const updateLikes = new Set(prev);
-        if (isLiked) {
-          updateLikes.add(diaryId);
-        } else {
-          updateLikes.delete(diaryId);
-        }
-        return updateLikes;
-      });
+      updateLike(diaryId, isLiked, count);
     },
-    [isAuth, user],
+    [isAuth, user, updateLike],
   );
 
-  if (loading) {
+  if (initialLoading) {
     return (
       <main className={S.container}>
         <Spinner />
@@ -116,7 +74,9 @@ const DiaryList = () => {
       </section>
 
       <section aria-label="일기 목록" className={S.diariesSection}>
-        {filteredDiaries.length <= 0 ? (
+        {isLoading ? (
+          <Spinner />
+        ) : diaries.length <= 0 ? (
           <p className={S.noResult} role="status">
             검색 결과가 없습니다.
           </p>
@@ -127,7 +87,7 @@ const DiaryList = () => {
               className={S.masonryGrid}
               columnClassName={S.masonryColumn}
             >
-              {filteredDiaries.map((diary) => {
+              {diaries.map((diary) => {
                 const user = users.find((u) => u.id === diary.user_id);
                 if (!user) return null;
                 return (
@@ -149,8 +109,10 @@ const DiaryList = () => {
             </Masonry>
           </ul>
         )}
+        {hasMore && <div ref={targetRef}>{isLoading && <Spinner />}</div>}
       </section>
     </main>
   );
 };
+
 export default DiaryList;
