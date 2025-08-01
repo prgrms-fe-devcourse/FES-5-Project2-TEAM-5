@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BsPlusLg } from 'react-icons/bs';
 
@@ -33,14 +33,21 @@ const DiaryPage = () => {
 
   const { diaryList, loading } = useDiaryData(user?.id ?? null, selectedDate, currentCalendarMonth);
 
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
   const handleMonthChange = useCallback((newDate: Date) => {
     setCurrentCalendarMonth(newDate);
+    // 강제로 데이터 다시 로드
+    setRefreshTrigger((prev) => prev + 1);
   }, []);
 
-  const { monthEntries, currentMonthDiaryCount } = useMonthlyDiaryData(
-    user?.id ?? null,
-    selectedDate,
-  );
+  // useMonthlyDiaryData에 refreshTrigger 전달
+  const {
+    monthEntries,
+    currentMonthDiaryCount,
+    loading: monthLoading,
+  } = useMonthlyDiaryData(user?.id ?? null, currentCalendarMonth, refreshTrigger);
+
   const { emotionMainsList } = useEmotionData();
   const { emotionStatsData } = useEmotionStats(user?.id ?? null, selectedDate, emotionMainsList);
 
@@ -85,6 +92,7 @@ const DiaryPage = () => {
               onDateChange={setSelectedDate}
               entries={monthEntries}
               onMonthChange={handleMonthChange}
+              loading={monthLoading}
             />
           </div>
 

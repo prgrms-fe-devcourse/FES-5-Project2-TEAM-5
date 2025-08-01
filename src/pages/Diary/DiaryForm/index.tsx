@@ -145,6 +145,18 @@ const DiaryFormPage = () => {
         const selectedDate = new Date(diaryDate);
         const now = new Date();
 
+        const createdAt = new Date(
+          selectedDate.getFullYear(),
+          selectedDate.getMonth(),
+          selectedDate.getDate(),
+          now.getHours(),
+          now.getMinutes(),
+          now.getSeconds(),
+          now.getMilliseconds(),
+        );
+
+        console.log('저장할 날짜:', createdAt.toISOString()); // 디버깅용
+
         // 선택한 날짜는 유지하고, 시간만 현재 시간으로 설정
         selectedDate.setHours(
           now.getHours(),
@@ -163,7 +175,7 @@ const DiaryFormPage = () => {
               content: formData.content,
               is_public: formData.isPublic,
               diary_image: imageUrl,
-              created_at: selectedDate.toISOString(),
+              created_at: createdAt.toISOString(),
               is_drafted: false,
             },
           ])
