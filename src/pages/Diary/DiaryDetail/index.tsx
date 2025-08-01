@@ -138,7 +138,7 @@ const DiaryDetailPage = () => {
 
           {diary.is_analyzed && (
             <div className={S.divider}>
-              <AnalysisResult diaryId={diary.id} />
+              <AnalysisResult diaryId={diary.id} isAuthor={isAuthor} />
             </div>
           )}
 

@@ -7,13 +7,15 @@ import S from './style.module.css';
 
 interface Props {
   diaryId: string;
+  isAuthor: boolean;
 }
 
-function AnalysisResult({ diaryId }: Props) {
+function AnalysisResult({ diaryId, isAuthor }: Props) {
   const { analysis, loading } = useDiaryAnalysis(diaryId);
   const [isOpen, setIsOpen] = useState(false);
 
   if (loading || !analysis) return null; // 로딩 중이거나 감정 분석 안 했으면 렌더 x
+  if (!isAuthor && !analysis.is_public) return null; // 작성자가 아니고 비공개면 렌더 x
 
   return (
     <div className={S.container}>

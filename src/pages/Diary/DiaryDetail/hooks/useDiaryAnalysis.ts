@@ -8,6 +8,7 @@ export function useDiaryAnalysis(diaryId: string) {
   const [analysis, setAnalysis] = useState<{
     reason: string | null;
     emotions: EmotionSub[];
+    is_public: boolean;
   } | null>(null);
 
   const [loading, setLoading] = useState(true);
@@ -19,6 +20,7 @@ export function useDiaryAnalysis(diaryId: string) {
         .from('diary_analysis')
         .select(`
           reason_text,
+          is_public,
           user_selected_emotions (
             emotion_subs (*)
           )
@@ -33,13 +35,12 @@ export function useDiaryAnalysis(diaryId: string) {
       }
 
       // user_selected_emotions에서 emotion_subs만 추출
-      const emotions = data.user_selected_emotions.map(
-        (e) => e.emotion_subs
-      );
+      const emotions = data.user_selected_emotions.map((e) => e.emotion_subs);
 
       setAnalysis({
         reason: data.reason_text, // 분석 이유 저장
         emotions: emotions ?? [], // 감정 저장
+        is_public: data.is_public, // 공개 여부 저장
       });
 
       setLoading(false);
