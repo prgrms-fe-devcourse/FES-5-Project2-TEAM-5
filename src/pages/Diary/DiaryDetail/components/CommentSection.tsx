@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { IoArrowUpCircleOutline } from 'react-icons/io5';
 import { BsChat } from 'react-icons/bs';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
@@ -34,10 +34,31 @@ export const CommentSection = ({
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [editCommentInput, setEditCommentInput] = useState('');
 
-  const handleAddComment = () => {
+  // 댓글 리스트 스크롤을 위한 ref
+  const commentsListRef = useRef<HTMLDivElement>(null);
+
+  // 새 댓글이 추가될 때만 스크롤을 맨 아래로 이동 (초기 로드 시에는 맨 위 유지)
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+  useEffect(() => {
+    if (!isInitialLoad && commentsListRef.current) {
+      commentsListRef.current.scrollTop = commentsListRef.current.scrollHeight;
+    }
+    if (isInitialLoad && comments.length > 0) {
+      setIsInitialLoad(false);
+    }
+  }, [comments.length, isInitialLoad]); // comments 배열의 길이가 변경될 때마다 실행
+
+  const handleAddComment = async () => {
     if (newCommentInput.trim()) {
-      onAddComment(newCommentInput);
+      await onAddComment(newCommentInput);
       setNewCommentInput('');
+      // 댓글 추가 후 스크롤을 맨 아래로 이동 (약간의 지연을 두어 DOM 업데이트 후 실행)
+      setTimeout(() => {
+        if (commentsListRef.current) {
+          commentsListRef.current.scrollTop = commentsListRef.current.scrollHeight;
+        }
+      }, 100);
     }
   };
 
@@ -106,7 +127,7 @@ export const CommentSection = ({
 
       <div className={S.commentBox}>
         {comments.length > 0 ? (
-          <div className={S.commnetItem}>
+          <div ref={commentsListRef} className={S.commentItem}>
             {comments.map((comment) => (
               <div key={comment.id} className={S.commentWrapper}>
                 <div className={S.profileImage}>
