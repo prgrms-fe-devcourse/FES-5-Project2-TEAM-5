@@ -2,6 +2,7 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
 import supabase from './supabase/client';
 import type { Tables } from './supabase/types';
 import { formatUTCToKorean, getLocalDateString } from '../utils/dateUtils';
+import { limitMessages } from '../constants/chat';
 
 /**
  * 채팅 입력 api
@@ -87,7 +88,7 @@ export const requestAiResponse = async (userId: string, name: string): Promise<v
  */
 export const createChatSession = async (userId: string): Promise<void> => {
   const today = getLocalDateString(new Date());
-  const randomPairId = Math.floor(Math.random() * 4) + 1; // 메시지 페어는 4가지
+  const randomPairId = Math.floor(Math.random() * limitMessages.length) + 1; // 메시지 페어는 4가지
 
   const { error } = await supabase.from('user_chat_session').upsert({
     user_id: userId,
@@ -101,6 +102,38 @@ export const createChatSession = async (userId: string): Promise<void> => {
 
   if (error) {
     throw new Error('user_chat_session 생성 에러');
+  }
+};
+
+/**
+ * 매사자 카운트
+ */
+export const getTodayMessageCount = async (userId: string) => {
+  const { data: limit, error: selectError } = await supabase
+    .from('user_chat_session')
+    .select('message_count, daily_limit')
+    .eq('user_id', userId)
+    .single();
+  if (selectError || !limit) {
+    throw new Error('daily limit selectError 발생');
+  }
+
+  return limit;
+};
+
+/**
+ * 사용자가 chat insert 성공시 daily_limit + 1 업데이트
+ */
+export const updateMessageCount = async (userId: string) => {
+  const limit = await getTodayMessageCount(userId);
+
+  const { error: updateError } = await supabase
+    .from('user_chat_session')
+    .update({ message_count: limit.message_count + 1 })
+    .eq('user_id', userId);
+
+  if (updateError) {
+    throw new Error('daily limit updateError 발생');
   }
 };
 

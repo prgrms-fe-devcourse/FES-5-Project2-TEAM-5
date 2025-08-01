@@ -8,7 +8,8 @@ import style from './style.module.css';
 
 const Home = () => {
   const [isChatActive, setIsChatActive] = useState<boolean>(false);
-  const { messages, isAiTyping, isLoading, ref, userProfileUrl } = useChatMessages();
+  const { messages, isAiTyping, isLoading, ref, userProfileUrl, isMessageLimitExceeded } =
+    useChatMessages();
 
   const handleOpenChat = () => {
     setIsChatActive(true);
@@ -43,7 +44,11 @@ const Home = () => {
             </div>
           </section>
         )}
-        <ChatInput onOpenChat={handleOpenChat} disabled={isAiTyping} />
+        <ChatInput
+          onOpenChat={handleOpenChat}
+          disabled={isAiTyping}
+          isMessageLimitExceeded={isMessageLimitExceeded}
+        />
       </div>
     </main>
   );
