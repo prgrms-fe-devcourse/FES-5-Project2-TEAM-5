@@ -186,18 +186,59 @@
     font-size: var(--text-xl);
     cursor: pointer;
   }
-  .bgGrayBtn {
-    margin-right: auto;
-    background-color: var(--gray-100);
-    color: var(--gray-900);
-  }
-  .lineBtn {
-    background-color: white;
-    color: var(--primary);
-    border: 1px solid var(--primary);
-  }
-  .bgPrimaryBtn {
-    background-color: var(--primary);
-    color: white;
+}
+.bgGrayBtn {
+  margin-right: auto;
+  background-color: var(--gray-100);
+  color: var(--gray-900);
+}
+.lineBtn {
+  background-color: white;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+.bgPrimaryBtn {
+  background-color: var(--primary);
+  color: white;
+}
+.dialogOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.dialog {
+  background: white;
+  padding: var(--space-8);
+  border-radius: var(--radius-2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 420px;
+}
+.dialog h4 {
+  margin-bottom: var(--space-6);
+  font-size: var(--text-3xl);
+  font-weight: 600;
+}
+.dialog p {
+  margin-bottom: 50px;
+  font-size: var(--text-lg);
+  color: var(--gray-900);
+}
+.dialogButtons {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: center;
+  button {
+    min-width: 110px;
+    height: 44px;
+    border-radius: var(--radius-2);
+    font-size: var(--text-xl);
+    cursor: pointer;
   }
 }

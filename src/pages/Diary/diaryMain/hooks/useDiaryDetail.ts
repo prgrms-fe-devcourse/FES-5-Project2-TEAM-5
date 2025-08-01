@@ -49,14 +49,7 @@ export const useDiaryDetail = (diaryId: string | undefined) => {
           id: comment.id,
           author: user?.name || '알 수 없는 사용자',
           content: comment.content,
-          timestamp: new Date(comment.created_at)
-            .toLocaleDateString('ko-KR', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-            })
-            .replace(/\.\s/g, '.')
-            .slice(0, -1),
+          timestamp: comment.created_at,
           profile_image_url: user?.profile_image,
           user_id: comment.user_id,
           created_at: comment.created_at,
@@ -161,14 +154,7 @@ export const useDiaryDetail = (diaryId: string | undefined) => {
           id: newComment.id,
           author: userInfo.name,
           content: newComment.content,
-          timestamp: new Date(newComment.created_at)
-            .toLocaleDateString('ko-KR', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-            })
-            .replace(/\.\s/g, '.')
-            .slice(0, -1),
+          timestamp: newComment.created_at,
           profile_image_url: userInfo.profile_image,
           user_id: newComment.user_id,
           created_at: newComment.created_at,
@@ -192,7 +178,7 @@ export const useDiaryDetail = (diaryId: string | undefined) => {
     [diary, userInfo, diaryId],
   );
 
-  // 댓글 수정 함수 추가
+  // 댓글 수정
   const handleEditComment = useCallback(
     async (commentId: string, content: string) => {
       if (!userInfo || !content.trim()) return;
@@ -202,11 +188,10 @@ export const useDiaryDetail = (diaryId: string | undefined) => {
           .from('comments')
           .update({ content: content.trim() })
           .eq('id', commentId)
-          .eq('user_id', userInfo.id); // 본인 댓글만 수정 가능
+          .eq('user_id', userInfo.id);
 
         if (updateError) throw updateError;
 
-        // 댓글 목록 업데이트
         setComments((prev) =>
           prev.map((comment) =>
             comment.id === commentId ? { ...comment, content: content.trim() } : comment,
@@ -220,7 +205,6 @@ export const useDiaryDetail = (diaryId: string | undefined) => {
     [userInfo],
   );
 
-  // 댓글 삭제 함수 추가
   const handleDeleteComment = useCallback(
     async (commentId: string) => {
       if (!userInfo) return;
@@ -230,11 +214,10 @@ export const useDiaryDetail = (diaryId: string | undefined) => {
           .from('comments')
           .delete()
           .eq('id', commentId)
-          .eq('user_id', userInfo.id); // 본인 댓글만 삭제 가능
+          .eq('user_id', userInfo.id);
 
         if (deleteError) throw deleteError;
 
-        // 댓글 목록에서 제거
         setComments((prev) => prev.filter((comment) => comment.id !== commentId));
       } catch (error) {
         console.error('댓글 삭제 실패:', error);
@@ -262,11 +245,11 @@ export const useDiaryDetail = (diaryId: string | undefined) => {
     isLiked,
     likesCount,
     comments,
-    currentUser: userInfo, // 현재 사용자 정보 추가
+    currentUser: userInfo,
     handleLike,
     handleAddComment,
-    handleEditComment, // 댓글 수정 함수 추가
-    handleDeleteComment, // 댓글 삭제 함수 추가
+    handleEditComment,
+    handleDeleteComment,
     handleDelete,
     fetchDiaryDetail,
   };

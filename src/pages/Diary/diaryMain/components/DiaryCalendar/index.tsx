@@ -17,10 +17,20 @@ type Props = {
   date: Date | null;
   onDateChange: (date: Date) => void;
   entries: DiaryEntry[];
+  onMonthChange?: (date: Date) => void;
 };
 
-const DiaryCalendar = ({ userId, date, onDateChange, entries }: Props) => {
+const DiaryCalendar = ({ userId, date, onDateChange, entries, onMonthChange }: Props) => {
   const todayStr = getLocalDateString(new Date());
+
+  const handleActiveStartDateChange = useCallback(
+    ({ activeStartDate }: { activeStartDate: Date | null }) => {
+      if (activeStartDate) {
+        onMonthChange?.(activeStartDate);
+      }
+    },
+    [onMonthChange],
+  );
 
   // 날짜 클릭 핸들러 (미래 날짜 방지)
   const handleDateClick = useCallback(
@@ -122,6 +132,7 @@ const DiaryCalendar = ({ userId, date, onDateChange, entries }: Props) => {
         tileClassName={tileClassName}
         value={date || new Date()}
         onClickDay={handleDateClick}
+        onActiveStartDateChange={handleActiveStartDateChange}
       />
     </>
   );
