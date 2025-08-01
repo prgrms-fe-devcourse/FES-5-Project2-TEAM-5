@@ -38,7 +38,13 @@
   border-bottom: 1px solid var(--gray-100);
   .date {
     font-size: var(--text-lg);
-    color: var(--gray-200);
+    color: var(--gray-300);
+  }
+  .userNickname {
+    display: inline-block;
+    padding-left: var(--space-3);
+    margin-left: var(--space-3);
+    border-left: 1px solid var(--gray-200);
   }
   h3 {
     display: flex;

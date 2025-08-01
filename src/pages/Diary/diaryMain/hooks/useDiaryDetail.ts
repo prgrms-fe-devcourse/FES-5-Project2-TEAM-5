@@ -15,6 +15,7 @@ export const useDiaryDetail = (diaryId: string | undefined) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
   const [comments, setComments] = useState<DisplayComment[]>([]);
+  const [author, setAuthor] = useState<{ name: string } | null>(null);
 
   const { userInfo } = useUserContext();
 
@@ -81,6 +82,15 @@ export const useDiaryDetail = (diaryId: string | undefined) => {
       const likedStatus = await checkUserLikedDiary(diaryId, userInfo.id);
       setIsLiked(likedStatus);
 
+      const { data: authorData, error: authorError } = await supabase
+        .from('users')
+        .select('name')
+        .eq('id', data.user_id)
+        .single();
+
+      if (!authorError && authorData) {
+        setAuthor(authorData);
+      }
       await fetchComments(diaryId);
     } catch (error) {
       const errorMessage =
@@ -240,6 +250,7 @@ export const useDiaryDetail = (diaryId: string | undefined) => {
 
   return {
     diary,
+    author,
     loading,
     error,
     isLiked,

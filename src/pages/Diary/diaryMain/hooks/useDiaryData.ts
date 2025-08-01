@@ -55,8 +55,6 @@ export const useDiaryData = (
           '-' +
           String(selectedDate.getDate()).padStart(2, '0');
 
-        console.log('필터링 기준 날짜 (선택된 날짜):', selectedDateStr);
-
         const filteredDiaries = rawDiaries.filter((diary) => {
           // Supabase UTC 시간을 한국 시간으로 변환
           const diaryDateUTC = new Date(diary.created_at);
@@ -68,16 +66,8 @@ export const useDiaryData = (
             '-' +
             String(diaryDateKST.getDate()).padStart(2, '0');
 
-          console.log(
-            `일기 원본: ${diary.created_at} → KST: ${diaryDateStr} → 매치: ${
-              diaryDateStr === selectedDateStr
-            }`,
-          );
-
           return diaryDateStr === selectedDateStr;
         });
-
-        console.log('필터링된 일기 수:', filteredDiaries.length);
 
         // 좋아요 및 댓글 수 추가
         const diariesWithCounts = filteredDiaries.map((diary) => ({

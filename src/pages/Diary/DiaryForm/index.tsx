@@ -22,7 +22,6 @@ const DiaryFormPage = () => {
     diaryDate,
     imagePreviewUrl,
     setImagePreviewUrl,
-    hasUnsavedChanges,
     existingDiary,
     isEditMode,
     user,
@@ -154,8 +153,6 @@ const DiaryFormPage = () => {
           now.getSeconds(),
           now.getMilliseconds(),
         );
-
-        console.log('저장할 날짜:', createdAt.toISOString()); // 디버깅용
 
         // 선택한 날짜는 유지하고, 시간만 현재 시간으로 설정
         selectedDate.setHours(
