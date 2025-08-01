@@ -136,11 +136,7 @@ const DiaryDetailPage = () => {
               ))}
           </div>
 
-          {diary.is_analyzed && (
-            <div className={S.divider}>
-              <AnalysisResult diaryId={diary.id} isAuthor={isAuthor} />
-            </div>
-          )}
+          {diary.is_analyzed && <AnalysisResult diaryId={diary.id} isAuthor={isAuthor} />}
 
           <CommentSection
             comments={comments}

@@ -15,7 +15,7 @@ export function useDiaryAnalysis(diaryId: string) {
 
   useEffect(() => {
     const fetchAnalysis = async () => {
-      // 조인으로 감정 분석 이유, 선택한 감정 전부 가져오기
+      // 조인으로 감정 분석 이유, 공개 여부, 선택한 감정 전부 가져오기
       const { data, error } = await supabase
         .from('diary_analysis')
         .select(`
