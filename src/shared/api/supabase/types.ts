@@ -87,7 +87,7 @@ export type Database = {
         }
         Insert: {
           content: string
-          created_at: string
+          created_at?: string
           diary_image?: string | null
           emotion_main_id: number
           id?: string
@@ -404,6 +404,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_chat_session: {
+        Row: {
+          created_at: string
+          daily_limit: number
+          id: number
+          last_reset_date: string
+          message_count: number
+          selected_message_pair_id: number
+          user_id: string
+          warning_threshold: number
+        }
+        Insert: {
+          created_at?: string
+          daily_limit?: number
+          id?: number
+          last_reset_date: string
+          message_count?: number
+          selected_message_pair_id?: number
+          user_id?: string
+          warning_threshold?: number
+        }
+        Update: {
+          created_at?: string
+          daily_limit?: number
+          id?: number
+          last_reset_date?: string
+          message_count?: number
+          selected_message_pair_id?: number
+          user_id?: string
+          warning_threshold?: number
+        }
+        Relationships: []
       }
       user_selected_emotions: {
         Row: {
