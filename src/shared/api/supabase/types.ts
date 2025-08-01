@@ -80,6 +80,7 @@ export type Database = {
           is_analyzed: boolean
           is_drafted: boolean
           is_public: boolean
+          sequence: number
           title: string
           updated_at: string | null
           user_id: string
@@ -93,6 +94,7 @@ export type Database = {
           is_analyzed?: boolean
           is_drafted?: boolean
           is_public: boolean
+          sequence?: number
           title: string
           updated_at?: string | null
           user_id: string
@@ -106,6 +108,7 @@ export type Database = {
           is_analyzed?: boolean
           is_drafted?: boolean
           is_public?: boolean
+          sequence?: number
           title?: string
           updated_at?: string | null
           user_id?: string

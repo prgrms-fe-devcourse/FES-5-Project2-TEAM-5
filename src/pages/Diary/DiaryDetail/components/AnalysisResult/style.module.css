@@ -1,0 +1,94 @@
+.container {
+  background-color: var(--gray-50);
+  border-radius: var(--radius-2);
+  overflow: hidden;
+}
+
+/* 감정 분석 결과 */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px 6px 6px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+}
+
+/* 도장 + 감정 분석 결과 문구 */
+.headerLeft { 
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  img {
+    width: 40px;
+    height: 40px;
+  }
+
+  span {
+    font-size: var(--text-xl);
+    font-weight: 500;
+    color: var(--gray-900);
+  }
+}
+
+/* isOpen */
+.analysisResult {
+  padding: 24px 52px;
+}
+
+/* 감정 섹션 */
+.emotionSection{
+  margin-bottom: var(--space-8);
+
+  /* 감정 태그 리스트 */
+  .emotions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  /* 감정 태그 */
+  .emotionTag {
+    padding: var(--space-2) var(--space-4);
+    border-radius: 9999px;
+    background-color: var(--gray-100);
+    color: var(--gray-900);
+    font-size: var(--text-base);
+    font-weight: 500;
+    line-height: var(--space-5);
+  }
+}
+
+/* 감정, 이유 섹션 공통 */
+.emotionSection,
+.reasonSection {
+
+  /* 감정, 이유 */
+  h4 {
+    color: var(--primary);
+    font-size: var(--text-2xl);
+    font-weight: 500;
+    margin-bottom: var(--space-3);
+  }
+
+  /* 이유 */
+  p {
+    color: var(--gray-900);
+    font-size: var(--text-lg);
+    line-height: var(--space-5);
+    /* font-weight: 500; */
+    
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+}
+
+/* 상단 구분선 */
+.divider {
+  border-top: 1px solid var(--gray-100);
+  margin-top: 20px;
+  padding-top: 20px;
+}

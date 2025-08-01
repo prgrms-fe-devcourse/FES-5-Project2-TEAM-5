@@ -7,6 +7,7 @@ import { useDiaryDetail } from '../DiaryMain/hooks/useDiaryDetail';
 import { toastUtils } from '@/shared/components/Toast';
 import CommentSection from './components/CommentSection';
 import { IoLockClosedOutline, IoLockOpenOutline } from 'react-icons/io5';
+import AnalysisResult from './components/AnalysisResult';
 import { useUserContext } from '@/shared/context/UserContext';
 
 const DiaryDetailPage = () => {
@@ -134,6 +135,8 @@ const DiaryDetailPage = () => {
                 <span key={dh.hashtags.id}>#{dh.hashtags.name}</span>
               ))}
           </div>
+
+          {diary.is_analyzed && <AnalysisResult diaryId={diary.id} isAuthor={isAuthor} />}
 
           <CommentSection
             comments={comments}
