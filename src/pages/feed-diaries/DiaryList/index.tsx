@@ -74,7 +74,9 @@ const DiaryList = () => {
       </section>
 
       <section aria-label="일기 목록" className={S.diariesSection}>
-        {diaries.length <= 0 ? (
+        {isLoading ? (
+          <Spinner />
+        ) : diaries.length <= 0 ? (
           <p className={S.noResult} role="status">
             검색 결과가 없습니다.
           </p>

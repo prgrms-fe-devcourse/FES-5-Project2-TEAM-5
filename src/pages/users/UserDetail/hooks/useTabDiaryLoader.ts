@@ -17,20 +17,21 @@ export const useUserDiaryLoader = (
 
       try {
         // 테스트 딜레이
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 200));
 
         let data: DiaryRowEntity[] = [];
         const apiPage = page;
+        const limit = 10;
 
         switch (activeTabId) {
           case 'diary':
-            data = await getUserDiaries(slug, apiPage, 5);
+            data = await getUserDiaries(slug, apiPage, limit);
             break;
           case 'like':
-            data = await getUserLikedDiaries(slug, apiPage, 5);
+            data = await getUserLikedDiaries(slug, apiPage, limit);
             break;
           case 'comment':
-            data = await getUserCommentedDiaries(slug, apiPage, 5);
+            data = await getUserCommentedDiaries(slug, apiPage, limit);
             break;
         }
 
@@ -50,7 +51,7 @@ export const useUserDiaryLoader = (
           return filtered;
         });
 
-        const hasMore = uniqueData.length === 5;
+        const hasMore = uniqueData.length < limit ? false : true;
 
         return {
           data: uniqueData,

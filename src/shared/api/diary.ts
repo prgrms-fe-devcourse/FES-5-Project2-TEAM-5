@@ -338,7 +338,8 @@ export const getUserLikedDiaries = async (userId: string, page: number = 1, limi
         ? diary.emotion_mains[0]
         : diary.emotion_mains,
       diary_hashtags: diary.diary_hashtags?.flatMap((h) => h.hashtags) || [],
-    }));
+    }))
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
   return result;
 };
 
@@ -398,6 +399,7 @@ export const getUserCommentedDiaries = async (
         ? diary.emotion_mains[0]
         : diary.emotion_mains,
       diary_hashtags: diary.diary_hashtags?.flatMap((h) => h.hashtags) || [],
-    }));
+    }))
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
   return result;
 };

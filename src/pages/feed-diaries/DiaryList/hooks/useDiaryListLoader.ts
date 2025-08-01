@@ -42,6 +42,7 @@ export const useDiaryListLoader = (
 
   const loadDiaries = useCallback(
     async (page: number) => {
+      await new Promise((resolve) => setTimeout(resolve, 200));
       try {
         // useInfiniteScroll page=1부터 시작
         const apiPage = page;
@@ -95,7 +96,7 @@ export const useDiaryListLoader = (
           return filtered;
         });
 
-        const hasMore = diaryData.length === limit;
+        const hasMore = diaryData.length < limit ? false : true;
 
         return {
           data: diaryData,

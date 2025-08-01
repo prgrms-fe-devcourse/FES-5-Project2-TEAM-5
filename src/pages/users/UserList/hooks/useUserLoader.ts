@@ -12,9 +12,10 @@ export const useUserLoader = (searchTerm: string) => {
     async (page: number) => {
       try {
         // 테스트 딜레이
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 200));
         const apiPage = page;
-        const data = await getAllUserData(apiPage, 10, searchTerm.trim() || undefined);
+        const limit = 16;
+        const data = await getAllUserData(apiPage, limit, searchTerm.trim() || undefined);
 
         setUsers((prev) => {
           if (page === 1) return data;
@@ -26,7 +27,7 @@ export const useUserLoader = (searchTerm: string) => {
 
         return {
           data,
-          hasMore: data.length === 10,
+          hasMore: data.length < limit ? false : true,
         };
       } catch (error) {
         console.error('데이터 로딩 실패:', error);

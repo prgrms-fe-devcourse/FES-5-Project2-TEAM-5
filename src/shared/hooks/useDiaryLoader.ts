@@ -14,9 +14,10 @@ export const useDiaryLoader = (userInfo: DbUser | null, isPending: boolean) => {
 
       try {
         // 테스트 딜레이
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 200));
         const apiPage = page + 1;
-        const data = await getUserDiaries(userInfo.id, apiPage, 10);
+        const limit = 10;
+        const data = await getUserDiaries(userInfo.id, apiPage, limit);
 
         setDiaries((prev) => {
           if (page === 0) return data;
@@ -28,7 +29,7 @@ export const useDiaryLoader = (userInfo: DbUser | null, isPending: boolean) => {
 
         return {
           data,
-          hasMore: data.length === 10,
+          hasMore: data.length < limit ? false : true,
         };
       } catch (error) {
         if (error instanceof Error) {
