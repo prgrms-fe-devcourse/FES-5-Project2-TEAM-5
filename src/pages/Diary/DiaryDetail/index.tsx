@@ -5,7 +5,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { formatToSimpleDate } from '@/shared/utils/formatDate';
 import Spinner from '@/shared/components/Spinner';
 import { useDiaryDetail } from '../DiaryMain/hooks/useDiaryDetail';
-import { toastUtils } from '@/shared/components/Toast';
 import CommentSection from './components/CommentSection';
 import { IoLockClosedOutline, IoLockOpenOutline } from 'react-icons/io5';
 import AnalysisResult from './components/AnalysisResult';
@@ -44,13 +43,9 @@ const DiaryDetailPage = () => {
     setShowDeleteModal(false);
     try {
       await handleDelete();
-      toastUtils.success({ title: '성공', message: '일기가 성공적으로 삭제되었습니다.' });
       navigate('/diary');
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.';
-      console.error('일기 삭제 실패:', errorMessage);
-      toastUtils.error({ title: '실패', message: '일기 삭제에 실패했습니다.' });
+      console.error('일기 삭제 실패:', error);
     }
   };
 
