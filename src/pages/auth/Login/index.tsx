@@ -54,6 +54,7 @@ const Login = () => {
     } catch (error) {
       if (error instanceof Error)
         toastUtils.error({ title: '로그인 실패', message: error.message });
+      setFormData((prev) => ({ ...prev, password: '' })); // 비밀번호 초기화
     }
   };
 
