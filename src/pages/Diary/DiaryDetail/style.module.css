@@ -95,16 +95,13 @@
   white-space: pre-line;
 }
 .diaryImage {
-  padding: 0 var(--space-5);
-  figure {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 60px;
-    img {
-      max-width: 900px;
-      width: 100%;
-    }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 60px;
+  img {
+    max-width: 900px;
+    width: 100%;
   }
 }
 .hashtag {
