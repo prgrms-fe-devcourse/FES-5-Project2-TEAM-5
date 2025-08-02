@@ -38,11 +38,17 @@ const Register = () => {
     if (!validateAll()) return false;
     try {
       const { email, name, password } = formData;
+      // 이메일 Authentication 등록
       const user = await registerWithEmail({ email, password });
+
+      // 프로파일 등록
       const publicUrl = imageFile
         ? await uploadProfileImage({ file: imageFile, userId: user.id })
         : null;
+
+      // users 테이블 insert
       await createNewUser({ id: user.id, name, email, profile_image: publicUrl });
+
       toastUtils.success({ title: '화원가입 성공', message: 'Seediary에 오신 걸 환영합니다!' });
 
       navigate('/login', {

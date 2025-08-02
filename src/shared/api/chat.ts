@@ -70,7 +70,7 @@ export const createMessageSubscription = (
 };
 
 /**
- * 수파 베이스 edge func 호출
+ * AI 채팅 edge func 호출
  */
 export const requestAiResponse = async (userId: string, name: string): Promise<void> => {
   const { error } = await supabase.functions.invoke('conversation_ai', {
@@ -106,7 +106,7 @@ export const createChatSession = async (userId: string): Promise<void> => {
 };
 
 /**
- * 매사자 카운트
+ * 메세지 카운트
  */
 export const getTodayMessageCount = async (userId: string) => {
   const { data: limit, error: selectError } = await supabase

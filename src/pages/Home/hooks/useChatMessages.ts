@@ -55,6 +55,7 @@ export const useChatMessages = () => {
     }
   }, [userInfo?.id]);
 
+  // 새 메시지 업데이트
   const handleNewMessage = (
     payload: RealtimePostgresInsertPayload<{
       [key: string]: any;
@@ -64,11 +65,13 @@ export const useChatMessages = () => {
     const { content, created_at, id, role, user_id } = payload.new as Tables<'chat_messages'>;
     setMessages((prev) => [...prev, { id, created_at, content, user_id, role }]);
 
+    // 유저 메시지 insert 감지
     if (role === 'user') {
       setMessageLimit((prev) => ({ ...prev, count: prev.count + 1 }));
       setIsAiTyping(true);
       requestAiResponse(userInfo.id, userInfo.name);
     }
+    // AI 메시지 insert 감지
     if (role === 'model') {
       setIsAiTyping(false);
     }

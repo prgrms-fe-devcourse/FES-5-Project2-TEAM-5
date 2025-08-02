@@ -7,16 +7,16 @@ import { useChatMessages } from './hooks/useChatMessages';
 import style from './style.module.css';
 
 const Home = () => {
-  const [isChatActive, setIsChatActive] = useState<boolean>(false);
+  const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
   const { messages, isAiTyping, isLoading, ref, userProfileUrl, isMessageLimitExceeded } =
     useChatMessages();
 
   const handleOpenChat = () => {
-    setIsChatActive(true);
+    setIsChatOpen(true);
   };
 
   const handleChatClose = () => {
-    setIsChatActive(false);
+    setIsChatOpen(false);
   };
 
   return (
@@ -24,7 +24,8 @@ const Home = () => {
       <div className={style.overlay}>
         {/* 퀘스트 */}
         <QuestSection />
-        {isChatActive ? (
+        {isChatOpen ? (
+          // 채팅창
           <ChatMessages
             onClose={handleChatClose}
             messages={messages}
@@ -34,6 +35,7 @@ const Home = () => {
             userProfileUrl={userProfileUrl ?? null}
           />
         ) : (
+          // 몰리 AI 캐릭터
           <section className={style.cardSection}>
             <h2 className="sr-only">AI 케릭터 섹션</h2>
             <div className={style.cardImage}>
@@ -44,6 +46,7 @@ const Home = () => {
             </div>
           </section>
         )}
+        {/* 채팅 input */}
         <ChatInput
           onOpenChat={handleOpenChat}
           disabled={isAiTyping}

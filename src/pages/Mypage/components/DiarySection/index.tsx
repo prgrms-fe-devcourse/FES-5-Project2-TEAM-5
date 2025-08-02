@@ -1,6 +1,6 @@
 import S from './style.module.css';
 import DiaryRowCard from '@/shared/components/DiaryRowCard';
-import { useEffect,useTransition } from 'react';
+import { useEffect, useTransition } from 'react';
 import { toastUtils } from '@/shared/components/Toast';
 import { useUserContext } from '@/shared/context/UserContext';
 import Spinner from '@/shared/components/Spinner';
@@ -12,12 +12,14 @@ const DiarySection = () => {
   const { userInfo } = useUserContext();
   const [isPending, startTransition] = useTransition();
 
-const { diaries, loadDiaries, targetRef, isLoading, hasMore } = useDiaryLoader(userInfo, isPending);
+  const { diaries, loadDiaries, targetRef, isLoading, hasMore } = useDiaryLoader(
+    userInfo,
+    isPending,
+  );
 
   useEffect(() => {
     startTransition(async () => {
       if (!userInfo) return;
-      startTransition(() => {});
       try {
         await loadDiaries(0);
       } catch (error) {
@@ -45,8 +47,10 @@ const { diaries, loadDiaries, targetRef, isLoading, hasMore } = useDiaryLoader(u
       <ul className={S.diaryList}>
         {diaries.length > 0 ? (
           <>
-          {diaries.map((diary) => <DiaryRowCard {...diary} key={diary.id} />)}
-          {hasMore && <div ref={targetRef}>{isLoading && <Spinner />}</div>}
+            {diaries.map((diary) => (
+              <DiaryRowCard {...diary} key={diary.id} />
+            ))}
+            {hasMore && <div ref={targetRef}>{isLoading && <Spinner />}</div>}
           </>
         ) : (
           <div className={S.emptySection}>

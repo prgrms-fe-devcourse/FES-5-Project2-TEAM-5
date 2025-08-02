@@ -17,7 +17,7 @@ interface Props {
 }
 
 const ChatMessages = ({ onClose, messages, isLoading, ref, isAiTyping, userProfileUrl }: Props) => {
-  // 렌더링 시 채팅창 스크롤 맨 아래로
+  //  채팅창 스크롤 맨 아래로
   useEffect(() => {
     if (ref.current) {
       ref.current.scrollTo({ behavior: 'instant', top: ref.current.scrollHeight });
@@ -47,15 +47,18 @@ const ChatMessages = ({ onClose, messages, isLoading, ref, isAiTyping, userProfi
       </header>
       <div className={style.chatMessage} ref={ref}>
         {messages.length > 0 ? (
+          // 메시지 리스트 출력
           messages.map((message) => (
             <MessageItem message={message} userProfileUrl={userProfileUrl} key={message.id} />
           ))
         ) : (
+          // message 내역 없음
           <div className={style.emptyMessage} role="status" aria-live="polite">
             <span>오늘 몰리와 대화를 하지 않았어요.</span>
             <span> 몰리에게 말을 건내보세요!</span>
           </div>
         )}
+        {/* AI 타이핑 애니메이션 */}
         {isAiTyping && <TypingIndicator />}
       </div>
     </section>

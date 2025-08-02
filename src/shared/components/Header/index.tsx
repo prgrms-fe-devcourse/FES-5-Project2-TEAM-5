@@ -4,18 +4,18 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FiUser, FiLogOut } from 'react-icons/fi';
 import { PiUserCircleThin } from 'react-icons/pi';
 import { MENU_LIST } from './constants';
-import S from './style.module.css';
+import style from './style.module.css';
 import { useUserContext } from '@/shared/context/UserContext';
 import type { CSSProperties } from 'react';
 import { toastUtils } from '../Toast';
 import Notification from '../Notification';
 
-const Header = ({ style }: { style: CSSProperties }) => {
+const Header = ({ cssOption }: { cssOption: CSSProperties }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { logout, isAuth, userInfo } = useUserContext();
 
-  const { color, border } = style;
+  const { color, border } = cssOption;
 
   const handleHome = () => {
     navigate('/');
@@ -42,20 +42,22 @@ const Header = ({ style }: { style: CSSProperties }) => {
   };
 
   return (
-    <header className={S.container} style={{ color }}>
-      <div className={S.logo}>
+    <header className={style.container} style={{ color }}>
+      {/* 로고 */}
+      <div className={style.logo}>
         <button
           type="button"
           onClick={handleHome}
           aria-label="홈으로 이동"
-          className={S.logoButton}
+          className={style.logoButton}
           style={{ color }}
         >
           <img src={Logo} alt="Seediary 로고" />
           <span>Seediary</span>
         </button>
       </div>
-      <ul className={S.menuList}>
+      {/* 메인 메뉴 */}
+      <ul className={style.menuList}>
         {MENU_LIST.map((menu) => (
           <li key={menu.name}>
             <Link
@@ -66,32 +68,35 @@ const Header = ({ style }: { style: CSSProperties }) => {
                 fontWeight: menu.path === pathname ? '700' : '400',
               }}
               onClick={handleLinkClick(menu.requireAuth)}
-              className={menu.requireAuth && !isAuth ? S.disabled : ''}
+              className={menu.requireAuth && !isAuth ? style.disabled : ''}
             >
               {menu.name}
             </Link>
           </li>
         ))}
       </ul>
-      <div className={S.authMenu}>
+      {/* auth 메뉴 */}
+      <div className={style.authMenu}>
         {isAuth ? (
-          <div className={S.buttonGroup}>
+          <div className={style.buttonGroup}>
             <Notification color={color} />
+            {/* 마이페이지 */}
             <button
               type="button"
-              className={S.mypageButton}
+              className={style.mypageButton}
               onClick={handleMypage}
               aria-label="마이페이지 가기"
               data-tooltip="마이페이지"
             >
               {userInfo?.profile_image ? (
-                <img src={userInfo.profile_image} alt="" className={S.profileImage} />
+                <img src={userInfo.profile_image} alt="" className={style.profileImage} />
               ) : (
                 <PiUserCircleThin size={30} aria-hidden="true" style={{ color }} />
               )}
             </button>
+            {/* 로그아웃 */}
             <button
-              className={S.authButton}
+              className={style.authButton}
               type="button"
               onClick={handleLogout}
               aria-label="로그아웃"
@@ -102,8 +107,9 @@ const Header = ({ style }: { style: CSSProperties }) => {
             </button>
           </div>
         ) : (
+          //  로그인
           <button
-            className={S.authButton}
+            className={style.authButton}
             type="button"
             onClick={handleLogin}
             aria-label="로그인"
