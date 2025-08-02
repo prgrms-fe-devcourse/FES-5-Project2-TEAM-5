@@ -8,10 +8,13 @@ import { validator } from '../../utils/validator';
 import { reauthenticate, updateUserPassword } from '@/shared/api/auth';
 
 const ChangePassword = () => {
-  const { userInfo } = useUserContext();
+  const { userInfo, user } = useUserContext();
   const currentPwdId = useId();
   const newPwdId = useId();
   const confirmNewPwdId = useId();
+
+  // 깃허브 계정 비밀번호 변경 렌더링 안함
+  if (user?.app_metadata.provider === 'github') return null;
 
   // 현재 비밀번호
   const currentPasswordRef = useRef<HTMLInputElement>(null);
