@@ -13,7 +13,7 @@ const DiaryCardContent = ({ diary, hashtags }: Props) => {
   return (
     <div className={S.content}>
       {diary_image && (
-        <figure>
+        <figure className={S.imageContainer}>
           <img className={S.diaryImage} src={diary_image} alt="일기 이미지" />
         </figure>
       )}
@@ -28,7 +28,7 @@ const DiaryCardContent = ({ diary, hashtags }: Props) => {
             ))}
           </div>
         )}
-        <p className={S.contentText}>{truncateText(content, 1000)}</p>
+        <p className={S.contentText}>{truncateText(content, 500)}</p>
       </section>
     </div>
   );
