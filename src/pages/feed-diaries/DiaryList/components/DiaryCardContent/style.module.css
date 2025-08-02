@@ -7,7 +7,8 @@
 
   .diaryImage {
     align-self: center;
-    width: 500px;
+    width: 100%;
+    max-width: 500px;
     margin-bottom: var(--space-5);
     border-radius: var(--space-1);
   }

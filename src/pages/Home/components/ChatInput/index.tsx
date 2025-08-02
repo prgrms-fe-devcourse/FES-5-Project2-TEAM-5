@@ -1,32 +1,33 @@
-import { useId, useRef, useTransition } from 'react';
-import S from './style.module.css';
-import { IoArrowUpCircleOutline } from 'react-icons/io5';
-import { useUserContext } from '@/shared/context/UserContext';
-import { insertChatMessage } from '@/shared/api/chat';
+import { insertChatMessage, updateMessageCount } from '@/shared/api/chat';
 import { toastUtils } from '@/shared/components/Toast';
+import { useUserContext } from '@/shared/context/UserContext';
+import { useCallback, useId, useRef } from 'react';
+import { IoArrowUpCircleOutline } from 'react-icons/io5';
+import style from './style.module.css';
+import { throttle } from '@/shared/utils/throttle';
 
 interface Props {
   onOpenChat: () => void;
+  disabled: boolean;
+  isMessageLimitExceeded: boolean;
 }
 
-const ChatInput = ({ onOpenChat }: Props) => {
+const ChatInput = ({ onOpenChat, disabled, isMessageLimitExceeded }: Props) => {
   const messageRef = useRef<HTMLInputElement | null>(null);
-  const [isPending, startTransition] = useTransition();
   const { userInfo } = useUserContext();
   const chatId = useId();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!messageRef.current) return;
-    const content = messageRef.current.value.trim();
-    if (!content) return;
-    if (!userInfo) return;
-
-    startTransition(async () => {
+  // 채팅 쓰로틀링 제한
+  const throttledInsertMessage = useCallback(
+    throttle(async (content: string, userId) => {
       try {
-        await insertChatMessage({ content, id: userInfo.id });
+        // 메시지 insert
+        await insertChatMessage({ content, id: userId });
+        // 하루 메시지 제한 카운트
+        void updateMessageCount(userId);
         messageRef.current!.value = '';
         messageRef.current!.focus();
+        // 에러 처리
       } catch (error) {
         if (error instanceof Error) {
           toastUtils.error({ title: '실패', message: error.message });
@@ -34,25 +35,45 @@ const ChatInput = ({ onOpenChat }: Props) => {
           toastUtils.error({ title: '실패', message: '네트워크 오류 발생' });
         }
       }
-    });
+    }, 2000),
+    [],
+  );
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (disabled) return;
+    if (!messageRef.current) return;
+    const content = messageRef.current.value.trim();
+    if (!content) return;
+    if (!userInfo) return;
+
+    throttledInsertMessage(content, userInfo.id);
   };
 
   return (
-    <form className={S.form} onSubmit={handleSubmit}>
+    <form className={style.form} onSubmit={handleSubmit}>
       <label htmlFor={chatId} className="sr-only">
         AI와 채팅
       </label>
       <input
         ref={messageRef}
-        className={S.chat}
+        className={style.chat}
         type="text"
         name="chat"
         id={chatId}
-        placeholder="몰리에게 말을 걸어주세요."
+        placeholder={
+          isMessageLimitExceeded ? '몰리가 자리를 비웠어요.' : '몰리에게 말을 걸어주세요.'
+        }
         onClick={onOpenChat}
         autoComplete="off"
+        disabled={isMessageLimitExceeded}
       />
-      <button type="submit" className={S.submitButton} disabled={isPending}>
+      <button
+        type="submit"
+        className={style.submitButton}
+        disabled={disabled || isMessageLimitExceeded}
+      >
         <IoArrowUpCircleOutline size={24} />
       </button>
     </form>

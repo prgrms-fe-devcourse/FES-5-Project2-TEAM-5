@@ -19,6 +19,33 @@ export const getAllDiariesCommentsCount = async (): Promise<Record<string, numbe
   return commentsCount;
 };
 
+/**
+ * 특정 diary들의 댓글 수 조회
+ */
+export const getAllDiariesCommentsCountByPage = async (
+  diaryIds?: string[],
+): Promise<Record<string, number>> => {
+  let query = supabase.from('comments').select('diary_id');
+
+  // 특정 다이어리 ID들만 조회
+  if (diaryIds && diaryIds.length > 0) {
+    query = query.in('diary_id', diaryIds);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw new Error(`댓글 데이터 조회 실패: ${error.message}`);
+  }
+
+  const commentsCount: Record<string, number> = {};
+  data.forEach((comment) => {
+    commentsCount[comment.diary_id] = (commentsCount[comment.diary_id] || 0) + 1;
+  });
+
+  return commentsCount;
+};
+
 // 댓글 알림
 export const postCommentNotification = async (
   receiverId: string,

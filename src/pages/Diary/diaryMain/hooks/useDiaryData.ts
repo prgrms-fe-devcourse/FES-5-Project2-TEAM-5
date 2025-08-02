@@ -28,7 +28,6 @@ export const useDiaryData = (
         const selectedYear = selectedDate.getFullYear();
         const selectedMonth = selectedDate.getMonth();
 
-        // 선택된 날짜가 속한 달의 전체 데이터 가져오기
         const startOfMonth = new Date(selectedYear, selectedMonth, 1);
         startOfMonth.setHours(0, 0, 0, 0);
         const startOfMonthUTC = startOfMonth.toISOString();
@@ -37,7 +36,6 @@ export const useDiaryData = (
         endOfMonth.setHours(23, 59, 59, 999);
         const endOfMonthUTC = endOfMonth.toISOString();
 
-        // 병렬로 데이터 가져오기
         const [rawDiaries, likesCount, commentsCount] = await Promise.all([
           fetchDiariesByDate(userId, startOfMonthUTC, endOfMonthUTC),
           getAllDiariesLikesCount(),
@@ -49,10 +47,25 @@ export const useDiaryData = (
           return;
         }
 
-        // 선택된 날짜의 일기만 필터링
-        const selectedDateStr = selectedDate.toISOString().split('T')[0];
+        // 로컬 날짜 기준으로 변환
+        const selectedDateStr =
+          selectedDate.getFullYear() +
+          '-' +
+          String(selectedDate.getMonth() + 1).padStart(2, '0') +
+          '-' +
+          String(selectedDate.getDate()).padStart(2, '0');
+
         const filteredDiaries = rawDiaries.filter((diary) => {
-          const diaryDateStr = new Date(diary.created_at).toISOString().split('T')[0];
+          // Supabase UTC 시간을 한국 시간으로 변환
+          const diaryDateUTC = new Date(diary.created_at);
+          const diaryDateKST = new Date(diaryDateUTC.getTime() + 9 * 60 * 60 * 1000); // UTC + 9시간
+          const diaryDateStr =
+            diaryDateKST.getFullYear() +
+            '-' +
+            String(diaryDateKST.getMonth() + 1).padStart(2, '0') +
+            '-' +
+            String(diaryDateKST.getDate()).padStart(2, '0');
+
           return diaryDateStr === selectedDateStr;
         });
 
@@ -66,6 +79,7 @@ export const useDiaryData = (
         const transformedData = transformDiaryData(
           diariesWithCounts as unknown as SupabaseDiaryResponse[],
         );
+
         setDiaryList(transformedData || []);
       } catch (error) {
         console.error('Failed to load diaries:', error);
@@ -80,7 +94,7 @@ export const useDiaryData = (
     };
 
     fetchDiaryForDate();
-  }, [userId, selectedDate]); // currentCalendarMonth 의존성 제거
+  }, [userId, selectedDate, currentCalendarMonth]);
 
   return { diaryList, loading };
 };

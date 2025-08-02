@@ -12,12 +12,16 @@ interface Props {
 
 const QuestItem = ({ quest, onUpdate }: Props) => {
   const { userInfo } = useUserContext();
+
+  // 퀘스트 완료
   const handleQuestComplete = async () => {
     if (!userInfo?.id) return;
 
+    // 낙관적 업데이트
     onUpdate(quest.quest_id);
 
     try {
+      // 퀘스트 상태 업데이트
       void updateQuestState(quest.quest_id, userInfo.id, quest.is_completed);
     } catch (error) {
       if (error instanceof Error) {

@@ -32,6 +32,7 @@ const Notification = ({ color }: Props) => {
 
       {isOpen && (
         <div className={style.notificationWrapper}>
+          {/* 알림 리스트 */}
           <ul className={style.notificationList}>
             {isLoading ? (
               <div className={style.spinnerWrapper}>
@@ -51,6 +52,7 @@ const Notification = ({ color }: Props) => {
               </>
             )}
           </ul>
+          {/*  읽음, 삭제 버튼 */}
           <div className={style.buttonGroup}>
             <button
               type="button"

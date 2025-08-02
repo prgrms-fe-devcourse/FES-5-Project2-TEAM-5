@@ -34,21 +34,6 @@ export type Hashtag = Database['public']['Tables']['hashtags']['Row'];
 export type EmotionMain = Database['public']['Tables']['emotion_mains']['Row'];
 export type User = Database['public']['Tables']['users']['Row'];
 
-export interface UpdateDiaryData {
-  title: string;
-  content: string;
-  is_public: boolean;
-}
-
-export type DiaryWithRelations = Diary & {
-  emotion_mains: EmotionMain | null;
-  diary_hashtags: {
-    hashtags: Hashtag;
-  }[];
-  likes: Like[];
-  comments: Comment[];
-};
-
 export type DiaryDetailEntity = Diary & {
   emotion_mains: EmotionMain | null;
   diary_hashtags: {
@@ -56,10 +41,6 @@ export type DiaryDetailEntity = Diary & {
   }[];
   likes_count: number;
   comments_count: number;
-};
-
-export type CommentWithUser = Comment & {
-  users: Pick<User, 'id' | 'name' | 'profile_image'> | null;
 };
 
 export interface DisplayComment {
@@ -71,22 +52,3 @@ export interface DisplayComment {
   user_id: string;
   created_at: string;
 }
-
-export const transformCommentForDisplay = (comment: CommentWithUser): DisplayComment => {
-  return {
-    id: comment.id,
-    author: comment.users?.name || '알 수 없는 사용자',
-    content: comment.content,
-    timestamp: new Date(comment.created_at)
-      .toLocaleDateString('ko-KR', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      })
-      .replace(/\.\s/g, '.')
-      .slice(0, -1),
-    profile_image_url: comment.users?.profile_image,
-    user_id: comment.user_id,
-    created_at: comment.created_at,
-  };
-};

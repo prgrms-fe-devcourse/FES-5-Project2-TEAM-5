@@ -1,5 +1,5 @@
 import S from './style.module.css';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -10,7 +10,6 @@ import {
   Legend,
   Title,
   type TooltipItem,
-  Scale,
   type Plugin,
 } from 'chart.js';
 import Spinner from '@/shared/components/Spinner';
@@ -27,6 +26,31 @@ const DiaryEmotionChart = ({ data, emotionLabels, emotionImages }: Props) => {
   const chartRef = useRef<ChartJS<'bar'>>(null);
   const [loadedEmotionImages, setLoadedEmotionImages] = useState<HTMLImageElement[]>([]);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isTablet, setIsTablet] = useState(false);
+
+  const prevDataRef = useRef(data);
+  const prevLabelsRef = useRef(emotionLabels);
+
+  // 화면 크기 감지
+  useEffect(() => {
+    const checkIsTablet = () => {
+      setIsTablet(window.innerWidth < 980);
+    };
+    checkIsTablet();
+    window.addEventListener('resize', checkIsTablet);
+    return () => window.removeEventListener('resize', checkIsTablet);
+  }, []);
+
+  // 데이터 변경 감지
+  const isDataChanged =
+    JSON.stringify(prevDataRef.current) !== JSON.stringify(data) ||
+    JSON.stringify(prevLabelsRef.current) !== JSON.stringify(emotionLabels);
+
+  // 이전 값 업데이트
+  useEffect(() => {
+    prevDataRef.current = data;
+    prevLabelsRef.current = emotionLabels;
+  }, [data, emotionLabels]);
 
   useEffect(() => {
     const loadImages = async () => {
@@ -36,24 +60,25 @@ const DiaryEmotionChart = ({ data, emotionLabels, emotionImages }: Props) => {
         return;
       }
 
-      const images: HTMLImageElement[] = [];
-      for (const src of emotionImages) {
-        const img = new Image();
-        img.src = src;
-
-        try {
-          await new Promise<void>((resolve, reject) => {
-            img.onload = () => resolve();
+      try {
+        // 병렬로 모든 이미지 로딩
+        const imagePromises = emotionImages.map((src) => {
+          return new Promise<HTMLImageElement>((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
             img.onerror = () => reject(new Error(`이미지 로드 실패: ${src}`));
+            img.src = src;
           });
-          images.push(img);
-        } catch (error) {
-          console.error(error);
-        }
-      }
+        });
 
-      setLoadedEmotionImages(images);
-      setIsInitialLoading(false);
+        const loadedImages = await Promise.all(imagePromises);
+        setLoadedEmotionImages(loadedImages);
+      } catch (error) {
+        console.error('이미지 로딩 실패:', error);
+        setLoadedEmotionImages([]);
+      } finally {
+        setIsInitialLoading(false);
+      }
     };
 
     loadImages();
@@ -66,8 +91,8 @@ const DiaryEmotionChart = ({ data, emotionLabels, emotionImages }: Props) => {
         label: '감정',
         data: data,
         backgroundColor: '#A7C584',
-        barThickness: 30,
-        borderRadius: 8,
+        barThickness: isTablet ? 20 : 30,
+        borderRadius: isTablet ? 4 : 8,
         hoverBackgroundColor: '#6b8a47',
       },
     ],
@@ -76,6 +101,17 @@ const DiaryEmotionChart = ({ data, emotionLabels, emotionImages }: Props) => {
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    animation: {
+      duration: 1000,
+      easing: 'easeInOutQuart' as const,
+    },
+    transitions: {
+      active: {
+        animation: {
+          duration: 400,
+        },
+      },
+    },
     plugins: {
       legend: { display: false },
       tooltip: {
@@ -89,11 +125,9 @@ const DiaryEmotionChart = ({ data, emotionLabels, emotionImages }: Props) => {
     scales: {
       x: {
         grid: { display: false },
-        ticks: {
-          display: false,
-        },
-        afterFit: function (scale: Scale) {
-          scale.height = 60;
+        ticks: { display: false },
+        afterFit: function (scale: any) {
+          scale.height = isTablet ? 45 : 60;
         },
       },
       y: {
@@ -113,9 +147,7 @@ const DiaryEmotionChart = ({ data, emotionLabels, emotionImages }: Props) => {
           },
           color: '#999999',
           callback: function (value: string | number, index: number) {
-            if (value === 0 && index === 0) {
-              return value + '%';
-            }
+            if (value === 0 && index === 0) return value + '%';
             return value;
           },
         },
@@ -123,30 +155,41 @@ const DiaryEmotionChart = ({ data, emotionLabels, emotionImages }: Props) => {
     },
   };
 
-  const imagePlugin: Plugin<'bar'> = {
-    id: 'xImageLabel',
-    afterDraw: (chart: ChartJS<'bar'>) => {
-      const { ctx, chartArea, scales } = chart;
-
-      if (loadedEmotionImages.length === 0) return;
-
-      if (loadedEmotionImages.length === emotionLabels.length) {
-        scales.x.ticks.forEach((_, idx: number) => {
-          const x = scales.x.getPixelForTick(idx);
-          const y = chartArea.bottom + 10;
-          if (loadedEmotionImages[idx]) {
-            ctx.drawImage(loadedEmotionImages[idx], x - 21, y, 40, 46);
+  const imagePlugin = useMemo<Plugin<'bar'>>(
+    () => ({
+      id: 'xImageLabel',
+      afterDraw: (chart) => {
+        const { ctx, chartArea, scales } = chart;
+        if (loadedEmotionImages.length === 0) return;
+        if (loadedEmotionImages.length === emotionLabels.length) {
+          for (let idx = 0; idx < emotionLabels.length; idx++) {
+            const x = scales.x.getPixelForTick(idx);
+            const y = chartArea.bottom + 10;
+            if (loadedEmotionImages[idx]) {
+              if (isTablet) {
+                ctx.drawImage(loadedEmotionImages[idx], x - 15, y, 30, 34);
+              } else {
+                ctx.drawImage(loadedEmotionImages[idx], x - 21, y, 40, 46);
+              }
+            }
           }
-        });
-      }
-    },
-  };
+        }
+      },
+    }),
+    [isTablet, loadedEmotionImages, emotionLabels],
+  );
 
   useEffect(() => {
     if (chartRef.current) {
-      chartRef.current.update();
+      chartRef.current.update('active');
     }
-  }, [data, emotionLabels, loadedEmotionImages]);
+  }, [isTablet, data, emotionLabels]);
+
+  useEffect(() => {
+    if (chartRef.current && loadedEmotionImages.length > 0) {
+      chartRef.current.update('none');
+    }
+  }, [loadedEmotionImages]);
 
   if (isInitialLoading && emotionImages.length > 0) {
     return (
@@ -159,12 +202,21 @@ const DiaryEmotionChart = ({ data, emotionLabels, emotionImages }: Props) => {
   if (emotionImages.length === 0) {
     setLoadedEmotionImages([]);
     setIsInitialLoading(false);
-    return;
+    return null;
   }
 
+  // 반응형 변경인지 데이터 변경인지 구분
+  const shouldUseKey = !isDataChanged;
+
   return (
-    <div style={{ width: '100%', height: '50%' }}>
-      <Bar ref={chartRef} data={chartData} options={chartOptions} plugins={[imagePlugin]} />
+    <div>
+      <Bar
+        key={shouldUseKey ? (isTablet ? 'tablet' : 'desktop') : undefined}
+        ref={chartRef}
+        data={chartData}
+        options={chartOptions}
+        plugins={[imagePlugin]}
+      />
     </div>
   );
 };

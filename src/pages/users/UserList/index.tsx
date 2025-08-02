@@ -1,52 +1,29 @@
 import S from './style.module.css';
 import UserList from './components/UserList';
 import SearchBox from './components/SearchBox';
-import { useUserSearch } from './hooks/useUserSearch';
-import { useCallback, useEffect, useState } from 'react';
-import type { DbUser } from '@/shared/types/dbUser';
+import { useCallback, useState } from 'react';
 import { debounce } from '@/shared/utils/debounce';
-import { getAllUserData } from '@/shared/api/user';
-import { toastUtils } from '@/shared/components/Toast';
 import Spinner from '@/shared/components/Spinner';
+import { useUserLoader } from './hooks/useUserLoader';
 
 const UserPage = () => {
-  const [users, setUsers] = useState<DbUser[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const { filteredUsers } = useUserSearch(users, searchTerm);
-  const [loading, setLoading] = useState(true);
-
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        setLoading(true);
-        const data = await getAllUserData();
-        setUsers(data);
-      } catch (error) {
-        console.error('데이터 로딩 실패:', error);
-        toastUtils.error({ title: '실패', message: '예상하지 못한 에러 발생' });
-      }finally{
-        setLoading(false);
-      }
-    };
-    fetchUsers();
-  }, []);
+  const { users, targetRef, isLoading, hasMore, initialLoading } = useUserLoader(searchTerm);
 
   const handleSearch = useCallback(
     debounce((value: string) => {
       setSearchTerm(value);
-    }),
+    }, 500),
     [],
   );
 
-
-  if (loading) {
-  return (
-    <main className={S.container}>
-      <Spinner />
-    </main>
-  );
-}
+  if (initialLoading) {
+    return (
+      <main className={S.container}>
+        <Spinner />
+      </main>
+    );
+  }
 
   return (
     <main className={S.container}>
@@ -54,8 +31,20 @@ const UserPage = () => {
         <h2 className={S.title}>함께하는 사람들</h2>
         <SearchBox onSearch={handleSearch} />
       </header>
-      <UserList users={filteredUsers} />
+      <UserList users={users} isLoading={isLoading} />
+      {!initialLoading && !isLoading && users.length === 0 && searchTerm !== '' && (
+        <p className={S.noResult} role="status">
+          검색 결과가 없습니다.
+        </p>
+      )}
+      {isLoading && hasMore && (
+        <div className={S.loadingSpinner}>
+          <Spinner />
+        </div>
+      )}
+      {hasMore && <div ref={targetRef} className={S.infiniteScrollTrigger} aria-hidden="true" />}
     </main>
   );
 };
+
 export default UserPage;

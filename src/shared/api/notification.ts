@@ -4,6 +4,7 @@ import type {
 } from '@supabase/supabase-js';
 import supabase from './supabase/client';
 import type { Tables } from './supabase/types';
+
 /**
  *  다이어리에 좋아요 시 알림
  */
@@ -80,7 +81,7 @@ export const getNotificationList = async (userId: string) => {
 };
 
 /**
- * 알림 삭제
+ * 알림 일괄 삭제
  */
 export const updateNotificationDelete = async (userId: string) => {
   const { error } = await supabase
@@ -94,7 +95,7 @@ export const updateNotificationDelete = async (userId: string) => {
 };
 
 /**
- * 알림 모두 읽음
+ * 알림 일괄 읽음
  */
 export const updateNotificationAllRead = async (userId: string) => {
   const { error } = await supabase

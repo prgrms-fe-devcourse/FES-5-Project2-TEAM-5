@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BsPlusLg } from 'react-icons/bs';
 
@@ -33,16 +33,29 @@ const DiaryPage = () => {
 
   const { diaryList, loading } = useDiaryData(user?.id ?? null, selectedDate, currentCalendarMonth);
 
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const [isPageReady, setIsPageReady] = useState(false);
+
   const handleMonthChange = useCallback((newDate: Date) => {
     setCurrentCalendarMonth(newDate);
+    // 강제로 데이터 다시 로드
+    setRefreshTrigger((prev) => prev + 1);
   }, []);
 
-  const { monthEntries, currentMonthDiaryCount } = useMonthlyDiaryData(
+  const {
+    monthEntries,
+    currentMonthDiaryCount,
+    loading: monthLoading,
+  } = useMonthlyDiaryData(user?.id ?? null, currentCalendarMonth, refreshTrigger);
+
+  const { emotionMainsList } = useEmotionData();
+  const { emotionStatsData } = useEmotionStats(
     user?.id ?? null,
     selectedDate,
+    emotionMainsList,
+    currentCalendarMonth,
   );
-  const { emotionMainsList } = useEmotionData();
-  const { emotionStatsData } = useEmotionStats(user?.id ?? null, selectedDate, emotionMainsList);
 
   // 계산된 값들
   const totalDaysInSelectedMonth = getDaysInMonth(
@@ -61,6 +74,24 @@ const DiaryPage = () => {
     const dateStr = getLocalDateString(selectedDate);
     navigate('/diary/form', { state: { date: dateStr } });
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsPageReady(true);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!isPageReady) {
+    return (
+      <main className={S.container}>
+        <div className={S.spinner_wrap}>
+          <Spinner />
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className={S.container}>
@@ -85,6 +116,7 @@ const DiaryPage = () => {
               onDateChange={setSelectedDate}
               entries={monthEntries}
               onMonthChange={handleMonthChange}
+              loading={monthLoading}
             />
           </div>
 

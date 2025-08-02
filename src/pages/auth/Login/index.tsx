@@ -11,14 +11,15 @@ import { useRememberMe } from './hook/useRememberMe';
 import { loginWithEmail, loginWithGithub } from '@/shared/api/auth';
 
 const Login = () => {
-  const location = useLocation();
-  const rememberId = useId();
+  const rememberId = useId(); // 아이디 기억하기
   const emailId = useId();
   const pwdId = useId();
+  const location = useLocation();
   const navigate = useNavigate();
 
   const { checked, handleRememberMe, storedValue, toggleChecked } = useRememberMe();
 
+  // 회원가입 or remember me 이메일 적용
   const userEmail = (location.state?.email as string) ?? storedValue;
   const { formData, onChange, setFormData } = useForm<LoginForm>({
     initialData: { email: userEmail, password: '' },
@@ -28,6 +29,7 @@ const Login = () => {
     setFormData((prev) => ({ ...prev, email: userEmail }));
   }, [userEmail, setFormData]);
 
+  // 이메일 로그인
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -46,6 +48,7 @@ const Login = () => {
     }
   };
 
+  // 깃허브 로그인
   const handleLoginWithGithub = async (e: React.PointerEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {

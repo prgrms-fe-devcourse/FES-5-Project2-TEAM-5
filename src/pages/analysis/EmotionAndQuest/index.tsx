@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import S from './style.module.css';
 import supabase from '@/shared/api/supabase/client';
 import { useUserContext } from '@/shared/context/UserContext';
@@ -12,6 +12,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useToggleList } from './hooks/useToggleList';
 import { toastUtils } from '@/shared/components/Toast';
 import PublicDecision from './components/PublicDecision';
+import AnalysisFromAI from './components/AnalysisFromAI';
+import type { Analysis } from '@/shared/types/analysis';
 
 function EmotionAndQuest() {
   const location = useLocation();
@@ -21,16 +23,22 @@ function EmotionAndQuest() {
 
   const { diary, emotionSubs, quests, loading } = useEmotionAndQuest(diaryId);
 
-  const emotionSelection = useToggleList();  // 감정 선택
+  const emotionSelection = useToggleList(); // 감정 선택
   const questSelection = useToggleList(); // 퀘스트 선택
   const [questAccepted, setQuestAccepted] = useState<boolean | null>(null);
+  const [aiAnalysis, setAiAnalysis] = useState<Analysis>({
+    emotionInterpretation: '',
+    emotionalTriggers: '',
+    empathy: '',
+    reminderMessage: '',
+    selfReflectionSuggestion: '',
+  });
   const [reason, setReason] = useState('');
 
   const [isPublic, setIsPublic] = useState(false);
 
-
   useEffect(() => {
-    if (questAccepted  === true) {
+    if (questAccepted === true) {
       window.scrollTo({
         top: document.documentElement.scrollHeight,
         behavior: 'smooth',
@@ -38,15 +46,18 @@ function EmotionAndQuest() {
     }
   }, [questAccepted]);
 
+  const handleAiAnalysis = useCallback((analysis: Analysis) => {
+    setAiAnalysis(analysis);
+  }, []);
+
   const handleSubmit = async () => {
-    console.log('선택된 감정:', emotionSelection.selected)
+    console.log('선택된 감정:', emotionSelection.selected);
     if (!user || !diaryId) return alert('로그인이 필요합니다.');
 
     try {
-
       // 퀘스트 미선택 시 is_quest_accepted false로 변경
       const accepted = questAccepted && questSelection.selected.length > 0 ? true : false;
-      
+
       // 1. diary_analysis 저장
       const { data: analysis, error: analysisError } = await supabase
         .from('diary_analysis')
@@ -55,7 +66,12 @@ function EmotionAndQuest() {
           user_id: user.id,
           reason_text: reason || null,
           is_quest_accepted: accepted,
-          is_public: isPublic  // 토글 상태로 저장
+          is_public: isPublic, // 토글 상태로 저장
+          emotionalTriggers: aiAnalysis.emotionalTriggers || null,
+          emotionInterpretation: aiAnalysis.emotionInterpretation || null,
+          empathy: aiAnalysis.empathy || null,
+          reminderMessage: aiAnalysis.reminderMessage || null,
+          selfReflectionSuggestion: aiAnalysis.selfReflectionSuggestion || null,
         })
         .select()
         .single();
@@ -87,7 +103,7 @@ function EmotionAndQuest() {
       }
 
       // 4. diaries 테이블 is_analyzed 컬럼 true로 저장
-      const {error: updateError} = await supabase
+      const { error: updateError } = await supabase
         .from('diaries')
         .update({ is_analyzed: true })
         .eq('id', diaryId)
@@ -98,7 +114,7 @@ function EmotionAndQuest() {
         return;
       }
 
-      toastUtils.success({ title: '성공', message: '분석이 저장되었습니다.' })
+      toastUtils.success({ title: '성공', message: '분석이 저장되었습니다.' });
 
       navigate('/', { replace: true });
     } catch (err) {
@@ -127,7 +143,16 @@ function EmotionAndQuest() {
         onToggle={emotionSelection.toggle}
       />
       <ReasonInput value={reason} onChange={setReason} />
-      
+
+      <AnalysisFromAI
+        content={diary.content}
+        emotions={emotionSubs}
+        reason={reason}
+        mainEmotionId={diary.emotion_main_id}
+        setAnalysis={handleAiAnalysis}
+        analysis={aiAnalysis}
+      />
+
       <QuestDecision
         accepted={questAccepted}
         onAccept={() => setQuestAccepted(true)}
@@ -143,10 +168,7 @@ function EmotionAndQuest() {
 
       {questAccepted !== null && (
         <>
-          <PublicDecision
-              isPublic={isPublic}
-              onChange={setIsPublic}
-          />
+          <PublicDecision isPublic={isPublic} onChange={setIsPublic} />
           <section className={S.submitSection}>
             <button
               type="button"

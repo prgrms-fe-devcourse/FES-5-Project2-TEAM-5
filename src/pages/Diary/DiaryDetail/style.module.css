@@ -24,7 +24,7 @@
     color: var(--gray-200);
   }
   .inner {
-    width: 1280px;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 60px 0;
   }
@@ -38,11 +38,18 @@
   border-bottom: 1px solid var(--gray-100);
   .date {
     font-size: var(--text-lg);
-    color: var(--gray-200);
+    color: var(--gray-300);
+  }
+  .userNickname {
+    display: inline-block;
+    padding-left: var(--space-3);
+    margin-left: var(--space-3);
+    border-left: 1px solid var(--gray-200);
   }
   h3 {
     display: flex;
     align-items: center;
+    gap: var(--space-5);
     font-size: var(--text-4xl);
     font-weight: 500;
   }
@@ -141,12 +148,18 @@
     color: var(--primary);
   }
 }
-.commnetItem {
+.commentItem {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: flex-start;
   gap: var(--space-4);
+  scrollbar-width: thin;
+  scrollbar-color: #ccc #f5f5f5;
+  max-height: 180px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  height: auto;
+  min-height: 42px;
   > div {
     display: flex;
     width: 100%;
@@ -191,6 +204,20 @@
     font-size: var(--text-base);
     color: var(--gray-300);
   }
+}
+.commentItem::-webkit-scrollbar {
+  width: 6px;
+}
+.commentItem::-webkit-scrollbar-track {
+  background: var(--gray-50);
+  border-radius: 3px;
+}
+.commentItem::-webkit-scrollbar-thumb {
+  background: var(--gray-300);
+  border-radius: 3px;
+}
+.commentItem::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-400);
 }
 .commentContentArea {
   display: flex;
@@ -267,5 +294,42 @@
     cursor: pointer;
     background-color: var(--gray-100);
     color: var(--gray-900);
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .container {
+    .inner {
+      padding: 60px var(--space-8);
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    .inner {
+      padding: 40px var(--space-5);
+    }
+  }
+  .titleArea {
+    padding: 0 0 var(--space-6);
+    h3 {
+      flex-direction: column;
+      align-items: flex-start;
+      font-size: var(--text-3xl);
+    }
+  }
+  .content {
+    padding: 0 0 var(--space-7);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .buttonGroup {
+    flex-direction: column;
+    button {
+      flex: initial;
+      min-width: 100%;
+    }
   }
 }

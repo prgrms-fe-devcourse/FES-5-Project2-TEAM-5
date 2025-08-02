@@ -1,4 +1,4 @@
-import S from './style.module.css';
+import style from './style.module.css';
 import defaultProfile from '@/assets/defaultProfile.svg';
 import { IoClose } from 'react-icons/io5';
 import { HiArrowPath } from 'react-icons/hi2';
@@ -24,6 +24,7 @@ const ChangeProfile = () => {
     }
   }, [imagePreview]);
 
+  // 설정된 이미지 리셋
   const resetInputAndImage = () => {
     clearImage();
     if (profileRef.current) {
@@ -41,13 +42,18 @@ const ChangeProfile = () => {
     if (e.key === 'Enter') handleProfileClick();
   };
 
+  // 프로필 변경
   const handleChangeProfile = async () => {
     try {
       if (!userInfo) return;
+
+      // 프로플 업데이트
       const updated = await updateProfile(imageFile, userInfo);
-      resetInputAndImage();
-      updateUserInfo(updated);
+      // 성공 처리
+      resetInputAndImage(); // 클린
+      updateUserInfo(updated); // 세션 업데이트
       toastUtils.success({ title: '성공', message: '프로필 이미지 변경 성공!' });
+      // 에러 처리
     } catch (error) {
       if (error instanceof Error) {
         toastUtils.error({ title: '실패', message: error.message });
@@ -57,14 +63,18 @@ const ChangeProfile = () => {
     }
   };
 
+  // 기본 프로플로 변경
   const setDefaultProfile = async () => {
     if (!userInfo) return;
     try {
       setDisplayImage(defaultProfile);
+      // 기본 프로필로 업데이트
       const updated = await updateProfile(null, userInfo);
       resetInputAndImage();
-      updateUserInfo(updated);
+      updateUserInfo(updated); // 세션 업데이트
+      // 성공 처리
       toastUtils.info({ title: '변경', message: '기본 프로필 이미지로 변경' });
+      // 에러 처리
     } catch (error) {
       if (error instanceof Error) {
         toastUtils.error({ title: '실패', message: error.message });
@@ -74,6 +84,7 @@ const ChangeProfile = () => {
     }
   };
 
+  // 이전 프로필 되돌리기
   const revertProfile = () => {
     if (userInfo?.profile_image) {
       resetInputAndImage();
@@ -82,10 +93,10 @@ const ChangeProfile = () => {
   };
 
   return (
-    <div className={S.profileSection}>
-      <IoClose className={S.closeButton} size={24} onPointerDown={setDefaultProfile} />
+    <div className={style.profileSection}>
+      <IoClose className={style.closeButton} size={24} onPointerDown={setDefaultProfile} />
       <label
-        className={S.profileImage}
+        className={style.profileImage}
         role="button"
         tabIndex={0}
         id={profileId}
@@ -103,10 +114,10 @@ const ChangeProfile = () => {
         onChange={onChange}
         hidden
       />
-      <div className={S.buttonGroup}>
+      <div className={style.buttonGroup}>
         <button
           type="button"
-          className={S.profileButton}
+          className={style.profileButton}
           onClick={handleChangeProfile}
           disabled={!imagePreview}
           aria-label="프로필 변경"
@@ -114,7 +125,7 @@ const ChangeProfile = () => {
           프로필 변경
         </button>
         <button
-          className={S.revertBUtton}
+          className={style.revertBUtton}
           type="button"
           onPointerDown={revertProfile}
           aria-label="기존 프로필로 변경"

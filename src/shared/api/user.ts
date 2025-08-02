@@ -117,7 +117,7 @@ export const getUserDataById = async (id: string) => {
 /**
  * 전체 유저정보 조회
  */
-export const getAllUserData = async () => {
+export const getAllUser = async () => {
   const { data, error } = await supabase.from('users').select('*');
 
   if (error) {
@@ -127,10 +127,34 @@ export const getAllUserData = async () => {
 };
 
 /**
+ * 전체 유저정보 조회 (검색 포함)
+ */
+export const getAllUserData = async (page: number = 1, limit: number = 20, search?: string) => {
+  const offset = (page - 1) * limit;
+
+  let query = supabase.from('users').select('*');
+
+  if (search?.trim()) {
+    query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%`);
+  }
+
+  query = query.range(offset, offset + limit - 1);
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw new Error(`전체 유저 정보 조회 실패: ${error.message}`);
+  }
+
+  return data || [];
+};
+
+/**
  * 소셜 로그인 시 사용자 프로필을 생성하거나 업데이트
  * 사용자가 처음 로그인하면 DB에 프로필을 생성
  */
 export const insertUserProfileOnLogin = async (user: User): Promise<void> => {
+  // users 테이블 확인
   const { data: existingProfile, error: selectError } = await supabase
     .from('users')
     .select('id')
@@ -140,13 +164,14 @@ export const insertUserProfileOnLogin = async (user: User): Promise<void> => {
   if (selectError) {
     throw new Error('사용자 프로필 조회 중 에러 발생');
   }
-
+  // 존재 시 return
   if (existingProfile) {
     return;
   }
 
   const { full_name, name, avatar_url } = user.user_metadata;
 
+  // upsert users 테이블
   const { error: insertError } = await supabase.from('users').upsert({
     id: user.id,
     name: name || full_name,

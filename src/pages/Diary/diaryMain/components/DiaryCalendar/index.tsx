@@ -18,9 +18,10 @@ type Props = {
   onDateChange: (date: Date) => void;
   entries: DiaryEntry[];
   onMonthChange?: (date: Date) => void;
+  loading?: boolean;
 };
 
-const DiaryCalendar = ({ userId, date, onDateChange, entries, onMonthChange }: Props) => {
+const DiaryCalendar = ({ userId, date, onDateChange, entries, onMonthChange, loading }: Props) => {
   const todayStr = getLocalDateString(new Date());
 
   const handleActiveStartDateChange = useCallback(
@@ -32,7 +33,6 @@ const DiaryCalendar = ({ userId, date, onDateChange, entries, onMonthChange }: P
     [onMonthChange],
   );
 
-  // 날짜 클릭 핸들러 (미래 날짜 방지)
   const handleDateClick = useCallback(
     (clickedDate: Date) => {
       if (isFutureDate(clickedDate)) {
@@ -75,8 +75,11 @@ const DiaryCalendar = ({ userId, date, onDateChange, entries, onMonthChange }: P
       // 일기 작성 여부에 따른 스타일 추가
       if (tileDateStr <= todayStr) {
         const hasEntry = entries.some((e) => {
-          const entryDate = new Date(e.created_at);
-          const entryDateStr = getLocalDateString(entryDate);
+          // 한국 시간대로 변환
+          const entryDateUTC = new Date(e.created_at);
+          const entryDateKST = new Date(entryDateUTC.getTime() + 9 * 60 * 60 * 1000);
+          const entryDateStr = getLocalDateString(entryDateKST);
+
           return entryDateStr === tileDateStr;
         });
 
@@ -97,6 +100,9 @@ const DiaryCalendar = ({ userId, date, onDateChange, entries, onMonthChange }: P
       // 미래 날짜는 아이콘 표시하지 않음
       if (tileDateStr > todayStr) return null;
 
+      // 로딩 중이면 아이콘 표시 안함 (깜빡임 방지)
+      if (loading) return null;
+
       const hasEntry = entries.some((e) => {
         const entryDate = new Date(e.created_at);
         const entryDateStr = getLocalDateString(entryDate);
@@ -112,7 +118,7 @@ const DiaryCalendar = ({ userId, date, onDateChange, entries, onMonthChange }: P
         </div>
       );
     },
-    [entries, todayStr, getLocalDateString],
+    [entries, todayStr, getLocalDateString, loading],
   );
 
   return (
