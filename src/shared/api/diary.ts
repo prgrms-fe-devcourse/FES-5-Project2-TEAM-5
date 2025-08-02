@@ -246,6 +246,7 @@ export const getUserDiaries = async (userId: string, page: number = 1, limit: nu
     diary_image,
     is_public,
     is_drafted,
+    is_analyzed,
     emotion_mains (
       icon_url,
       name
