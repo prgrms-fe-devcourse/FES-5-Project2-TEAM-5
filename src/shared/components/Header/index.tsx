@@ -6,11 +6,13 @@ import { PiUserCircleThin } from 'react-icons/pi';
 import { MENU_LIST } from './constants';
 import style from './style.module.css';
 import { useUserContext } from '@/shared/context/UserContext';
-import type { CSSProperties } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { toastUtils } from '../Toast';
 import Notification from '../Notification';
+import ConfirmModal from '../Modal/ConfirmModal';
 
 const Header = ({ cssOption }: { cssOption: CSSProperties }) => {
+  const [showModal, setShowModal] = useState(false); // 모달 컨트롤
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { logout, isAuth, userInfo } = useUserContext();
@@ -26,8 +28,7 @@ const Header = ({ cssOption }: { cssOption: CSSProperties }) => {
   };
 
   const handleLogout = async () => {
-    navigate('/about');
-    await logout();
+    setShowModal(true);
   };
 
   const handleMypage = () => {
@@ -64,7 +65,7 @@ const Header = ({ cssOption }: { cssOption: CSSProperties }) => {
               to={menu.path}
               aria-label={menu.label}
               style={{
-                color: menu.path === pathname ? '#f6c915' : 'inherit',
+                color: menu.path === pathname ? '#f6c915' : '',
                 fontWeight: menu.path === pathname ? '700' : '400',
               }}
               onClick={handleLinkClick(menu.requireAuth)}
@@ -119,6 +120,18 @@ const Header = ({ cssOption }: { cssOption: CSSProperties }) => {
           </button>
         )}
       </div>
+      {showModal && (
+        <ConfirmModal
+          title="로그아웃"
+          message="정말 로그아웃 하시겠습니까?"
+          onConfirm={async () => {
+            navigate('/about');
+            await logout();
+            setShowModal(false);
+          }}
+          onCancel={() => setShowModal(false)}
+        />
+      )}
     </header>
   );
 };

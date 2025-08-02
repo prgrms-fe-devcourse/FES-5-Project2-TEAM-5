@@ -1,4 +1,4 @@
-import { useId, useRef } from 'react';
+import { useId, useRef, useState } from 'react';
 import S from './style.module.css';
 import { useForm } from '@/shared/hooks';
 import type { ChangePasswordForm } from '../../utils/type';
@@ -6,12 +6,14 @@ import { toastUtils } from '@/shared/components/Toast';
 import { useUserContext } from '@/shared/context/UserContext';
 import { validator } from '../../utils/validator';
 import { reauthenticate, updateUserPassword } from '@/shared/api/auth';
+import ConfirmModal from '@/shared/components/Modal/ConfirmModal';
 
 const ChangePassword = () => {
   const { userInfo, user } = useUserContext();
   const currentPwdId = useId();
   const newPwdId = useId();
   const confirmNewPwdId = useId();
+  const [showModal, setShowModal] = useState(false); // 모달 컨트롤
 
   // 깃허브 계정 비밀번호 변경 렌더링 안함
   if (user?.app_metadata.provider === 'github') return null;
@@ -27,9 +29,13 @@ const ChangePassword = () => {
   // 새 비밀번호 validation
   const isFormValid = formData.password && formData.confirmPassword && !error;
 
-  // 비밀번호 변경
+  // 서밋 이벤트
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setShowModal(true);
+  };
+  // 비밀번호 변경
+  const handlePasswordChange = async () => {
     if (!userInfo || !currentPasswordRef.current) {
       toastUtils.error({ title: '실패', message: '사용자 정보를 확인할 수 없습니다.' });
       return;
@@ -120,6 +126,17 @@ const ChangePassword = () => {
         </div>
       </form>
       <div className={S.errorMessage}>{error && <span>{error}</span>}</div>
+      {showModal && (
+        <ConfirmModal
+          title="비밀번호 변경"
+          message="비밀번호를 변경하시겠습니까?"
+          onConfirm={() => {
+            handlePasswordChange();
+            setShowModal(false);
+          }}
+          onCancel={() => setShowModal(false)}
+        />
+      )}
     </>
   );
 };
