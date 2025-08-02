@@ -15,6 +15,7 @@ const Login = () => {
   const emailId = useId();
   const pwdId = useId();
   const location = useLocation();
+  const message = location.state?.message;
   const navigate = useNavigate();
 
   const { checked, handleRememberMe, storedValue, toggleChecked } = useRememberMe();
@@ -28,6 +29,14 @@ const Login = () => {
   useEffect(() => {
     setFormData((prev) => ({ ...prev, email: userEmail }));
   }, [userEmail, setFormData]);
+
+  // 인증이 필요한 경우
+  useEffect(() => {
+    if (message) {
+      toastUtils.info({ title: '인증 필요', message: message });
+      navigate(location.pathname, { replace: true });
+    }
+  }, [message]);
 
   // 이메일 로그인
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
