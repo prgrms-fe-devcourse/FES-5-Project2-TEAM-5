@@ -137,7 +137,8 @@
   color: white;
 }
 .react-calendar__tile--hasActive {
-  background: transparent;
+  background: transparent url('../pages/diary/assets/diary_select.svg') no-repeat center 42%/40px
+    auto;
 }
 
 @media screen and (max-width: 768px) {

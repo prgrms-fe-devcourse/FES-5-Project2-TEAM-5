@@ -21,7 +21,7 @@ type Props = {
   loading?: boolean;
 };
 
-const DiaryCalendar = ({ userId, date, onDateChange, entries, onMonthChange, loading }: Props) => {
+const DiaryCalendar = ({ date, onDateChange, entries, onMonthChange, loading }: Props) => {
   const todayStr = getLocalDateString(new Date());
 
   const handleActiveStartDateChange = useCallback(

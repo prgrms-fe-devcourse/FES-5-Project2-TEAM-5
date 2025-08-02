@@ -28,21 +28,14 @@ const DiaryPage = () => {
   const { user } = useUserContext();
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-
   const [currentCalendarMonth, setCurrentCalendarMonth] = useState(new Date());
-
-  const { diaryList, loading } = useDiaryData(user?.id ?? null, selectedDate, currentCalendarMonth);
-
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-
   const [isPageReady, setIsPageReady] = useState(false);
 
-  const handleMonthChange = useCallback((newDate: Date) => {
-    setCurrentCalendarMonth(newDate);
-    // 강제로 데이터 다시 로드
-    setRefreshTrigger((prev) => prev + 1);
-  }, []);
+  // 선택된 날짜의 일기 목록 (일기 리스트용)
+  const { diaryList, loading } = useDiaryData(user?.id ?? null, selectedDate);
 
+  // 달력에 표시할 월별 일기 데이터 (달력 아이콘용)
   const {
     monthEntries,
     currentMonthDiaryCount,
@@ -50,6 +43,8 @@ const DiaryPage = () => {
   } = useMonthlyDiaryData(user?.id ?? null, currentCalendarMonth, refreshTrigger);
 
   const { emotionMainsList } = useEmotionData();
+
+  // 감정 차트용 데이터 (달력 월과 연동)
   const { emotionStatsData } = useEmotionStats(
     user?.id ?? null,
     selectedDate,
@@ -57,10 +52,19 @@ const DiaryPage = () => {
     currentCalendarMonth,
   );
 
+  const handleMonthChange = useCallback((newDate: Date) => {
+    setCurrentCalendarMonth(newDate);
+    setRefreshTrigger((prev) => prev + 1);
+  }, []);
+
+  const handleDateChange = useCallback((newDate: Date) => {
+    setSelectedDate(newDate);
+  }, []);
+
   // 계산된 값들
   const totalDaysInSelectedMonth = getDaysInMonth(
-    selectedDate.getFullYear(),
-    selectedDate.getMonth(),
+    currentCalendarMonth.getFullYear(),
+    currentCalendarMonth.getMonth(),
   );
 
   const diaryCompletionPercentage = calculateDiaryCompletionPercentage(
@@ -93,6 +97,8 @@ const DiaryPage = () => {
     );
   }
 
+  console.log('diaryList:', diaryList);
+
   return (
     <main className={S.container}>
       {/* 날씨 영역 */}
@@ -113,7 +119,7 @@ const DiaryPage = () => {
             <DiaryCalendar
               userId={user?.id ?? null}
               date={selectedDate}
-              onDateChange={setSelectedDate}
+              onDateChange={handleDateChange}
               entries={monthEntries}
               onMonthChange={handleMonthChange}
               loading={monthLoading}

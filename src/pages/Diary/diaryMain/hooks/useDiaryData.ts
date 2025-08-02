@@ -6,11 +6,7 @@ import { fetchDiariesByDate } from '@/shared/api/diary';
 import { getAllDiariesLikesCount } from '@/shared/api/like';
 import { getAllDiariesCommentsCount } from '@/shared/api/comment';
 
-export const useDiaryData = (
-  userId: string | null,
-  selectedDate: Date,
-  currentCalendarMonth: Date,
-) => {
+export const useDiaryData = (userId: string | null, selectedDate: Date) => {
   const [diaryList, setDiaryList] = useState<DiaryRowEntity[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -24,20 +20,25 @@ export const useDiaryData = (
       setLoading(true);
 
       try {
-        // 선택된 날짜의 월 기준으로 데이터 가져오기
+        // 선택된 날짜의 시작과 끝 시간 설정 (하루 전체)
         const selectedYear = selectedDate.getFullYear();
         const selectedMonth = selectedDate.getMonth();
+        const selectedDay = selectedDate.getDate();
 
-        const startOfMonth = new Date(selectedYear, selectedMonth, 1);
-        startOfMonth.setHours(0, 0, 0, 0);
-        const startOfMonthUTC = startOfMonth.toISOString();
+        // 선택된 날짜의 시작 (00:00:00)
+        const startOfDay = new Date(selectedYear, selectedMonth, selectedDay);
+        startOfDay.setHours(0, 0, 0, 0);
 
-        const endOfMonth = new Date(selectedYear, selectedMonth + 1, 0);
-        endOfMonth.setHours(23, 59, 59, 999);
-        const endOfMonthUTC = endOfMonth.toISOString();
+        // 선택된 날짜의 끝 (23:59:59)
+        const endOfDay = new Date(selectedYear, selectedMonth, selectedDay);
+        endOfDay.setHours(23, 59, 59, 999);
+
+        // 한국 시간을 UTC로 변환 (UTC = KST - 9시간)
+        const startOfDayUTC = new Date(startOfDay.getTime() - 9 * 60 * 60 * 1000).toISOString();
+        const endOfDayUTC = new Date(endOfDay.getTime() - 9 * 60 * 60 * 1000).toISOString();
 
         const [rawDiaries, likesCount, commentsCount] = await Promise.all([
-          fetchDiariesByDate(userId, startOfMonthUTC, endOfMonthUTC),
+          fetchDiariesByDate(userId, startOfDayUTC, endOfDayUTC),
           getAllDiariesLikesCount(),
           getAllDiariesCommentsCount(),
         ]);
@@ -47,30 +48,8 @@ export const useDiaryData = (
           return;
         }
 
-        // 로컬 날짜 기준으로 변환
-        const selectedDateStr =
-          selectedDate.getFullYear() +
-          '-' +
-          String(selectedDate.getMonth() + 1).padStart(2, '0') +
-          '-' +
-          String(selectedDate.getDate()).padStart(2, '0');
-
-        const filteredDiaries = rawDiaries.filter((diary) => {
-          // Supabase UTC 시간을 한국 시간으로 변환
-          const diaryDateUTC = new Date(diary.created_at);
-          const diaryDateKST = new Date(diaryDateUTC.getTime() + 9 * 60 * 60 * 1000); // UTC + 9시간
-          const diaryDateStr =
-            diaryDateKST.getFullYear() +
-            '-' +
-            String(diaryDateKST.getMonth() + 1).padStart(2, '0') +
-            '-' +
-            String(diaryDateKST.getDate()).padStart(2, '0');
-
-          return diaryDateStr === selectedDateStr;
-        });
-
         // 좋아요 및 댓글 수 추가
-        const diariesWithCounts = filteredDiaries.map((diary) => ({
+        const diariesWithCounts = rawDiaries.map((diary) => ({
           ...diary,
           likes: [{ count: likesCount[diary.id] || 0 }],
           comments: [{ count: commentsCount[diary.id] || 0 }],
@@ -94,7 +73,7 @@ export const useDiaryData = (
     };
 
     fetchDiaryForDate();
-  }, [userId, selectedDate, currentCalendarMonth]);
+  }, [userId, selectedDate]);
 
   return { diaryList, loading };
 };
