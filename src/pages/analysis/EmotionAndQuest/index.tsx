@@ -14,6 +14,7 @@ import { toastUtils } from '@/shared/components/Toast';
 import PublicDecision from './components/PublicDecision';
 import AnalysisFromAI from './components/AnalysisFromAI';
 import type { Analysis } from '@/shared/types/analysis';
+import ConfirmModal from '@/shared/components/Modal/ConfirmModal';
 
 function EmotionAndQuest() {
   const location = useLocation();
@@ -33,9 +34,10 @@ function EmotionAndQuest() {
     reminderMessage: '',
     selfReflectionSuggestion: '',
   });
-  const [reason, setReason] = useState('');
 
+  const [reason, setReason] = useState('');
   const [isPublic, setIsPublic] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (questAccepted === true) {
@@ -49,6 +51,7 @@ function EmotionAndQuest() {
   const handleAiAnalysis = useCallback((analysis: Analysis) => {
     setAiAnalysis(analysis);
   }, []);
+
 
   const handleSubmit = async () => {
     console.log('선택된 감정:', emotionSelection.selected);
@@ -173,13 +176,25 @@ function EmotionAndQuest() {
             <button
               type="button"
               className={S.submit}
-              onClick={handleSubmit}
+              onClick={() => setShowModal(true)}
               disabled={emotionSelection.selected.length === 0}
             >
               완료
             </button>
           </section>
         </>
+      )}
+      {showModal && (
+        <ConfirmModal
+          title="감정 분석 결과 저장"
+          message="작성한 감정 분석 결과를 저장합니다.
+          계속 진행하려면 확인을 눌러주세요."
+          onConfirm={() => {
+            setShowModal(false);
+            handleSubmit();
+          }}
+          onCancel={() => setShowModal(false)}
+        />
       )}
     </main>
   );

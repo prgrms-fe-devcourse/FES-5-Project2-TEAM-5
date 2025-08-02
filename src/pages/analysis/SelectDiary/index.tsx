@@ -44,10 +44,7 @@ function SelectDiary() {
     });
   };
 
-  const handleCancel = () => {
-    setShowModal(false);
-  };
-
+  
   // --- 화면 렌더링 ---
 
   if (loading) {
@@ -117,7 +114,7 @@ function SelectDiary() {
           message="선택한 일기를 바탕으로 감정 분석을 진행합니다.
           계속 진행하려면 확인을 눌러주세요."
           onConfirm={handleConfirm}
-          onCancel={handleCancel}
+          onCancel={() => setShowModal(false)}
         />
       )}
 
