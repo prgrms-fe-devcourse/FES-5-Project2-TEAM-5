@@ -118,7 +118,7 @@
   }
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 768px) {
   .inner {
     flex-direction: column;
     padding: 0 var(--space-5);
