@@ -1,5 +1,8 @@
 .navTab {
-  width: 1280px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
   display: flex;
   justify-content: start;
   border-bottom: 1px solid var(--gray-300);
@@ -7,7 +10,6 @@
   .tab {
     display: flex;
     gap: 32px;
-
     color: var(--gray-300);
     font-weight: 700;
     line-height: 21px;
@@ -17,11 +19,55 @@
       padding-block: 13px;
       border-bottom: 3px solid var(--gray-300);
       cursor: pointer;
+      white-space: nowrap; /* 탭 텍스트가 줄바꿈되지 않도록 */
     }
 
     .isActive {
       color: var(--primary);
       border-bottom: 3px solid var(--primary);
     }
+
+    /* 태블릿 사이즈 */
+    @media (max-width: 768px) {
+      gap: 24px;
+      font-size: var(--text-xl);
+      line-height: 19px;
+
+      > li {
+        padding-block: 12px;
+      }
+    }
+
+    /* 모바일 사이즈 */
+    @media (max-width: 480px) {
+      gap: 16px;
+      font-size: var(--text-xl);
+      line-height: 17px;
+
+      > li {
+        padding-block: 10px;
+        font-size: var(--text-xl);
+      }
+    }
+
+    /* 아주 작은 화면에서 스크롤 가능하도록 */
+    @media (max-width: 360px) {
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 2px; /* 스크롤바 여백 */
+
+      > li {
+        min-width: fit-content;
+      }
+    }
+  }
+
+  /* 전체 컨테이너 패딩 조정 */
+  @media (max-width: 768px) {
+    padding: 0 16px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0 12px;
   }
 }
