@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import S from './style.module.css';
 import DiaryWeather from '@/shared/components/DiaryWeather';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -9,11 +10,14 @@ import CommentSection from './components/CommentSection';
 import { IoLockClosedOutline, IoLockOpenOutline } from 'react-icons/io5';
 import AnalysisResult from './components/AnalysisResult';
 import { useUserContext } from '@/shared/context/UserContext';
+import ConfirmModal from '@/shared/components/Modal/ConfirmModal';
 
 const DiaryDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useUserContext();
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const {
     diary,
@@ -31,10 +35,13 @@ const DiaryDetailPage = () => {
     handleDelete,
   } = useDiaryDetail(id);
 
-  const onDeleteDiary = async () => {
-    if (!id || !window.confirm('정말로 일기를 삭제하시겠습니까?')) {
-      return;
-    }
+  const handleDeleteClick = () => {
+    if (!id) return;
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    setShowDeleteModal(false);
     try {
       await handleDelete();
       toastUtils.success({ title: '성공', message: '일기가 성공적으로 삭제되었습니다.' });
@@ -45,6 +52,10 @@ const DiaryDetailPage = () => {
       console.error('일기 삭제 실패:', errorMessage);
       toastUtils.error({ title: '실패', message: '일기 삭제에 실패했습니다.' });
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
   };
 
   if (loading) {
@@ -160,7 +171,7 @@ const DiaryDetailPage = () => {
           </button>
           {isAuthor && (
             <>
-              <button type="button" className={S.lineBtn} onClick={onDeleteDiary}>
+              <button type="button" className={S.lineBtn} onClick={handleDeleteClick}>
                 삭제
               </button>
               <button
@@ -177,6 +188,17 @@ const DiaryDetailPage = () => {
           )}
         </div>
       </div>
+
+      {showDeleteModal && (
+        <ConfirmModal
+          title="일기 삭제"
+          message="정말로 일기를 삭제하시겠습니까?"
+          onConfirm={handleDeleteConfirm}
+          onCancel={handleDeleteCancel}
+          confirmText="삭제"
+          cancelText="취소"
+        />
+      )}
     </main>
   );
 };

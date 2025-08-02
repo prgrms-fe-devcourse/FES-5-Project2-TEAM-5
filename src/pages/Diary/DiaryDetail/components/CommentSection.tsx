@@ -8,6 +8,7 @@ import type { DisplayComment } from '@/shared/types/diary';
 import S from '../style.module.css';
 import type { Tables } from '@/shared/api/supabase/types';
 import { formatToSimpleDate } from '@/shared/utils/formatDate';
+import ConfirmModal from '@/shared/components/Modal/ConfirmModal';
 
 interface CommentSectionProps {
   comments: DisplayComment[];
@@ -33,6 +34,9 @@ export const CommentSection = ({
   const [newCommentInput, setNewCommentInput] = useState('');
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [editCommentInput, setEditCommentInput] = useState('');
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [commentToDelete, setCommentToDelete] = useState<string | null>(null);
 
   // 댓글 리스트 스크롤을 위한 ref
   const commentsListRef = useRef<HTMLDivElement>(null);
@@ -90,19 +94,30 @@ export const CommentSection = ({
     setEditCommentInput('');
   };
 
-  const handleDeleteComment = async (commentId: string) => {
-    if (!window.confirm('정말로 댓글을 삭제하시겠습니까?')) {
-      return;
-    }
+  const handleDeleteClick = (commentId: string) => {
+    setCommentToDelete(commentId);
+    setShowDeleteModal(true);
+  };
 
+  const handleDeleteConfirm = async () => {
+    if (!commentToDelete) return;
+
+    setShowDeleteModal(false);
     try {
-      await onDeleteComment(commentId);
+      await onDeleteComment(commentToDelete);
       toastUtils.success({ title: '성공', message: '댓글이 삭제되었습니다.' });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : '댓글 삭제에 실패했습니다.';
       console.error('댓글 삭제 실패:', errorMessage);
       toastUtils.error({ title: '실패', message: errorMessage });
+    } finally {
+      setCommentToDelete(null);
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setCommentToDelete(null);
   };
 
   // 현재 사용자가 댓글 작성자인지 확인
@@ -185,7 +200,7 @@ export const CommentSection = ({
                             <BiEdit size={16} />
                           </button>
                           <button
-                            onClick={() => handleDeleteComment(comment.id)}
+                            onClick={() => handleDeleteClick(comment.id)}
                             className={S.deleteCommentBtn}
                             title="댓글 삭제"
                           >
@@ -223,6 +238,17 @@ export const CommentSection = ({
           </button>
         </div>
       </div>
+
+      {showDeleteModal && (
+        <ConfirmModal
+          title="댓글 삭제"
+          message="정말로 댓글을 삭제하시겠습니까?"
+          onConfirm={handleDeleteConfirm}
+          onCancel={handleDeleteCancel}
+          confirmText="삭제"
+          cancelText="취소"
+        />
+      )}
     </section>
   );
 };

@@ -13,6 +13,7 @@ import { processHashtags, uploadImageToStorage, scrollToElement } from './utils/
 import { ImageUpload } from './components/ImageUpload';
 import supabase from '@/shared/api/supabase/client';
 import { EmotionSelector } from './components/EmotionSelector';
+import ConfirmModal from '@/shared/components/Modal/ConfirmModal';
 
 const DiaryFormPage = () => {
   const {
@@ -34,6 +35,10 @@ const DiaryFormPage = () => {
     handleRestoreConfirm,
     handleRestoreCancel,
     saveToLocalStorage,
+
+    showCancelModal,
+    handleCancelConfirm,
+    handleCancelModalCancel,
   } = useDiaryForm();
 
   const { emotions, isLoadingEmotions } = useEmotions();
@@ -230,24 +235,6 @@ const DiaryFormPage = () => {
 
   return (
     <main className={S.container}>
-      {/* 임시저장 복원 */}
-      {showRestoreDialog && (
-        <div className={S.dialogOverlay}>
-          <div className={S.dialog}>
-            <h4>임시저장 복원</h4>
-            <p>이전에 임시저장된 내용이 있습니다. 불러오시겠습니까?</p>
-            <div className={S.dialogButtons}>
-              <button onClick={handleRestoreCancel} className={S.lineBtn}>
-                아니오
-              </button>
-              <button onClick={handleRestoreConfirm} className={S.bgPrimaryBtn}>
-                예
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <DiaryWeather />
       <div className={S.inner}>
         <form onSubmit={handleSubmit}>
@@ -382,6 +369,27 @@ const DiaryFormPage = () => {
           </div>
         </form>
       </div>
+
+      {showCancelModal && (
+        <ConfirmModal
+          title="작성 취소"
+          message="저장하지 않은 변경사항이 있습니다. 정말 나가시겠습니까?"
+          onConfirm={handleCancelConfirm}
+          onCancel={handleCancelModalCancel}
+          confirmText="나가기"
+          cancelText="계속 작성"
+        />
+      )}
+      {showRestoreDialog && (
+        <ConfirmModal
+          title="임시저장 복원"
+          message="이전에 임시저장된 내용이 있습니다. 불러오시겠습니까?"
+          onConfirm={handleRestoreConfirm}
+          onCancel={handleRestoreCancel}
+          confirmText="예"
+          cancelText="아니오"
+        />
+      )}
     </main>
   );
 };

@@ -125,6 +125,13 @@
     justify-content: center;
     align-items: center;
     gap: var(--space-1);
+    cursor: pointer;
+  }
+  button svg {
+    transition: all 0.2s;
+  }
+  button svg:hover {
+    transform: scale(1.2);
   }
   .likesBtn {
     cursor: pointer;

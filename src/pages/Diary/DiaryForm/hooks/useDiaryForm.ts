@@ -81,18 +81,24 @@ export const useDiaryForm = () => {
     return null;
   });
 
+  const [showCancelModal, setShowCancelModal] = useState(false);
+
   const handleCancel = useCallback(() => {
     if (hasUnsavedChanges) {
-      const confirmLeave = window.confirm(
-        '저장하지 않은 변경사항이 있습니다. 정말 나가시겠습니까?',
-      );
-      if (confirmLeave) {
-        navigate(-1);
-      }
+      setShowCancelModal(true);
     } else {
       navigate(-1);
     }
   }, [hasUnsavedChanges, navigate]);
+
+  const handleCancelConfirm = useCallback(() => {
+    setShowCancelModal(false);
+    navigate(-1);
+  }, [navigate]);
+
+  const handleCancelModalCancel = useCallback(() => {
+    setShowCancelModal(false);
+  }, []);
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -265,5 +271,9 @@ export const useDiaryForm = () => {
     handleRestoreConfirm,
     handleRestoreCancel,
     hasCheckedDraft,
+
+    showCancelModal,
+    handleCancelConfirm,
+    handleCancelModalCancel,
   };
 };
