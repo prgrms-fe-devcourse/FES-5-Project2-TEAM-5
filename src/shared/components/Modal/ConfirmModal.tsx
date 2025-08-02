@@ -17,9 +17,11 @@ function ConfirmModal({ title, message, onConfirm, onCancel, confirmText = '확�
   useEffect(() => {
     document.documentElement.style.setProperty('overflow', 'hidden', 'important'); // 배경 스크롤 방지
 
-    const handleKeyDown = (e: KeyboardEvent) => { // ESC 이벤트 핸들러
+    const handleKeyDown = (e: KeyboardEvent) => { // ESC, Enter 이벤트 핸들러
       if (e.key === 'Escape') {
         onCancel();
+      } else if (e.key === 'Enter') {
+        onConfirm();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
