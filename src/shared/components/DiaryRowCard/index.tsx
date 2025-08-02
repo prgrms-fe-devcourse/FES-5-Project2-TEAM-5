@@ -44,14 +44,12 @@ function DiaryRowCard({
           </div>
           <p className={S.date}>{formatToReadableDate(created_at)}</p>
         </div>
-        <figure>
-          {diary_image && (
-            <>
-              <img className={S.thumbImage} src={diary_image} alt="" />
-              <figcaption className="sr-only">일기 첨부 사진</figcaption>
-            </>
-          )}
-        </figure>
+        {diary_image && (
+          <figure>
+            <img className={S.thumbImage} src={diary_image} alt="" />
+            <figcaption className="sr-only">일기 첨부 사진</figcaption>
+          </figure>
+        )}
       </a>
     </li>
   );

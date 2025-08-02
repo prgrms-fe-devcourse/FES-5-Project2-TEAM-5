@@ -30,3 +30,14 @@
     }
   }
 }
+
+@media screen and (max-width: 768px) {
+  .section01 {
+    figure {
+      height: 200px;
+    }
+    h2 {
+      font-size: var(--text-5xl);
+    }
+  }
+}

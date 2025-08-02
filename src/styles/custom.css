@@ -136,3 +136,20 @@
 .react-calendar__tile.has-diary-entry {
   color: white;
 }
+.react-calendar__tile--hasActive {
+  background: transparent;
+}
+
+@media screen and (max-width: 768px) {
+  .react-calendar__tile:enabled:hover,
+  .react-calendar__tile:enabled:focus,
+  .react-calendar__tile--active,
+  .react-calendar__tile--now,
+  .react-calendar__tile--now:enabled:hover {
+    background-size: 32px auto;
+  }
+  .icon-bg {
+    width: 32px;
+    height: auto;
+  }
+}

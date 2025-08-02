@@ -33,7 +33,6 @@ const DiaryCalendar = ({ userId, date, onDateChange, entries, onMonthChange, loa
     [onMonthChange],
   );
 
-  // 날짜 클릭 핸들러 (미래 날짜 방지)
   const handleDateClick = useCallback(
     (clickedDate: Date) => {
       if (isFutureDate(clickedDate)) {
@@ -76,7 +75,7 @@ const DiaryCalendar = ({ userId, date, onDateChange, entries, onMonthChange, loa
       // 일기 작성 여부에 따른 스타일 추가
       if (tileDateStr <= todayStr) {
         const hasEntry = entries.some((e) => {
-          // 🔥 여기도 한국 시간대로 변환
+          // 한국 시간대로 변환
           const entryDateUTC = new Date(e.created_at);
           const entryDateKST = new Date(entryDateUTC.getTime() + 9 * 60 * 60 * 1000);
           const entryDateStr = getLocalDateString(entryDateKST);

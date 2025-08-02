@@ -8,6 +8,7 @@ export const useEmotionStats = (
   userId: string | null,
   selectedDate: Date,
   emotionMainsList: EmotionMain[],
+  currentCalendarMonth: Date,
 ) => {
   const [emotionStatsData, setEmotionStatsData] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +24,7 @@ export const useEmotionStats = (
       }
 
       try {
-        const { startUTC, endUTC } = getMonthRange(selectedDate);
+        const { startUTC, endUTC } = getMonthRange(currentCalendarMonth);
 
         const data = await getEmotionStatsFromSupabase(userId, startUTC, endUTC);
 
@@ -50,7 +51,7 @@ export const useEmotionStats = (
     };
 
     fetchEmotionStatistics();
-  }, [userId, selectedDate, emotionMainsList]);
+  }, [userId, selectedDate, emotionMainsList, currentCalendarMonth]);
 
   return { emotionStatsData, loading };
 };
