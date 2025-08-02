@@ -2,7 +2,6 @@ import type { DiaryRowEntity } from '@/shared/types/diary';
 import S from './style.module.css';
 import { formatToReadableDate } from '@/shared/utils/formatDate';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 
 function DiaryRowCard({
   id,
@@ -21,18 +20,6 @@ function DiaryRowCard({
     e.preventDefault();
     navigate(`/diary/${id}`);
   };
-
-  const [isMobile, setIsMobile] = useState(false);
-
-  // 화면 크기 감지
-  useEffect(() => {
-    const checkIsTablet = () => {
-      setIsMobile(window.innerWidth < 980);
-    };
-    checkIsTablet();
-    window.addEventListener('resize', checkIsTablet);
-    return () => window.removeEventListener('resize', checkIsTablet);
-  }, []);
 
   return (
     <li className={S.rowCard}>

@@ -259,6 +259,14 @@
   }
 }
 
+@media screen and (max-width: 767px) {
+  .container {
+    .inner {
+      padding: 40px var(--space-5);
+    }
+  }
+}
+
 @media screen and (max-width: 480px) {
   .buttonGroup {
     flex-direction: column;

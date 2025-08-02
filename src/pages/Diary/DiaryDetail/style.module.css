@@ -159,6 +159,7 @@
   overflow-y: auto;
   scroll-behavior: smooth;
   height: auto;
+  min-height: 42px;
   > div {
     display: flex;
     width: 100%;
