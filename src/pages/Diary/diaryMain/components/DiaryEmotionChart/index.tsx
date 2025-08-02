@@ -28,6 +28,9 @@ const DiaryEmotionChart = ({ data, emotionLabels, emotionImages }: Props) => {
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [isTablet, setIsTablet] = useState(false);
 
+  const prevDataRef = useRef(data);
+  const prevLabelsRef = useRef(emotionLabels);
+
   // 화면 크기 감지
   useEffect(() => {
     const checkIsTablet = () => {
@@ -38,6 +41,17 @@ const DiaryEmotionChart = ({ data, emotionLabels, emotionImages }: Props) => {
     return () => window.removeEventListener('resize', checkIsTablet);
   }, []);
 
+  // 데이터 변경 감지
+  const isDataChanged =
+    JSON.stringify(prevDataRef.current) !== JSON.stringify(data) ||
+    JSON.stringify(prevLabelsRef.current) !== JSON.stringify(emotionLabels);
+
+  // 이전 값 업데이트
+  useEffect(() => {
+    prevDataRef.current = data;
+    prevLabelsRef.current = emotionLabels;
+  }, [data, emotionLabels]);
+
   useEffect(() => {
     const loadImages = async () => {
       if (emotionImages.length === 0) {
@@ -45,23 +59,28 @@ const DiaryEmotionChart = ({ data, emotionLabels, emotionImages }: Props) => {
         setIsInitialLoading(false);
         return;
       }
-      const images: HTMLImageElement[] = [];
-      for (const src of emotionImages) {
-        const img = new Image();
-        img.src = src;
-        try {
-          await new Promise<void>((resolve, reject) => {
-            img.onload = () => resolve();
+
+      try {
+        // 병렬로 모든 이미지 로딩
+        const imagePromises = emotionImages.map((src) => {
+          return new Promise<HTMLImageElement>((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
             img.onerror = () => reject(new Error(`이미지 로드 실패: ${src}`));
+            img.src = src;
           });
-          images.push(img);
-        } catch (error) {
-          console.error(error);
-        }
+        });
+
+        const loadedImages = await Promise.all(imagePromises);
+        setLoadedEmotionImages(loadedImages);
+      } catch (error) {
+        console.error('이미지 로딩 실패:', error);
+        setLoadedEmotionImages([]);
+      } finally {
+        setIsInitialLoading(false);
       }
-      setLoadedEmotionImages(images);
-      setIsInitialLoading(false);
     };
+
     loadImages();
   }, [emotionImages]);
 
@@ -82,6 +101,17 @@ const DiaryEmotionChart = ({ data, emotionLabels, emotionImages }: Props) => {
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    animation: {
+      duration: 1000,
+      easing: 'easeInOutQuart' as const,
+    },
+    transitions: {
+      active: {
+        animation: {
+          duration: 400,
+        },
+      },
+    },
     plugins: {
       legend: { display: false },
       tooltip: {
@@ -151,9 +181,15 @@ const DiaryEmotionChart = ({ data, emotionLabels, emotionImages }: Props) => {
 
   useEffect(() => {
     if (chartRef.current) {
+      chartRef.current.update('active');
+    }
+  }, [isTablet, data, emotionLabels]);
+
+  useEffect(() => {
+    if (chartRef.current && loadedEmotionImages.length > 0) {
       chartRef.current.update('none');
     }
-  }, [isTablet, loadedEmotionImages, emotionLabels, data]);
+  }, [loadedEmotionImages]);
 
   if (isInitialLoading && emotionImages.length > 0) {
     return (
@@ -169,10 +205,13 @@ const DiaryEmotionChart = ({ data, emotionLabels, emotionImages }: Props) => {
     return null;
   }
 
+  // 반응형 변경인지 데이터 변경인지 구분
+  const shouldUseKey = !isDataChanged;
+
   return (
     <div>
       <Bar
-        key={isTablet ? 'tablet' : 'desktop'}
+        key={shouldUseKey ? (isTablet ? 'tablet' : 'desktop') : undefined}
         ref={chartRef}
         data={chartData}
         options={chartOptions}

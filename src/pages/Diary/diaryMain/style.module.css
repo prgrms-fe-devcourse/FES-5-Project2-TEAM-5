@@ -1,5 +1,8 @@
 .container {
   background-color: var(--background);
+  > .spinner_wrap {
+    transform: translateY(10%);
+  }
 }
 .inner {
   display: flex;
