@@ -1,4 +1,4 @@
-import { insertChatMessage, updateMessageCount } from '@/shared/api/chat';
+import { insertChatMessage } from '@/shared/api/chat';
 import { toastUtils } from '@/shared/components/Toast';
 import { useUserContext } from '@/shared/context/UserContext';
 import { useCallback, useId, useRef } from 'react';
@@ -9,10 +9,10 @@ import { throttle } from '@/shared/utils/throttle';
 interface Props {
   onOpenChat: () => void;
   disabled: boolean;
-  isMessageLimitExceeded: boolean;
+  isMessageExceeded: boolean;
 }
 
-const ChatInput = ({ onOpenChat, disabled, isMessageLimitExceeded }: Props) => {
+const ChatInput = ({ onOpenChat, disabled, isMessageExceeded }: Props) => {
   const messageRef = useRef<HTMLInputElement | null>(null);
   const { userInfo } = useUserContext();
   const chatId = useId();
@@ -23,10 +23,7 @@ const ChatInput = ({ onOpenChat, disabled, isMessageLimitExceeded }: Props) => {
       try {
         // 메시지 insert
         await insertChatMessage({ content, id: userId });
-        // 하루 메시지 제한 카운트
-        void updateMessageCount(userId);
-        messageRef.current!.value = '';
-        messageRef.current!.focus();
+
         // 에러 처리
       } catch (error) {
         if (error instanceof Error) {
@@ -49,6 +46,8 @@ const ChatInput = ({ onOpenChat, disabled, isMessageLimitExceeded }: Props) => {
     if (!userInfo) return;
 
     throttledInsertMessage(content, userInfo.id);
+    messageRef.current!.value = '';
+    messageRef.current!.focus();
   };
 
   return (
@@ -62,18 +61,12 @@ const ChatInput = ({ onOpenChat, disabled, isMessageLimitExceeded }: Props) => {
         type="text"
         name="chat"
         id={chatId}
-        placeholder={
-          isMessageLimitExceeded ? '몰리가 자리를 비웠어요.' : '몰리에게 말을 걸어주세요.'
-        }
+        placeholder={isMessageExceeded ? '몰리가 자리를 비웠어요.' : '몰리에게 말을 걸어주세요.'}
         onClick={onOpenChat}
         autoComplete="off"
-        disabled={isMessageLimitExceeded}
+        disabled={isMessageExceeded}
       />
-      <button
-        type="submit"
-        className={style.submitButton}
-        disabled={disabled || isMessageLimitExceeded}
-      >
+      <button type="submit" className={style.submitButton} disabled={disabled || isMessageExceeded}>
         <IoArrowUpCircleOutline size={24} />
       </button>
     </form>

@@ -1,7 +1,6 @@
 import {
   createMessageSubscription,
   fetchTodayChatMessages,
-  getTodayMessageCount,
   requestAiResponse,
 } from '@/shared/api/chat';
 import type { Tables } from '@/shared/api/supabase/types';
@@ -13,22 +12,18 @@ import { useChatScroll } from './useChatScroll';
 export const useChatMessages = () => {
   const { userInfo } = useUserContext();
   const [messages, setMessages] = useState<Tables<'chat_messages'>[]>([]);
-  const [messageLimit, setMessageLimit] = useState({ count: 0, limit: 50 });
   const [isAiTyping, setIsAiTyping] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string>('');
+  const MAX_MESSAGE_COUNT = 102;
 
   // 초기 메시지 fetch
   useEffect(() => {
     if (!userInfo?.id) return;
     startTransition(async () => {
       try {
-        const [messagesData, limitData] = await Promise.all([
-          fetchTodayChatMessages(userInfo.id),
-          getTodayMessageCount(userInfo.id),
-        ]);
-        setMessages(messagesData);
-        setMessageLimit({ count: limitData.message_count, limit: limitData.daily_limit });
+        const message = await fetchTodayChatMessages(userInfo.id);
+        setMessages(message);
       } catch (error) {
         if (error instanceof Error) {
           setError(error.message);
@@ -67,7 +62,6 @@ export const useChatMessages = () => {
 
     // 유저 메시지 insert 감지
     if (role === 'user') {
-      setMessageLimit((prev) => ({ ...prev, count: prev.count + 1 }));
       setIsAiTyping(true);
       requestAiResponse(userInfo.id, userInfo.name);
     }
@@ -87,6 +81,6 @@ export const useChatMessages = () => {
     isLoading: isPending,
     ref: ref,
     userProfileUrl: userInfo?.profile_image,
-    isMessageLimitExceeded: messageLimit.count >= messageLimit.limit,
+    isMessageExceeded: messages.length >= MAX_MESSAGE_COUNT,
   };
 };

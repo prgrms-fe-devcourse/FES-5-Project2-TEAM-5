@@ -1,11 +1,9 @@
 import type { User } from '@supabase/supabase-js';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { logout } from '../api/auth';
 import supabase from '../api/supabase/client';
 import type { Tables } from '../api/supabase/types';
 import { getUserDataById, insertUserProfileOnLogin } from '../api/user';
-import { initializedChatSession } from '../api/chat';
-import { throttle } from '../utils/throttle';
 
 export const useUser = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -44,10 +42,6 @@ export const useUser = () => {
       const newUser = session?.user ?? null;
       setUser(newUser);
 
-      if (newUser && (event === 'INITIAL_SESSION' || event === 'SIGNED_IN')) {
-        throttledInitializedChatSession(newUser.id);
-      }
-
       if (newUser && event === 'INITIAL_SESSION') {
         await insertUserProfileOnLogin(newUser);
       }
@@ -59,13 +53,6 @@ export const useUser = () => {
       subscription.unsubscribe();
     };
   }, []);
-
-  const throttledInitializedChatSession = useCallback(
-    throttle(async (userId: string) => {
-      void initializedChatSession(userId);
-    }),
-    [],
-  );
 
   const updateUserInfo = (user: Tables<'users'> | null) => {
     setUserInfo(user);
