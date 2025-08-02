@@ -32,21 +32,19 @@
       cursor: pointer;
       transition: all 0.3s;
 
-      a {
+      > a {
         font-size: var(--text-xl);
         display: block;
         padding: 8px 4px;
 
-        &:hover {
-          color: var(--point);
-          text-decoration: underline;
-        }
-
         &:focus-visible {
           color: var(--point);
           font-weight: 700;
-          text-decoration: underline;
         }
+      }
+
+      &:hover {
+        color: var(--point);
       }
 
       a.disabled {
@@ -55,7 +53,6 @@
         &:hover {
           color: inherit;
           font-weight: inherit;
-          text-decoration: none;
         }
       }
     }
@@ -79,7 +76,8 @@
       border-radius: var(--radius-3);
       cursor: pointer;
 
-      &:focus-visible {
+      &:focus-visible,
+      &:hover {
         outline: 4px solid var(--point);
       }
     }

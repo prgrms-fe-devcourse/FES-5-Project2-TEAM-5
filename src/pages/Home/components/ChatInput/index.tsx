@@ -1,7 +1,7 @@
 import { insertChatMessage } from '@/shared/api/chat';
 import { toastUtils } from '@/shared/components/Toast';
 import { useUserContext } from '@/shared/context/UserContext';
-import { useCallback, useId, useRef } from 'react';
+import React, { useCallback, useId, useRef } from 'react';
 import { IoArrowUpCircleOutline } from 'react-icons/io5';
 import style from './style.module.css';
 import { throttle } from '@/shared/utils/throttle';
@@ -36,6 +36,10 @@ const ChatInput = ({ onOpenChat, disabled, isMessageExceeded }: Props) => {
     [],
   );
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') onOpenChat();
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -63,6 +67,7 @@ const ChatInput = ({ onOpenChat, disabled, isMessageExceeded }: Props) => {
         id={chatId}
         placeholder={isMessageExceeded ? '몰리가 자리를 비웠어요.' : '몰리에게 말을 걸어주세요.'}
         onClick={onOpenChat}
+        onKeyDown={handleKeyDown}
         autoComplete="off"
         disabled={isMessageExceeded}
       />

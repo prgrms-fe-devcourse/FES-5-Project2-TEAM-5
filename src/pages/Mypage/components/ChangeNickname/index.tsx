@@ -4,14 +4,20 @@ import S from './style.module.css';
 import { useUserContext } from '@/shared/context/UserContext';
 import { nameValidator } from '@/shared/utils/validator';
 import { uploadUserNickname } from '@/shared/api/user';
+import ConfirmModal from '@/shared/components/Modal/ConfirmModal';
 
 const ChangeNickname = () => {
   const nicknameId = useId();
   const [nickname, setNickname] = useState<string>('');
   const { userInfo, updateUserInfo } = useUserContext();
   const [error, setError] = useState<string>('');
+  const [showModal, setShowModal] = useState(false); // 모달 컨트롤
 
   const isFormValid = nickname && !error;
+
+  const handleClickChange = () => {
+    setShowModal(true);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -47,10 +53,11 @@ const ChangeNickname = () => {
       }
     }
   };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      handleChangeNickname();
+      handleClickChange();
     }
   };
 
@@ -71,7 +78,7 @@ const ChangeNickname = () => {
         />
         <button
           type="button"
-          onClick={handleChangeNickname}
+          onClick={handleClickChange}
           onKeyDown={handleKeyDown}
           disabled={!isFormValid}
           aria-label="닉네임 변경"
@@ -80,6 +87,18 @@ const ChangeNickname = () => {
         </button>
       </div>
       <div className={S.errorMessage}>{error && <span>{error}</span>}</div>
+
+      {showModal && (
+        <ConfirmModal
+          title="닉네임 변경"
+          message="닉네임을 변경하시겠습니까?"
+          onConfirm={() => {
+            handleChangeNickname();
+            setShowModal(false);
+          }}
+          onCancel={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 };

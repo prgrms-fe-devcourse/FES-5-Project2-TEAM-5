@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   position: relative;
-  svg {
+  > svg {
     stroke-width: 1.2; /* 더 얇게 */
     cursor: pointer;
   }
@@ -20,6 +20,10 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
+  }
+  > svg:hover {
+    color: var(--point) !important;
+    stroke-width: 2.3;
   }
 }
 

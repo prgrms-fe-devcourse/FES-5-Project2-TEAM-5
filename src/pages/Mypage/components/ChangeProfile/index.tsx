@@ -7,6 +7,7 @@ import { useUploadImage } from '@/shared/hooks';
 import { useUserContext } from '@/shared/context/UserContext';
 import { useProfileChange } from '../../hooks/useProfileChange';
 import { toastUtils } from '@/shared/components/Toast';
+import ConfirmModal from '@/shared/components/Modal/ConfirmModal';
 
 const ChangeProfile = () => {
   const { userInfo, updateUserInfo } = useUserContext();
@@ -15,6 +16,7 @@ const ChangeProfile = () => {
   const [displayImage, setDisplayImage] = useState<string>(defaultProfile);
   const { imageFile, imagePreview, onChange, clearImage } = useUploadImage();
   const { updateProfile } = useProfileChange();
+  const [showModal, setShowModal] = useState(false); // 모달 컨트롤
 
   useEffect(() => {
     if (imagePreview) {
@@ -84,6 +86,10 @@ const ChangeProfile = () => {
     }
   };
 
+  const handleSetDefaultProfile = () => {
+    setShowModal(true);
+  };
+
   // 이전 프로필 되돌리기
   const revertProfile = () => {
     if (userInfo?.profile_image) {
@@ -94,7 +100,7 @@ const ChangeProfile = () => {
 
   return (
     <div className={style.profileSection}>
-      <IoClose className={style.closeButton} size={24} onPointerDown={setDefaultProfile} />
+      <IoClose className={style.closeButton} size={24} onPointerDown={handleSetDefaultProfile} />
       <label
         className={style.profileImage}
         role="button"
@@ -128,11 +134,22 @@ const ChangeProfile = () => {
           className={style.revertBUtton}
           type="button"
           onPointerDown={revertProfile}
-          aria-label="기존 프로필로 변경"
+          aria-label="기존 프로필 변경"
         >
           <HiArrowPath size={24} />
         </button>
       </div>
+      {showModal && (
+        <ConfirmModal
+          title="기본 프로필 변경"
+          message="기본 프로필로 변경하시겠습니까?"
+          onConfirm={() => {
+            setDefaultProfile();
+            setShowModal(false);
+          }}
+          onCancel={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 };
