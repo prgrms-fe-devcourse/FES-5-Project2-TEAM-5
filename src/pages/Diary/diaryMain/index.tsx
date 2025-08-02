@@ -97,8 +97,6 @@ const DiaryPage = () => {
     );
   }
 
-  console.log('diaryList:', diaryList);
-
   return (
     <main className={S.container}>
       {/* 날씨 영역 */}

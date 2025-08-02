@@ -132,10 +132,12 @@ const DiaryDetailPage = () => {
           <p className={S.content}>{diary.content}</p>
 
           {diary.diary_image && (
-            <figure className={S.diaryImage}>
-              <img src={diary.diary_image} alt="일기 이미지" />
-              <figcaption className="sr-only">일기장 이미지</figcaption>
-            </figure>
+            <div className={S.diaryImage}>
+              <figure>
+                <img src={diary.diary_image} alt="일기 이미지" />
+                <figcaption className="sr-only">일기장 이미지</figcaption>
+              </figure>
+            </div>
           )}
 
           <div className={S.hashtag}>
