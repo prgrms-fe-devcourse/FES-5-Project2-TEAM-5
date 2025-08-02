@@ -34,6 +34,9 @@ const QuestSection = () => {
     );
   }, []);
 
+  // 수락한 퀘스트가 없는 경우
+  if (!(questList.length > 0)) return null;
+
   return (
     <div className={style.questSection}>
       <div

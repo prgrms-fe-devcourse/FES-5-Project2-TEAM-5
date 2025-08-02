@@ -424,7 +424,6 @@ export type Database = {
         Row: {
           created_at: string
           daily_limit: number
-          id: number
           last_reset_date: string
           message_count: number
           selected_message_pair_id: number
@@ -435,7 +434,6 @@ export type Database = {
         Insert: {
           created_at?: string
           daily_limit?: number
-          id?: number
           last_reset_date: string
           message_count?: number
           selected_message_pair_id?: number
@@ -446,13 +444,50 @@ export type Database = {
         Update: {
           created_at?: string
           daily_limit?: number
-          id?: number
           last_reset_date?: string
           message_count?: number
           selected_message_pair_id?: number
           user_id?: string
           warning_sent?: boolean
           warning_threshold?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_chat_session_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_daily_usage: {
+        Row: {
+          created_at: string | null
+          id: string
+          message_count: number | null
+          message_type: number | null
+          updated_at: string | null
+          usage_date: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          message_count?: number | null
+          message_type?: number | null
+          updated_at?: string | null
+          usage_date?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          message_count?: number | null
+          message_type?: number | null
+          updated_at?: string | null
+          usage_date?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -515,7 +550,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      update_daily_usage: {
+        Args: { p_user_id: string }
+        Returns: {
+          message_count: number
+          message_type: number
+        }[]
+      }
     }
     Enums: {
       chat_role: "user" | "model"

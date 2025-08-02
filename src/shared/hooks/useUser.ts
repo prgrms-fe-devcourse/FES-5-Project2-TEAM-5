@@ -4,7 +4,6 @@ import { logout } from '../api/auth';
 import supabase from '../api/supabase/client';
 import type { Tables } from '../api/supabase/types';
 import { getUserDataById, insertUserProfileOnLogin } from '../api/user';
-import { initializedChatSession } from '../api/chat';
 
 export const useUser = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -42,10 +41,6 @@ export const useUser = () => {
       setIsLoading(true);
       const newUser = session?.user ?? null;
       setUser(newUser);
-
-      if (newUser && (event === 'INITIAL_SESSION' || event === 'SIGNED_IN')) {
-        void initializedChatSession(newUser.id);
-      }
 
       if (newUser && event === 'INITIAL_SESSION') {
         await insertUserProfileOnLogin(newUser);
