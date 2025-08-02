@@ -42,11 +42,11 @@ export const useDiaryListLoader = (
 
   const loadDiaries = useCallback(
     async (page: number) => {
-      await new Promise((resolve) => setTimeout(resolve, 200));
+      await new Promise((resolve) => setTimeout(resolve, 400));
       try {
         // useInfiniteScroll page=1부터 시작
         const apiPage = page;
-        const limit = 20;
+        const limit = 10;
 
         // 검색/필터 조건 설정
         const filters: {

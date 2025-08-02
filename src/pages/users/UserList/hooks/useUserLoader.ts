@@ -12,7 +12,7 @@ export const useUserLoader = (searchTerm: string) => {
     async (page: number) => {
       try {
         // 테스트 딜레이
-        await new Promise((resolve) => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 400));
         const apiPage = page;
         const limit = 16;
         const data = await getAllUserData(apiPage, limit, searchTerm.trim() || undefined);

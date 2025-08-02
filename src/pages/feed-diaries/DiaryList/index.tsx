@@ -76,10 +76,6 @@ const DiaryList = () => {
       <section aria-label="일기 목록" className={S.diariesSection}>
         {isLoading ? (
           <Spinner />
-        ) : diaries.length <= 0 ? (
-          <p className={S.noResult} role="status">
-            검색 결과가 없습니다.
-          </p>
         ) : (
           <ul className={S.diaryList}>
             <Masonry
@@ -109,7 +105,17 @@ const DiaryList = () => {
             </Masonry>
           </ul>
         )}
-        {hasMore && <div ref={targetRef}>{isLoading && <Spinner />}</div>}
+        {!initialLoading && !isLoading && diaries.length === 0 && searchTerm !== '' && (
+          <p className={S.noResult} role="status">
+            검색 결과가 없습니다.
+          </p>
+        )}
+        {isLoading && hasMore && (
+          <div className={S.loadingSpinner}>
+            <Spinner />
+          </div>
+        )}
+        {hasMore && <div ref={targetRef} className={S.infiniteScrollTrigger} aria-hidden="true" />}
       </section>
     </main>
   );

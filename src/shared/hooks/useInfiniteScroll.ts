@@ -57,11 +57,22 @@ export const useInfiniteScroll = <T>(
     };
   }, [handleIntersect, threshold, rootMargin, enabled]);
 
-  const reset = useCallback(() => {
+  const reset = useCallback(async () => {
     setPage(1);
     setHasMore(true);
-    setIsLoading(false);
-  }, []);
+    setIsLoading(true);
+
+    try {
+      const result = await loadMore(1);
+      setHasMore(result.hasMore);
+      setPage(2);
+    } catch (error) {
+      console.error('초기 로딩 실패:', error);
+      setHasMore(false);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [loadMore]);
 
   return {
     targetRef,

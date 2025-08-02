@@ -1,5 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
-import { getUserCommentedDiaries, getUserDiaries, getUserLikedDiaries } from '@/shared/api/diary';
+import {
+  getUserCommentedDiaries,
+  getUserLikedDiaries,
+  getUserPublicDiaries,
+} from '@/shared/api/diary';
 import { toastUtils } from '@/shared/components/Toast';
 import type { DiaryRowEntity } from '@/shared/types/diary';
 import { useInfiniteScroll } from '@/shared/hooks/useInfiniteScroll';
@@ -17,15 +21,15 @@ export const useUserDiaryLoader = (
 
       try {
         // 테스트 딜레이
-        await new Promise((resolve) => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 400));
 
         let data: DiaryRowEntity[] = [];
         const apiPage = page;
-        const limit = 10;
+        const limit = 5;
 
         switch (activeTabId) {
           case 'diary':
-            data = await getUserDiaries(slug, apiPage, limit);
+            data = await getUserPublicDiaries(slug, apiPage, limit);
             break;
           case 'like':
             data = await getUserLikedDiaries(slug, apiPage, limit);
@@ -75,7 +79,6 @@ export const useUserDiaryLoader = (
     if (!loading && slug) {
       setDiaries([]);
       reset();
-      loadDiaries(0);
     }
   }, [activeTabId, slug, reset]);
 

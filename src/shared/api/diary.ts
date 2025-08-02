@@ -266,6 +266,67 @@ export const getUserDiaries = async (userId: string, page: number = 1, limit: nu
   `,
     )
     .eq('user_id', userId)
+    .eq('is_drafted', false)
+    .order('created_at', { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  if (error) {
+    throw new Error(`관계 포함 다이어리 조회 실패`);
+  }
+
+  const result = data.map((diary) => ({
+    ...diary,
+    likes: Array.isArray(diary.likes) ? diary.likes.length : 0,
+    comments: Array.isArray(diary.comments) ? diary.comments.length : 0,
+    emotion_mains: Array.isArray(diary.emotion_mains)
+      ? diary.emotion_mains[0]
+      : diary.emotion_mains,
+    diary_hashtags: diary.diary_hashtags?.flatMap((h) => h.hashtags) || [],
+  }));
+
+  return result;
+};
+
+/**
+ * 특정 사용자가 작성한 전체 공개 일기 불러오기
+ */
+export const getUserPublicDiaries = async (
+  userId: string,
+  page: number = 1,
+  limit: number = 20,
+) => {
+  const offset = (page - 1) * limit;
+  const { data, error } = await supabase
+    .from('diaries')
+    .select(
+      `
+    id,
+    title,
+    created_at,
+    diary_image,
+    is_public,
+    is_drafted,
+    emotion_mains (
+      icon_url,
+      name
+    ),
+    diary_hashtags (
+      hashtags (
+        id,
+        name
+      )
+    ),
+    likes (
+      id
+    ),
+    comments (
+      id
+    )
+  `,
+    )
+    .eq('user_id', userId)
+    .eq('is_public', true)
+    .eq('is_drafted', false)
     .order('created_at', { ascending: false })
     .range(offset, offset + limit - 1);
 
@@ -323,6 +384,8 @@ export const getUserLikedDiaries = async (userId: string, page: number = 1, limi
     `,
     )
     .eq('user_id', userId)
+    .filter('diaries.is_public', 'eq', true)
+    .filter('diaries.is_drafted', 'eq', false)
     .range(offset, offset + limit - 1);
 
   if (error) throw new Error(`좋아요한 다이어리 조회 실패`);
@@ -351,46 +414,58 @@ export const getUserCommentedDiaries = async (
   page: number = 1,
   limit: number = 20,
 ) => {
-  const offset = (page - 1) * limit;
-  const { data, error } = await supabase
+  // 먼저 유저가 댓글단 고유한 diary_id들만 가져오기
+  const { data: commentedDiaryIds, error: idsError } = await supabase
     .from('comments')
+    .select('diary_id')
+    .eq('user_id', userId);
+
+  if (idsError) throw new Error(`댓글단 다이어리 ID 조회 실패`);
+
+  // 중복 제거
+  const uniqueDiaryIds = [...new Set(commentedDiaryIds.map((c) => c.diary_id))];
+
+  const offset = (page - 1) * limit;
+  const paginatedIds = uniqueDiaryIds.slice(offset, offset + limit);
+
+  if (paginatedIds.length === 0) return [];
+
+  // 해당 일기들 가져오기
+  const { data, error } = await supabase
+    .from('diaries')
     .select(
       `
-      diary_id,
-      diaries (
-        id,
-        title,
-        created_at,
-        diary_image,
-        is_public,
-        is_drafted,
-        emotion_mains (
-          icon_url,
+      id,
+      title,
+      created_at,
+      diary_image,
+      is_public,
+      is_drafted,
+      emotion_mains (
+        icon_url,
+        name
+      ),
+      diary_hashtags (
+        hashtags (
+          id,
           name
-        ),
-        diary_hashtags (
-          hashtags (
-            id,
-            name
-          )
-        ),
-        likes (
-          id
-        ),
-        comments (
-          id
         )
+      ),
+      likes (
+        id
+      ),
+      comments (
+        id
       )
     `,
     )
-    .eq('user_id', userId)
-    .range(offset, offset + limit - 1);
+    .in('id', paginatedIds)
+    .eq('is_public', true)
+    .eq('is_drafted', false);
 
-  if (error) throw new Error(`댓글단 다이어리 조회 실패`);
+  if (error) throw new Error(`다이어리 조회 실패`);
 
   const result = data
-    .map((like) => like.diaries)
-    .filter(Boolean)
     .map((diary) => ({
       ...diary,
       likes: Array.isArray(diary.likes) ? diary.likes.length : 0,

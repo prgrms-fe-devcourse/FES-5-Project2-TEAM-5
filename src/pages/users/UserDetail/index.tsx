@@ -74,7 +74,12 @@ const UserDetail = () => {
               return <DiaryRowCard {...cardProps} key={diary.id} />;
             })}
           </ul>
-          {hasMore && <div ref={targetRef}>{isLoading && <Spinner />}</div>}
+          {isLoading && hasMore && (
+            <div className={S.loadingSpinner}>
+              <Spinner />
+            </div>
+          )}
+          <div ref={targetRef} className={S.infiniteScrollTrigger} aria-hidden="true" />
         </div>
       </section>
     </main>
