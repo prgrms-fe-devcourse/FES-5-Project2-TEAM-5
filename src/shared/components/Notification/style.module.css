@@ -25,6 +25,10 @@
     color: var(--point) !important;
     stroke-width: 2.3;
   }
+  &:focus-visible > svg {
+    color: var(--point) !important;
+    stroke-width: 2.3;
+  }
 }
 
 /* 툴팁  */

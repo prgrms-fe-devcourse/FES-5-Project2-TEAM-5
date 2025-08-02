@@ -20,19 +20,23 @@ const Header = ({ cssOption }: { cssOption: CSSProperties }) => {
 
   const { color, border } = cssOption;
 
+  // 홈으로
   const handleHome = () => {
     navigate('/');
     setShowMobileMenu(false);
   };
 
+  // 로그인
   const handleLogin = () => {
     navigate('/login');
   };
 
+  // 로그아웃
   const handleLogout = async () => {
     setShowModal(true);
   };
 
+  // 마이 페이지
   const handleMypage = () => {
     navigate('/mypage');
   };
@@ -42,6 +46,7 @@ const Header = ({ cssOption }: { cssOption: CSSProperties }) => {
     setShowMobileMenu(!showMobileMenu);
   };
 
+  // 메뉴 이동
   const handleLinkClick = (requireAuth: boolean) => (e: React.PointerEvent<HTMLAnchorElement>) => {
     if (requireAuth && !isAuth) {
       e.preventDefault();
@@ -188,7 +193,7 @@ const Header = ({ cssOption }: { cssOption: CSSProperties }) => {
       {showMobileMenu && (
         <div className={style.mobileNavOverlay} onClick={() => setShowMobileMenu(false)} />
       )}
-
+      {/* 모달 */}
       {showModal && (
         <ConfirmModal
           title="로그아웃"
