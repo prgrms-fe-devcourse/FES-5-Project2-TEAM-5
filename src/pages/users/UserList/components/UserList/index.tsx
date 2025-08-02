@@ -13,10 +13,6 @@ const UserList = ({ users, isLoading }: Props) => {
     <section aria-label="사용자 목록" className={S.userSection}>
       {isLoading ? (
         <Spinner />
-      ) : users.length <= 0 ? (
-        <p className={S.noResult} role="status">
-          검색 결과가 없습니다.
-        </p>
       ) : (
         <ul className={S.userList}>
           {users.map((user) => (

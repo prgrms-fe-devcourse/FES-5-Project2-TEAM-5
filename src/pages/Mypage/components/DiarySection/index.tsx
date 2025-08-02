@@ -50,7 +50,14 @@ const DiarySection = () => {
             {diaries.map((diary) => (
               <DiaryRowCard {...diary} key={diary.id} />
             ))}
-            {hasMore && <div ref={targetRef}>{isLoading && <Spinner />}</div>}
+            {isLoading && hasMore && (
+              <div className={S.loadingSpinner}>
+                <Spinner />
+              </div>
+            )}
+            {hasMore && (
+              <div ref={targetRef} className={S.infiniteScrollTrigger} aria-hidden="true" />
+            )}
           </>
         ) : (
           <div className={S.emptySection}>

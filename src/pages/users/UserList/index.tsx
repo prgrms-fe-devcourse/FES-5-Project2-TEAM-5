@@ -13,7 +13,7 @@ const UserPage = () => {
   const handleSearch = useCallback(
     debounce((value: string) => {
       setSearchTerm(value);
-    }),
+    }, 500),
     [],
   );
 
@@ -32,7 +32,17 @@ const UserPage = () => {
         <SearchBox onSearch={handleSearch} />
       </header>
       <UserList users={users} isLoading={isLoading} />
-      {hasMore && <div ref={targetRef}>{isLoading && <Spinner />}</div>}
+      {!initialLoading && !isLoading && users.length === 0 && searchTerm !== '' && (
+        <p className={S.noResult} role="status">
+          검색 결과가 없습니다.
+        </p>
+      )}
+      {isLoading && hasMore && (
+        <div className={S.loadingSpinner}>
+          <Spinner />
+        </div>
+      )}
+      {hasMore && <div ref={targetRef} className={S.infiniteScrollTrigger} aria-hidden="true" />}
     </main>
   );
 };
