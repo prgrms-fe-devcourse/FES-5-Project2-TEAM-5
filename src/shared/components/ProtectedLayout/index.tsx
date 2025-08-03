@@ -1,6 +1,7 @@
 import { useUserContext } from '@/shared/context/UserContext';
 import { Outlet, Navigate } from 'react-router-dom';
 import Spinner from '../Spinner';
+import { PATHS } from '@/shared/constants/path';
 
 export const ProtectedLayout = () => {
   const { isAuth, isLoading } = useUserContext();
@@ -10,7 +11,7 @@ export const ProtectedLayout = () => {
   }
 
   if (!isAuth) {
-    return <Navigate to={'/login'} replace state={{ message: '로그인이 필요합니다.' }} />;
+    return <Navigate to={PATHS.ABOUT} replace state={{ message: '로그인이 필요합니다.' }} />;
   }
 
   return <Outlet />;

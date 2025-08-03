@@ -25,6 +25,10 @@
     color: var(--point) !important;
     stroke-width: 2.3;
   }
+  &:focus-visible > svg {
+    color: var(--point) !important;
+    stroke-width: 2.3;
+  }
 }
 
 /* 툴팁  */
@@ -58,6 +62,11 @@
   background-color: var(--gray-10);
   border: 1px solid var(--border);
   padding: var(--space-4) var(--space-2) var(--space-2) var(--space-2);
+
+  @media (max-width: 1024px) {
+    right: 0;
+    transform: translateX(30%);
+  }
 
   .notificationList {
     min-width: 100px;

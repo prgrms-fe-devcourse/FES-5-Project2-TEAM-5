@@ -15,11 +15,13 @@ const ChangeNickname = () => {
 
   const isFormValid = nickname && !error;
 
-  const handleClickChange = () => {
+  // 모달 오픈
+  const handleOpenModal = () => {
     setShowModal(true);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // 인풋 change
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
     setNickname(value);
@@ -28,7 +30,8 @@ const ChangeNickname = () => {
     setError(errorMessage || '');
   };
 
-  const handleChangeNickname = async () => {
+  // 닉네임 변경
+  const handleConfirmNicknameChange = async () => {
     if (!userInfo) return;
     try {
       // 닉네임 validation
@@ -54,13 +57,6 @@ const ChangeNickname = () => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleClickChange();
-    }
-  };
-
   return (
     <div>
       <label className={S.inputLabel} htmlFor={nicknameId}>
@@ -74,12 +70,11 @@ const ChangeNickname = () => {
           id={nicknameId}
           value={nickname}
           placeholder="닉네임을 변경해주세요."
-          onChange={handleChange}
+          onChange={handleInputChange}
         />
         <button
           type="button"
-          onClick={handleClickChange}
-          onKeyDown={handleKeyDown}
+          onClick={handleOpenModal}
           disabled={!isFormValid}
           aria-label="닉네임 변경"
         >
@@ -93,7 +88,7 @@ const ChangeNickname = () => {
           title="닉네임 변경"
           message="닉네임을 변경하시겠습니까?"
           onConfirm={() => {
-            handleChangeNickname();
+            handleConfirmNicknameChange();
             setShowModal(false);
           }}
           onCancel={() => setShowModal(false)}

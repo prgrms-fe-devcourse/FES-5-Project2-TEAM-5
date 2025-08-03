@@ -9,6 +9,7 @@ import S from './style.module.css';
 import type { LoginForm } from './utils/type';
 import { useRememberMe } from './hook/useRememberMe';
 import { loginWithEmail, loginWithGithub } from '@/shared/api/auth';
+import { PATHS } from '@/shared/constants/path';
 
 const Login = () => {
   const rememberId = useId(); // 아이디 기억하기
@@ -50,10 +51,11 @@ const Login = () => {
 
       handleRememberMe(email);
 
-      navigate('/');
+      navigate(PATHS.HOME);
     } catch (error) {
       if (error instanceof Error)
         toastUtils.error({ title: '로그인 실패', message: error.message });
+      setFormData((prev) => ({ ...prev, password: '' })); // 비밀번호 초기화
     }
   };
 
@@ -69,9 +71,13 @@ const Login = () => {
     }
   };
 
+  const handleAbout = () => {
+    navigate(PATHS.ABOUT);
+  };
+
   return (
     <AuthLayout>
-      <h1 className={S.logo}>
+      <h1 className={S.logo} onClick={handleAbout}>
         <img src={logo} alt="" /> <span>Seediary</span>
       </h1>
       <form className={S.form} onSubmit={handleSubmit}>
@@ -114,7 +120,7 @@ const Login = () => {
             />
             remember me
           </label>
-          <Link to="/register">register</Link>
+          <Link to={PATHS.REGISTER}>register</Link>
         </div>
 
         <div className={S.buttonGroup}>

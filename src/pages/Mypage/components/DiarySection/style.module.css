@@ -1,5 +1,8 @@
 .contents {
-  width: 1280px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
 
   .diaryList {
     height: 100%;
@@ -21,6 +24,8 @@
       > span {
         color: var(--gray-400);
         font-size: var(--text-xl);
+        text-align: center;
+        padding: 0 20px;
       }
 
       > a {
@@ -39,5 +44,53 @@
         }
       }
     }
+
+    /* 태블릿 사이즈 */
+    @media (max-width: 768px) {
+      gap: 20px;
+      padding-block: 30px;
+
+      .emptySection {
+        gap: var(--space-4);
+
+        > span {
+          font-size: var(--text-lg);
+        }
+
+        > a {
+          padding: 12px 16px;
+          font-size: var(--text-sm);
+        }
+      }
+    }
+
+    /* 모바일 사이즈 */
+    @media (max-width: 480px) {
+      gap: 16px;
+      padding-block: 20px;
+
+      .emptySection {
+        gap: var(--space-3);
+
+        > span {
+          font-size: var(--text-base);
+          padding: 0 10px;
+        }
+
+        > a {
+          padding: 10px 14px;
+          font-size: var(--text-sm);
+        }
+      }
+    }
+  }
+
+  /* 전체 컨테이너 패딩 조정 */
+  @media (max-width: 768px) {
+    padding: 0 16px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0 12px;
   }
 }

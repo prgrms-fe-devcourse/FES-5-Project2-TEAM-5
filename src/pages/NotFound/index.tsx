@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import style from './style.module.css';
+import { PATHS } from '@/shared/constants/path';
 
 const NotFound = () => {
   const navigate = useNavigate();
   const handleHome = () => {
-    navigate('/');
+    navigate(PATHS.HOME);
   };
 
   return (

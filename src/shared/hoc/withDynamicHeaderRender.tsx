@@ -4,7 +4,13 @@ import { PATHS } from '../constants/path';
 
 type PathValues = (typeof PATHS)[keyof typeof PATHS];
 
-const whiteStyle: PathValues[] = [PATHS.HOME, PATHS.MYPAGE, PATHS.DIARY, PATHS.DIARY_FORM];
+const whiteStyle: PathValues[] = [
+  PATHS.HOME,
+  PATHS.MYPAGE,
+  PATHS.DIARY,
+  PATHS.DIARY_FORM,
+  PATHS.ABOUT,
+];
 
 const whiteDynamicPathPatterns = ['/diary/:id', '/users/:id'];
 
