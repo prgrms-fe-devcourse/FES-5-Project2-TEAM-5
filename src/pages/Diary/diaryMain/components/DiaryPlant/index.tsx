@@ -19,7 +19,7 @@ const plantLevels = [
   { threshold: 90, image: PlantLevel04 }, // 90% 이상
 ];
 
-const DiaryPlant = ({ value, currentPlantLevel }: Props) => {
+const DiaryPlant = ({ value }: Props) => {
   const getPlantImage = () => {
     for (let i = plantLevels.length - 1; i >= 0; i--) {
       if (value >= plantLevels[i].threshold) {

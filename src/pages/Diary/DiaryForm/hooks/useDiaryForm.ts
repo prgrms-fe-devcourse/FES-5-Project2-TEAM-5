@@ -35,13 +35,29 @@ export const useDiaryForm = () => {
   const existingDiary = location.state?.diary;
   const isEditMode = !!existingDiary?.id;
 
-  // 임시저장 관련
-  const draftKey = isEditMode ? `diary-draft-${existingDiary.id}` : '';
+  // 먼저 diaryDate 초기값 계산
+  const initialDiaryDate: string = (() => {
+    // 수정 모드면 해당 일기 날짜 사용
+    if (isEditMode && existingDiary) {
+      return existingDiary.created_at?.split('T')[0] || new Date().toISOString().split('T')[0];
+    }
+    // 신규면 달력에서 온 날짜(state) 아니면 오늘
+    return dateInState || new Date().toISOString().split('T')[0];
+  })();
+
+  // 임시저장 관련 - 신규 작성은 날짜별로, 수정 모드는 일기 ID별로
+  const draftKey: string = isEditMode
+    ? `diary-draft-${existingDiary.id}`
+    : `diary-new-draft-${user?.id || 'anonymous'}-${initialDiaryDate}`; // 날짜별 임시저장
+
   const {
     storedValue: draftData,
     setStoredValue: saveDraft,
     resetStorage: clearDraft,
   } = useLocalStorage<DraftData | null>(draftKey, null);
+
+  // 복원 트리거 상태 추가
+  const [restoreTrigger, setRestoreTrigger] = useState(0);
 
   const [formData, setFormData] = useState<FormData>(() => {
     return {
@@ -62,11 +78,10 @@ export const useDiaryForm = () => {
   });
 
   const [diaryDate, setDiaryDate] = useState(() => {
-    // 수정 모드면 해당 일기 날짜 사용
-    if (isEditMode && draftData) return draftData.diaryDate;
-    if (isEditMode && existingDiary) return existingDiary.created_at?.split('T')[0];
-    // 신규면 달력에서 온 날짜(state) 아니면 오늘
-    return dateInState || new Date().toISOString().split('T')[0];
+    // 수정 모드면서 임시저장 데이터가 있으면 임시저장된 날짜 사용
+    if (isEditMode && draftData?.diaryDate) return draftData.diaryDate;
+    // 아니면 초기 계산값 사용
+    return initialDiaryDate;
   });
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(() => {
@@ -75,7 +90,7 @@ export const useDiaryForm = () => {
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [lastSavedTime, setLastSavedTime] = useState<Date | null>(() => {
-    if (isEditMode && draftData?.lastSaved) {
+    if (draftData?.lastSaved) {
       return new Date(draftData.lastSaved);
     }
     return null;
@@ -93,8 +108,12 @@ export const useDiaryForm = () => {
 
   const handleCancelConfirm = useCallback(() => {
     setShowCancelModal(false);
+    // 신규 작성 시에만 임시저장 데이터 삭제
+    if (!isEditMode) {
+      clearDraft();
+    }
     navigate(-1);
-  }, [navigate]);
+  }, [navigate, isEditMode, clearDraft]);
 
   const handleCancelModalCancel = useCallback(() => {
     setShowCancelModal(false);
@@ -114,49 +133,52 @@ export const useDiaryForm = () => {
     setFormData((prev) => ({ ...prev, emotion: emotionName }));
   }, []);
 
-  const saveToLocalStorage = useCallback(() => {
-    if (!isEditMode) return;
+  const saveToLocalStorage = useCallback(
+    (currentTags?: string[]) => {
+      if (!hasUnsavedChanges) {
+        toastUtils.info({
+          title: '알림',
+          message: isEditMode ? '수정한 내용이 없습니다.' : '작성한 내용이 없습니다.',
+        });
+        return;
+      }
 
-    if (!hasUnsavedChanges) {
-      toastUtils.info({
-        title: '알림',
-        message: '수정한 내용이 없습니다.',
+      const currentDraft: DraftData = {
+        emotion: formData.emotion,
+        title: formData.title,
+        content: formData.content,
+        isPublic: formData.isPublic,
+        tags: currentTags || formData.tags || [],
+        selectedEmotionId: selectedEmotionId,
+        diaryDate: diaryDate,
+        imagePreviewUrl: imagePreviewUrl,
+        lastSaved: Date.now(),
+      };
+
+      saveDraft(currentDraft);
+      setLastSavedTime(new Date());
+      setHasUnsavedChanges(false);
+
+      toastUtils.success({
+        title: '임시저장 완료',
+        message: isEditMode
+          ? '수정 내용이 임시 저장되었습니다.'
+          : '작성 내용이 임시 저장되었습니다.',
       });
-      return;
-    }
-
-    const currentDraft: DraftData = {
-      emotion: formData.emotion,
-      title: formData.title,
-      content: formData.content,
-      isPublic: formData.isPublic,
-      tags: formData.tags || [],
-      selectedEmotionId: selectedEmotionId,
-      diaryDate: diaryDate,
-      imagePreviewUrl: imagePreviewUrl,
-      lastSaved: Date.now(),
-    };
-
-    saveDraft(currentDraft);
-    setLastSavedTime(new Date());
-    setHasUnsavedChanges(false);
-
-    toastUtils.success({
-      title: '임시저장 완료',
-      message: '수정 내용이 임시 저장되었습니다.',
-    });
-  }, [
-    isEditMode,
-    hasUnsavedChanges,
-    formData,
-    selectedEmotionId,
-    diaryDate,
-    imagePreviewUrl,
-    saveDraft,
-  ]);
+    },
+    [
+      hasUnsavedChanges,
+      formData,
+      selectedEmotionId,
+      diaryDate,
+      imagePreviewUrl,
+      saveDraft,
+      isEditMode,
+    ],
+  );
 
   const restoreFromDraft = useCallback(() => {
-    if (!isEditMode || !draftData) return;
+    if (!draftData) return;
 
     setFormData({
       emotion: draftData.emotion,
@@ -172,19 +194,34 @@ export const useDiaryForm = () => {
     setImagePreviewUrl(draftData.imagePreviewUrl || null);
     setHasUnsavedChanges(false);
 
+    setRestoreTrigger((prev) => prev + 1);
+
     toastUtils.success({
       title: '복원 완료',
       message: '임시저장된 내용을 복원했습니다.',
     });
-  }, [isEditMode, draftData]);
-  useEffect(() => {
-    if (!isEditMode) return;
+  }, [draftData]);
 
-    const hasChanges =
-      formData.title !== (existingDiary?.title || '') ||
-      formData.content !== (existingDiary?.content || '') ||
-      formData.isPublic !== (existingDiary?.is_public ?? true) ||
-      selectedEmotionId !== (existingDiary?.emotion_main_id || null);
+  // 신규 작성과 수정 모드 모두에서 변경사항 체크
+  useEffect(() => {
+    let hasChanges: boolean = false;
+
+    if (isEditMode) {
+      // 수정 모드: 기존 일기와 비교
+      hasChanges =
+        formData.title !== (existingDiary?.title || '') ||
+        formData.content !== (existingDiary?.content || '') ||
+        formData.isPublic !== (existingDiary?.is_public ?? true) ||
+        selectedEmotionId !== (existingDiary?.emotion_main_id || null);
+    } else {
+      // 신규 작성: 빈 상태와 비교
+      hasChanges =
+        formData.title.trim() !== '' ||
+        formData.content.trim() !== '' ||
+        formData.isPublic !== true ||
+        selectedEmotionId !== null ||
+        Boolean(formData.tags && formData.tags.length > 0);
+    }
 
     setHasUnsavedChanges(hasChanges);
   }, [formData, selectedEmotionId, isEditMode, existingDiary]);
@@ -194,28 +231,40 @@ export const useDiaryForm = () => {
 
   // 임시저장된 내용이 현재 내용과 다른지 확인하는 함수
   const isDraftDifferentFromCurrent = useCallback(
-    (draft: DraftData) => {
-      const currentData = {
-        title: existingDiary?.title || '',
-        content: existingDiary?.content || '',
-        isPublic: existingDiary?.is_public ?? true,
-        selectedEmotionId: existingDiary?.emotion_main_id || null,
-      };
+    (draft: DraftData): boolean => {
+      if (isEditMode) {
+        // 수정 모드: 기존 일기와 비교
+        const currentData = {
+          title: existingDiary?.title || '',
+          content: existingDiary?.content || '',
+          isPublic: existingDiary?.is_public ?? true,
+          selectedEmotionId: existingDiary?.emotion_main_id || null,
+        };
 
-      return (
-        draft.title !== currentData.title ||
-        draft.content !== currentData.content ||
-        draft.isPublic !== currentData.isPublic ||
-        draft.selectedEmotionId !== currentData.selectedEmotionId
-      );
+        return (
+          draft.title !== currentData.title ||
+          draft.content !== currentData.content ||
+          draft.isPublic !== currentData.isPublic ||
+          draft.selectedEmotionId !== currentData.selectedEmotionId
+        );
+      } else {
+        // 신규 작성: 빈 상태와 비교
+        return (
+          draft.title.trim() !== '' ||
+          draft.content.trim() !== '' ||
+          draft.isPublic !== true ||
+          draft.selectedEmotionId !== null ||
+          Boolean(draft.tags && draft.tags.length > 0)
+        );
+      }
     },
-    [existingDiary],
+    [existingDiary, isEditMode],
   );
 
   useEffect(() => {
     if (hasCheckedDraft) return;
 
-    if (isEditMode && draftData && draftData.lastSaved) {
+    if (draftData && draftData.lastSaved) {
       const lastSavedDate = new Date(draftData.lastSaved);
       const now = new Date();
       const timeDiff = now.getTime() - lastSavedDate.getTime();
@@ -228,7 +277,7 @@ export const useDiaryForm = () => {
     } else {
       setHasCheckedDraft(true);
     }
-  }, [isEditMode, draftData, hasCheckedDraft, isDraftDifferentFromCurrent]);
+  }, [draftData, hasCheckedDraft, isDraftDifferentFromCurrent]);
 
   const handleRestoreConfirm = useCallback(() => {
     restoreFromDraft();
@@ -275,5 +324,6 @@ export const useDiaryForm = () => {
     showCancelModal,
     handleCancelConfirm,
     handleCancelModalCancel,
+    restoreTrigger,
   };
 };

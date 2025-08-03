@@ -121,7 +121,7 @@ export const fetchDiariesByDate = async (
     .from('diaries')
     .select(
       `
-      id, title, created_at, is_public, diary_image,
+      id, title, created_at, is_public, diary_image, is_analyzed,
       emotion_mains(name, icon_url),
       diary_hashtags(hashtags(id, name))
     `,

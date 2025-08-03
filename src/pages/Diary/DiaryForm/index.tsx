@@ -39,10 +39,28 @@ const DiaryFormPage = () => {
     showCancelModal,
     handleCancelConfirm,
     handleCancelModalCancel,
+
+    restoreTrigger,
   } = useDiaryForm();
 
   const { emotions, isLoadingEmotions } = useEmotions();
-  const { tagInput, tags, handleTagInputChange } = useTags(formData.tags);
+
+  const { tagInput, tags, handleTagInputChange, setTagInput, setTags } = useTags(formData.tags);
+
+  useEffect(() => {
+    if (restoreTrigger > 0) {
+      const currentFormData = formData;
+      if (currentFormData.tags && currentFormData.tags.length > 0) {
+        const tagString = currentFormData.tags.join(' ');
+        setTagInput(tagString);
+        setTags(currentFormData.tags);
+      }
+    }
+  }, [restoreTrigger]);
+
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, tags }));
+  }, [tags]);
 
   const titleId = useId();
   const contentId = useId();
@@ -78,7 +96,7 @@ const DiaryFormPage = () => {
 
   const handleSaveDraft = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    saveToLocalStorage();
+    saveToLocalStorage(tags);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -159,14 +177,6 @@ const DiaryFormPage = () => {
           now.getMilliseconds(),
         );
 
-        // 선택한 날짜는 유지하고, 시간만 현재 시간으로 설정
-        selectedDate.setHours(
-          now.getHours(),
-          now.getMinutes(),
-          now.getSeconds(),
-          now.getMilliseconds(),
-        );
-
         const { data, error } = await supabase
           .from('diaries')
           .insert([
@@ -188,7 +198,6 @@ const DiaryFormPage = () => {
         diaryData = data;
       }
 
-      // 해시태그 처리
       if (tags.length > 0 && diaryData) {
         const hashtagIds = await processHashtags(tags);
 
@@ -211,9 +220,8 @@ const DiaryFormPage = () => {
         }
       }
 
-      if (isEditMode) {
-        clearDraft();
-      }
+      // 임시저장 데이터 정리
+      clearDraft();
 
       toastUtils.success({ title: '성공', message: '일기가 저장되었습니다.' });
       navigate('/diary');
@@ -246,6 +254,7 @@ const DiaryFormPage = () => {
               selectedEmotionId={selectedEmotionId}
               onEmotionSelect={(id) => handleEmotionSelect(id, emotions)}
             />
+
             {/* 제목 */}
             <div>
               <label htmlFor={titleId} className={S.itemTitle}>
@@ -350,7 +359,6 @@ const DiaryFormPage = () => {
                 placeholder="#태그 형식으로 입력해주세요 (예: #일상 #행복 #여행)"
                 onChange={(e) => {
                   handleTagInputChange(e.target.value);
-                  setFormData((prev) => ({ ...prev, tags }));
                 }}
               />
             </div>
