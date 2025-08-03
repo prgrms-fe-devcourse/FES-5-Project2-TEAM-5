@@ -14,12 +14,17 @@ export const useUserDiaryLoader = (
   loading: boolean,
 ) => {
   const [diaries, setDiaries] = useState<DiaryRowEntity[]>([]);
+  const [isInitialLoading, setIsInitialLoading] = useState(false);
+  const [isTabChanging, setIsTabChanging] = useState(false);
 
   const loadDiaries = useCallback(
     async (page: number) => {
       if (!slug) return { data: [], hasMore: false };
 
       try {
+        if (page === 1) {
+          setIsInitialLoading(true);
+        }
         // 테스트 딜레이
         await new Promise((resolve) => setTimeout(resolve, 400));
 
@@ -65,6 +70,11 @@ export const useUserDiaryLoader = (
         if (error instanceof Error)
           toastUtils.error({ title: '다이어리 정보 로드 실패', message: error.message });
         return { data: [], hasMore: false };
+      } finally {
+        if (page === 1) {
+          setIsInitialLoading(false);
+          setIsTabChanging(false);
+        }
       }
     },
     [slug, activeTabId],
@@ -77,10 +87,19 @@ export const useUserDiaryLoader = (
 
   useEffect(() => {
     if (!loading && slug) {
+      setIsTabChanging(true);
+      setIsInitialLoading(true);
       setDiaries([]);
       reset();
     }
-  }, [activeTabId, slug, reset]);
+  }, [activeTabId, slug, reset, loading]);
 
-  return { diaries, targetRef, isLoading, hasMore };
+  return {
+    diaries,
+    targetRef,
+    isLoading,
+    hasMore,
+    isInitialLoading: loading || isInitialLoading || isTabChanging,
+    isTabChanging,
+  };
 };

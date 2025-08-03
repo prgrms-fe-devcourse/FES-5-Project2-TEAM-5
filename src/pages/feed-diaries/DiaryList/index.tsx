@@ -106,9 +106,16 @@ const DiaryList = () => {
           </ul>
         )}
         {!initialLoading && !isLoading && diaries.length === 0 && searchTerm !== '' && (
-          <p className={S.noResult} role="status">
-            검색 결과가 없습니다.
-          </p>
+          <div className={S.noDiaryState}>
+            <img
+              src="https://ttqedeydfvolnyrivpvg.supabase.co/storage/v1/object/public/emotions/icon_sad.svg"
+              alt="일기 없음 아이콘"
+              className={S.noDiaryIcon}
+            />
+            <p className={S.noResult} role="status">
+              검색 결과가 없습니다.
+            </p>
+          </div>
         )}
         {isLoading && hasMore && (
           <div className={S.loadingSpinner}>
