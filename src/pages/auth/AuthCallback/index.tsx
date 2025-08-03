@@ -1,5 +1,6 @@
 import Spinner from '@/shared/components/Spinner';
 import { toastUtils } from '@/shared/components/Toast';
+import { PATHS } from '@/shared/constants/path';
 import { useUserContext } from '@/shared/context/UserContext';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,10 +13,10 @@ const AuthCallback = () => {
     if (!isLoading) {
       if (isAuth) {
         toastUtils.success({ title: 'github', message: 'github 인증 성공' });
-        navigate('/');
+        navigate(PATHS.HOME);
       } else {
         toastUtils.error({ title: 'github', message: 'github 인증 실패' });
-        navigate('/login');
+        navigate(PATHS.LOGIN);
       }
     }
   }, [isAuth, isLoading]);

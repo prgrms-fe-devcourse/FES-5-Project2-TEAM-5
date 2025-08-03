@@ -10,6 +10,7 @@ import type { RegisterForm } from './utils/type';
 import { registerValidator } from './utils/validator';
 import { registerWithEmail } from '@/shared/api/auth';
 import { createNewUser, uploadProfileImage } from '@/shared/api/user';
+import { PATHS } from '@/shared/constants/path';
 
 const Register = () => {
   const profileId = useId();
@@ -51,7 +52,7 @@ const Register = () => {
 
       toastUtils.success({ title: '화원가입 성공', message: 'Seediary에 오신 걸 환영합니다!' });
 
-      navigate('/login', {
+      navigate(PATHS.LOGIN, {
         state: {
           email,
         },
@@ -71,7 +72,7 @@ const Register = () => {
   };
 
   const handleBack = () => {
-    navigate('/login');
+    navigate(PATHS.LOGIN);
   };
 
   return (

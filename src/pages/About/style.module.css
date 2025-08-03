@@ -74,9 +74,9 @@
 
 .description {
   font-size: clamp(1rem, 2.5vw, 1.3rem);
-  font-weight: 400;
+  font-weight: 500;
   margin-bottom: 2.5rem;
-  color: #f1f5f990;
+  color: var(--gray-100);
   line-height: 1.6;
 }
 
@@ -131,8 +131,7 @@
 
 .sectionSubtitle {
   font-size: 1.2rem;
-  color: #cbd5e1;
-  font-weight: 300;
+  color: var(--gray-50);
   font-style: italic;
 }
 
@@ -187,8 +186,7 @@
 
 .featureDescription {
   font-size: 1rem;
-  color: #cbd5e1;
-  font-weight: 300;
+  color: var(--gray-200);
   line-height: 1.6;
   position: relative;
   z-index: 1;
@@ -326,13 +324,15 @@
 .footerText {
   font-size: 1rem;
   color: #cbd5e1;
-  font-weight: 400;
+  flex: 1;
+  display: flex;
+  align-items: center;
 }
 
 .footerLinks {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  align-items: center;
 }
 
 .footerLink {
@@ -417,11 +417,12 @@
     flex-direction: column;
     gap: 2rem;
     text-align: center;
+    align-items: center;
   }
 
   .footerInfo {
-    justify-content: center;
-    gap: 2rem;
+    flex-direction: column;
+    gap: 1.5rem;
   }
 
   .footerBottomContent {
@@ -439,10 +440,12 @@
 @media (max-width: 480px) {
   .footerInfo {
     flex-direction: column;
+
     gap: 1.5rem;
   }
 
   .footerSection {
     align-items: center;
+    justify-content: center;
   }
 }

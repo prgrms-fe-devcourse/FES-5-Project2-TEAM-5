@@ -10,6 +10,7 @@ import { useState, type CSSProperties } from 'react';
 import { toastUtils } from '../Toast';
 import Notification from '../Notification';
 import ConfirmModal from '../Modal/ConfirmModal';
+import { PATHS } from '@/shared/constants/path';
 
 const Header = ({ cssOption }: { cssOption: CSSProperties }) => {
   const [showModal, setShowModal] = useState(false); // 모달 컨트롤
@@ -22,13 +23,13 @@ const Header = ({ cssOption }: { cssOption: CSSProperties }) => {
 
   // 홈으로
   const handleHome = () => {
-    navigate('/');
+    navigate(PATHS.HOME);
     setShowMobileMenu(false);
   };
 
   // 로그인
   const handleLogin = () => {
-    navigate('/login');
+    navigate(PATHS.LOGIN);
   };
 
   // 로그아웃
@@ -38,7 +39,7 @@ const Header = ({ cssOption }: { cssOption: CSSProperties }) => {
 
   // 마이 페이지
   const handleMypage = () => {
-    navigate('/mypage');
+    navigate(PATHS.MYPAGE);
   };
 
   // 햄버거 메뉴 토글
@@ -199,7 +200,7 @@ const Header = ({ cssOption }: { cssOption: CSSProperties }) => {
           title="로그아웃"
           message="정말 로그아웃 하시겠습니까?"
           onConfirm={async () => {
-            navigate('/about');
+            navigate(PATHS.ABOUT);
             await logout();
             setShowModal(false);
             setShowMobileMenu(false);

@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useUserContext } from '@/shared/context/UserContext';
 import { toastUtils } from '@/shared/components/Toast';
+import { PATHS } from '../constants/path';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -20,7 +21,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
         message: '로그인 후 이용해 주세요.',
       });
 
-      navigate('/login', {
+      navigate(PATHS.LOGIN, {
         state: { from: location.pathname },
         replace: true,
       });

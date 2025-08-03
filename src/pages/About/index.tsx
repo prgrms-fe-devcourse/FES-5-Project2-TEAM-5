@@ -23,39 +23,43 @@ const About = () => {
           </h1>
           <p className={style.subtitle}>오늘 당신의 마음에 씨앗을 심어보세요</p>
           <p className={style.description}>매일 쓰는 일기가 자라나는 나만의 정원이 되는 곳</p>
-          <button className={style.ctaButton}>회원가입</button>
+          {/* <button className={style.ctaButton}>회원가입</button> */}
         </div>
       </section>
 
       <section className={style.keyFeatureSection}>
         <div className={style.sectionHeader}>
-          <h2 className={style.sectionTitle}>Key Feature</h2>
-          <p className={style.sectionSubtitle}>Explore the tools that make Seediary unique</p>
+          <h2 className={style.sectionTitle}>Key Features</h2>
+          <p className={style.sectionSubtitle}>단순한 일기장이 아닌, 멘탈 케어 플렛폼</p>
         </div>
 
         <div className={style.featureGrid}>
           <div className={style.featureCard}>
             <h3 className={style.featureTitle}>📔 감정 일기</h3>
             <p className={style.featureDescription}>
-              하루의 이야기를 자유롭게 써보세요. 감정을 선택하고 나만의 마음 여행을 기록해보세요.
+              느낀 감정을 선택하고 오늘의 이야기를 자유롭게 적어보세요. 감정은 마음에 씨앗처럼 심겨
+              일기를 쓰며 자라고, 쌓인 감정은 통계로 나만의 마음 흐름을 보여줍니다.
             </p>
           </div>
           <div className={style.featureCard}>
             <h3 className={style.featureTitle}>🌼 AI 친구 몰리</h3>
             <p className={style.featureDescription}>
-              따뜻한 AI 챗봇 몰리와 대화하며 개인화된 조언과 따뜻한 위로를 받아보세요.
+              따뜻한 AI 챗봇 몰리와 대화하며, 나만을 위한 세심한 조언과 진심 어린 위로를
+              경험해보세요. 몰리는 당신의 감정을 이해하고, 언제나 곁에서 따뜻하게 응원해 줍니다.
             </p>
           </div>
           <div className={style.featureCard}>
             <h3 className={style.featureTitle}>🧐 감정 분석</h3>
             <p className={style.featureDescription}>
-              상세한 분석과 리포트를 통해 나의 감정 트렌드를 깊이 있게 이해하고 통찰을 얻어보세요.
+              상세한 감정 선택과 이유 작성 후, AI가 분석한 리포트를 받아보세요. 이를 통해 내 마음의
+              흐름을 깊이 이해하고, 스스로에 대한 새로운 통찰을 얻을 수 있습니다.
             </p>
           </div>
           <div className={style.featureCard}>
             <h3 className={style.featureTitle}>😃 커뮤니티</h3>
             <p className={style.featureDescription}>
-              일기를 공유하고(익명 선택 가능) 비슷한 길을 걷는 사람들과 따뜻하게 연결되어 보세요.
+              커뮤니티는 다른 사람들의 일기를 읽고, 나의 이야기를 공유하는 공간입니다. 비슷한 마음을
+              가진 사람들과 공감하며 따뜻한 연결을 만들어 보세요.
             </p>
           </div>
         </div>
@@ -67,7 +71,7 @@ const About = () => {
           <div className={style.footerMain}>
             <div className={style.footerBrand}>
               <h3 className={style.footerTitle}>Seediary</h3>
-              <p className={style.footerTagline}>나만의 감정 정원을 키워가세요</p>
+              <p className={style.footerTagline}>당신만의 감정 정원을 가꿔보세요</p>
             </div>
 
             <div className={style.footerInfo}>

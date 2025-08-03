@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import './styles/global.css';
 
 import { Toaster } from 'react-hot-toast';
@@ -32,6 +32,7 @@ function App() {
           <Header />
           <Routes>
             {/* 로그인 필요 없는 페이지 */}
+            <Route path="/" element={<Navigate to={PATHS.ABOUT} replace />} />
             <Route path={PATHS.LOGIN} element={<Login />} />
             <Route path={PATHS.REGISTER} element={<Register />} />
             <Route path={PATHS.ABOUT} element={<About />} />
