@@ -167,7 +167,8 @@ const DiaryFormPage = () => {
         const selectedDate = new Date(diaryDate);
         const now = new Date();
 
-        const createdAt = new Date(
+        // 선택된 날짜에 현재 시간을 설정 (한국 시간 기준)
+        const createdAtKST = new Date(
           selectedDate.getFullYear(),
           selectedDate.getMonth(),
           selectedDate.getDate(),
@@ -176,6 +177,9 @@ const DiaryFormPage = () => {
           now.getSeconds(),
           now.getMilliseconds(),
         );
+
+        // 한국 시간을 UTC로 변환해서 저장
+        const createdAtUTC = new Date(createdAtKST.getTime() - 9 * 60 * 60 * 1000);
 
         const { data, error } = await supabase
           .from('diaries')
@@ -187,7 +191,7 @@ const DiaryFormPage = () => {
               content: formData.content,
               is_public: formData.isPublic,
               diary_image: imageUrl,
-              created_at: createdAt.toISOString(),
+              created_at: createdAtUTC.toISOString(),
               is_drafted: false,
             },
           ])
@@ -198,6 +202,7 @@ const DiaryFormPage = () => {
         diaryData = data;
       }
 
+      // 해시태그 처리
       if (tags.length > 0 && diaryData) {
         const hashtagIds = await processHashtags(tags);
 
@@ -220,7 +225,6 @@ const DiaryFormPage = () => {
         }
       }
 
-      // 임시저장 데이터 정리
       clearDraft();
 
       toastUtils.success({ title: '성공', message: '일기가 저장되었습니다.' });
