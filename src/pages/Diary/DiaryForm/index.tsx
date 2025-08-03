@@ -1,5 +1,5 @@
 import S from './style.module.css';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState, useCallback } from 'react';
 import { useUploadImage } from '@/shared/hooks';
 import { BsCheckSquare, BsCheckSquareFill } from 'react-icons/bs';
 import DiaryWeather from '@/shared/components/DiaryWeather';
@@ -93,14 +93,25 @@ const DiaryFormPage = () => {
   useEffect(() => {
     if (imagePreview) {
       setImagePreviewUrl(imagePreview);
-    } else if (!imageFile && imagePreviewUrl && !existingDiary?.diary_image) {
+    } else if (!imageFile && !existingDiary?.diary_image) {
       setImagePreviewUrl(null);
     }
-  }, [imagePreview, imageFile, setImagePreviewUrl, imagePreviewUrl, existingDiary?.diary_image]);
+  }, [imagePreview, imageFile, existingDiary?.diary_image, setImagePreviewUrl]);
 
   useEffect(() => {
     setFormData((prev) => ({ ...prev, image: imageFile }));
   }, [imageFile, setFormData]);
+
+  useEffect(() => {
+    return () => {
+      if (imagePreview?.startsWith('blob:')) {
+        URL.revokeObjectURL(imagePreview);
+      }
+      if (imagePreviewUrl?.startsWith('blob:')) {
+        URL.revokeObjectURL(imagePreviewUrl);
+      }
+    };
+  }, [imagePreview, imagePreviewUrl]);
 
   const [selected, setSelected] = useState<'public' | 'private'>(
     formData.isPublic ? 'public' : 'private',
@@ -127,6 +138,18 @@ const DiaryFormPage = () => {
   const handleRemoveTag = (index: number) => {
     removeTag(index);
   };
+
+  // 이미지 정리 함수들을 useCallback으로 메모이제이션
+  const handleImageClear = useCallback(() => {
+    clearImage();
+    setImagePreviewUrl(null);
+    setFormData((prev) => ({ ...prev, image: null }));
+  }, [clearImage, setImagePreviewUrl, setFormData]);
+
+  const handlePreviewUrlClear = useCallback(() => {
+    setImagePreviewUrl(null);
+    setFormData((prev) => ({ ...prev, image: null }));
+  }, [setImagePreviewUrl, setFormData]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -379,15 +402,8 @@ const DiaryFormPage = () => {
               imagePreview={imagePreview}
               imagePreviewUrl={imagePreviewUrl}
               onImageChange={handleImageChange}
-              onClearImage={() => {
-                clearImage();
-                setImagePreviewUrl(null);
-                setFormData((prev) => ({ ...prev, image: null }));
-              }}
-              onClearPreviewUrl={() => {
-                setImagePreviewUrl(null);
-                setFormData((prev) => ({ ...prev, image: null }));
-              }}
+              onClearImage={handleImageClear}
+              onClearPreviewUrl={handlePreviewUrlClear}
             />
 
             {/* 태그 */}

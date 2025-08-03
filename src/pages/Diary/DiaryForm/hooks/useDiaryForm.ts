@@ -26,6 +26,11 @@ export interface DraftData {
   lastSaved: number;
 }
 
+const areTagsEqual = (tags1: string[] = [], tags2: string[] = []): boolean => {
+  if (tags1.length !== tags2.length) return false;
+  return tags1.every((tag, index) => tag === tags2[index]);
+};
+
 export const useDiaryForm = () => {
   const { user } = useUserContext();
   const navigate = useNavigate();
@@ -218,12 +223,6 @@ export const useDiaryForm = () => {
     });
   }, [draftData]);
 
-  const areTagsEqual = (tags1: string[] = [], tags2: string[] = []): boolean => {
-    if (tags1.length !== tags2.length) return false;
-    return tags1.every((tag, index) => tag === tags2[index]);
-  };
-
-  // 신규 작성과 수정 모드 모두에서 변경사항 체크
   useEffect(() => {
     let hasChanges: boolean = false;
 
@@ -258,7 +257,22 @@ export const useDiaryForm = () => {
     }
 
     setHasUnsavedChanges(hasChanges);
-  }, [formData, selectedEmotionId, isEditMode, existingDiary, imagePreviewUrl]);
+  }, [
+    // 의존성 배열을 구체적으로 명시 (무한 루프 방지)
+    formData.title,
+    formData.content,
+    formData.isPublic,
+    formData.tags,
+    selectedEmotionId,
+    imagePreviewUrl,
+    isEditMode,
+    existingDiary?.title,
+    existingDiary?.content,
+    existingDiary?.is_public,
+    existingDiary?.emotion_main_id,
+    existingDiary?.diary_hashtags,
+    existingDiary?.diary_image,
+  ]);
 
   const [showRestoreDialog, setShowRestoreDialog] = useState(false);
   const [hasCheckedDraft, setHasCheckedDraft] = useState(false);
