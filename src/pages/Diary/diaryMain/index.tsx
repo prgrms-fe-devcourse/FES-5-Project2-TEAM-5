@@ -87,78 +87,76 @@ const DiaryPage = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  if (!isPageReady) {
-    return (
-      <main className={S.container}>
-        <div className={S.spinner_wrap}>
-          <Spinner />
-        </div>
-      </main>
-    );
-  }
-
   return (
     <main className={S.container}>
       {/* 날씨 영역 */}
       <DiaryWeather />
 
       {/* 일기 통계 영역 */}
-      <section className={S.section02}>
-        <h2 className="sr-only">일기 통계 영역</h2>
-        <div className={S.inner}>
-          <div className={S.calendar}>
-            <h3>
-              My emotional seed
-              <button type="button" onClick={handleNewDiaryClick}>
-                <BsPlusLg size={24} aria-hidden="true" />
-                New Diary
-              </button>
-            </h3>
-            <DiaryCalendar
-              userId={user?.id ?? null}
-              date={selectedDate}
-              onDateChange={handleDateChange}
-              entries={monthEntries}
-              onMonthChange={handleMonthChange}
-              loading={monthLoading}
-            />
-          </div>
-
-          <div className={S.stats}>
-            <div className={S.plantGrowth}>
-              <h3>My emotional record</h3>
-              <DiaryPlant
-                value={diaryCompletionPercentage}
-                currentPlantLevel={currentMonthDiaryCount}
-              />
-            </div>
-
-            {emotionMainsList.length > 0 && (
-              <DiaryEmotionChart
-                data={emotionStatsPercentage}
-                emotionLabels={emotionMainsList.map((e) => e.name)}
-                emotionImages={emotionMainsList.map((e) => e.icon_url)}
-              />
-            )}
-          </div>
+      {!isPageReady ? (
+        <div className={S.spinner_wrap}>
+          <Spinner />
         </div>
-      </section>
+      ) : (
+        <>
+          <section className={S.section02}>
+            <h2 className="sr-only">일기 통계 영역</h2>
+            <div className={S.inner}>
+              <div className={S.calendar}>
+                <h3>
+                  My emotional seed
+                  <button type="button" onClick={handleNewDiaryClick}>
+                    <BsPlusLg size={24} aria-hidden="true" />
+                    New Diary
+                  </button>
+                </h3>
+                <DiaryCalendar
+                  userId={user?.id ?? null}
+                  date={selectedDate}
+                  onDateChange={handleDateChange}
+                  entries={monthEntries}
+                  onMonthChange={handleMonthChange}
+                  loading={monthLoading}
+                />
+              </div>
 
-      {/* 일기 배너 및 리스트 영역 */}
-      <section className={S.section03}>
-        <h2 className="sr-only">일기 배너 리스트 영역</h2>
-        <div className={S.inner}>
-          {loading ? (
-            <div className={S.spinner_wrap}>
-              <Spinner />
+              <div className={S.stats}>
+                <div className={S.plantGrowth}>
+                  <h3>My emotional record</h3>
+                  <DiaryPlant
+                    value={diaryCompletionPercentage}
+                    currentPlantLevel={currentMonthDiaryCount}
+                  />
+                </div>
+
+                {emotionMainsList.length > 0 && (
+                  <DiaryEmotionChart
+                    data={emotionStatsPercentage}
+                    emotionLabels={emotionMainsList.map((e) => e.name)}
+                    emotionImages={emotionMainsList.map((e) => e.icon_url)}
+                  />
+                )}
+              </div>
             </div>
-          ) : diaryList.length > 0 ? (
-            <DiaryList diaries={diaryList} />
-          ) : (
-            <DiaryBanner onNewDiaryClick={handleNewDiaryClick} />
-          )}
-        </div>
-      </section>
+          </section>
+
+          {/* 일기 배너 및 리스트 영역 */}
+          <section className={S.section03}>
+            <h2 className="sr-only">일기 배너 리스트 영역</h2>
+            <div className={S.inner}>
+              {loading ? (
+                <div className={S.spinner_wrap}>
+                  <Spinner />
+                </div>
+              ) : diaryList.length > 0 ? (
+                <DiaryList diaries={diaryList} />
+              ) : (
+                <DiaryBanner onNewDiaryClick={handleNewDiaryClick} />
+              )}
+            </div>
+          </section>
+        </>
+      )}
     </main>
   );
 };
