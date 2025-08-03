@@ -49,3 +49,23 @@ export const formatUTCToKorean = () => {
 
   return [startKST, endKST];
 };
+
+// 특정 날짜에 대한 한국 시간 기준 UTC 범위 계산
+export const getKoreanDateRangeUTC = (date: Date) => {
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+
+  const startKST = new Date(`${yyyy}-${mm}-${dd}T00:00:00+09:00`);
+  const endKST = new Date(`${yyyy}-${mm}-${dd}T23:59:59.999+09:00`);
+
+  return [startKST.toISOString(), endKST.toISOString()];
+};
+
+// UTC 시간을 한국 시간으로 변환해서 날짜 문자열 반환
+export const getKoreanDateStringFromUTC = (utcDate: string | Date): string => {
+  const date = typeof utcDate === 'string' ? new Date(utcDate) : utcDate;
+  // UTC에서 한국 시간으로 변환 (UTC + 9시간)
+  const koreanDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+  return getLocalDateString(koreanDate);
+};

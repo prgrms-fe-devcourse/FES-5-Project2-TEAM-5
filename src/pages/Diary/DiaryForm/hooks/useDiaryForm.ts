@@ -35,7 +35,6 @@ export const useDiaryForm = () => {
   const existingDiary = location.state?.diary;
   const isEditMode = !!existingDiary?.id;
 
-  // 먼저 diaryDate 초기값 계산
   const initialDiaryDate: string = (() => {
     // 수정 모드면 해당 일기 날짜 사용
     if (isEditMode && existingDiary) {
@@ -134,7 +133,7 @@ export const useDiaryForm = () => {
   }, []);
 
   const saveToLocalStorage = useCallback(
-    (currentTags?: string[]) => {
+    (currentTags?: string[], imageFile?: File | null, currentImagePreviewUrl?: string | null) => {
       if (!hasUnsavedChanges) {
         toastUtils.info({
           title: '알림',
@@ -151,7 +150,7 @@ export const useDiaryForm = () => {
         tags: currentTags || formData.tags || [],
         selectedEmotionId: selectedEmotionId,
         diaryDate: diaryDate,
-        imagePreviewUrl: imagePreviewUrl,
+        imagePreviewUrl: currentImagePreviewUrl || imagePreviewUrl,
         lastSaved: Date.now(),
       };
 
@@ -159,12 +158,28 @@ export const useDiaryForm = () => {
       setLastSavedTime(new Date());
       setHasUnsavedChanges(false);
 
-      toastUtils.success({
-        title: '임시저장 완료',
-        message: isEditMode
-          ? '수정 내용이 임시 저장되었습니다.'
-          : '작성 내용이 임시 저장되었습니다.',
-      });
+      const originalImageUrl = existingDiary?.diary_image || null;
+      const currentImageUrl = currentImagePreviewUrl || imagePreviewUrl;
+
+      const hasNewImageFile = !!imageFile;
+      const hasImageUrlChanged = currentImageUrl !== originalImageUrl;
+      const hasImageChanges = hasNewImageFile || hasImageUrlChanged;
+
+      if (hasImageChanges) {
+        toastUtils.info({
+          title: '안내',
+          message: isEditMode
+            ? '이미지 변경사항은 실제 저장 시에만 반영됩니다.'
+            : '이미지는 실제 저장 시에만 업로드됩니다.',
+        });
+      } else {
+        toastUtils.success({
+          title: '임시저장 완료',
+          message: isEditMode
+            ? '수정 내용이 임시 저장되었습니다.'
+            : '작성 내용이 임시 저장되었습니다.',
+        });
+      }
     },
     [
       hasUnsavedChanges,
@@ -174,6 +189,7 @@ export const useDiaryForm = () => {
       imagePreviewUrl,
       saveDraft,
       isEditMode,
+      existingDiary,
     ],
   );
 
@@ -202,17 +218,34 @@ export const useDiaryForm = () => {
     });
   }, [draftData]);
 
+  const areTagsEqual = (tags1: string[] = [], tags2: string[] = []): boolean => {
+    if (tags1.length !== tags2.length) return false;
+    return tags1.every((tag, index) => tag === tags2[index]);
+  };
+
   // 신규 작성과 수정 모드 모두에서 변경사항 체크
   useEffect(() => {
     let hasChanges: boolean = false;
 
     if (isEditMode) {
       // 수정 모드: 기존 일기와 비교
+      const existingTags =
+        (existingDiary?.diary_hashtags as Array<{ hashtags: { name: string } }> | undefined)?.map(
+          (h) => `#${h.hashtags.name}`,
+        ) || [];
+
+      // 이미지 변경 감지 추가
+      const originalImageUrl = existingDiary?.diary_image || null;
+      const currentImageUrl = imagePreviewUrl;
+      const hasImageChanged = currentImageUrl !== originalImageUrl;
+
       hasChanges =
         formData.title !== (existingDiary?.title || '') ||
         formData.content !== (existingDiary?.content || '') ||
         formData.isPublic !== (existingDiary?.is_public ?? true) ||
-        selectedEmotionId !== (existingDiary?.emotion_main_id || null);
+        selectedEmotionId !== (existingDiary?.emotion_main_id || null) ||
+        !areTagsEqual(formData.tags || [], existingTags) ||
+        hasImageChanged;
     } else {
       // 신규 작성: 빈 상태와 비교
       hasChanges =
@@ -220,11 +253,12 @@ export const useDiaryForm = () => {
         formData.content.trim() !== '' ||
         formData.isPublic !== true ||
         selectedEmotionId !== null ||
-        Boolean(formData.tags && formData.tags.length > 0);
+        Boolean(formData.tags && formData.tags.length > 0) ||
+        Boolean(imagePreviewUrl);
     }
 
     setHasUnsavedChanges(hasChanges);
-  }, [formData, selectedEmotionId, isEditMode, existingDiary]);
+  }, [formData, selectedEmotionId, isEditMode, existingDiary, imagePreviewUrl]);
 
   const [showRestoreDialog, setShowRestoreDialog] = useState(false);
   const [hasCheckedDraft, setHasCheckedDraft] = useState(false);
@@ -234,18 +268,25 @@ export const useDiaryForm = () => {
     (draft: DraftData): boolean => {
       if (isEditMode) {
         // 수정 모드: 기존 일기와 비교
+        const existingTags =
+          (existingDiary?.diary_hashtags as Array<{ hashtags: { name: string } }> | undefined)?.map(
+            (h) => `#${h.hashtags.name}`,
+          ) || [];
+
         const currentData = {
           title: existingDiary?.title || '',
           content: existingDiary?.content || '',
           isPublic: existingDiary?.is_public ?? true,
           selectedEmotionId: existingDiary?.emotion_main_id || null,
+          tags: existingTags,
         };
 
         return (
           draft.title !== currentData.title ||
           draft.content !== currentData.content ||
           draft.isPublic !== currentData.isPublic ||
-          draft.selectedEmotionId !== currentData.selectedEmotionId
+          draft.selectedEmotionId !== currentData.selectedEmotionId ||
+          !areTagsEqual(draft.tags || [], currentData.tags)
         );
       } else {
         // 신규 작성: 빈 상태와 비교

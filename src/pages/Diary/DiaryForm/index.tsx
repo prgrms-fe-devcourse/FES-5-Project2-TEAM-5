@@ -35,17 +35,23 @@ const DiaryFormPage = () => {
     handleRestoreConfirm,
     handleRestoreCancel,
     saveToLocalStorage,
-
     showCancelModal,
     handleCancelConfirm,
     handleCancelModalCancel,
-
     restoreTrigger,
   } = useDiaryForm();
 
   const { emotions, isLoadingEmotions } = useEmotions();
 
-  const { tagInput, tags, handleTagInputChange, setTagInput, setTags } = useTags(formData.tags);
+  const {
+    tagInput,
+    tags,
+    handleTagInputChange,
+    handleTagInputKeyDown,
+    removeTag,
+    setTagInput,
+    setTags,
+  } = useTags(formData.tags);
 
   useEffect(() => {
     if (restoreTrigger > 0) {
@@ -54,13 +60,16 @@ const DiaryFormPage = () => {
         const tagString = currentFormData.tags.join(' ');
         setTagInput(tagString);
         setTags(currentFormData.tags);
+      } else {
+        setTagInput('');
+        setTags([]);
       }
     }
-  }, [restoreTrigger]);
+  }, [restoreTrigger, formData.tags, setTagInput, setTags]);
 
   useEffect(() => {
     setFormData((prev) => ({ ...prev, tags }));
-  }, [tags]);
+  }, [tags, setFormData]);
 
   const titleId = useId();
   const contentId = useId();
@@ -81,6 +90,18 @@ const DiaryFormPage = () => {
 
   const { imagePreview, imageFile, onChange: handleImageChange, clearImage } = useUploadImage();
 
+  useEffect(() => {
+    if (imagePreview) {
+      setImagePreviewUrl(imagePreview);
+    } else if (!imageFile && imagePreviewUrl && !existingDiary?.diary_image) {
+      setImagePreviewUrl(null);
+    }
+  }, [imagePreview, imageFile, setImagePreviewUrl, imagePreviewUrl, existingDiary?.diary_image]);
+
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, image: imageFile }));
+  }, [imageFile, setFormData]);
+
   const [selected, setSelected] = useState<'public' | 'private'>(
     formData.isPublic ? 'public' : 'private',
   );
@@ -96,10 +117,18 @@ const DiaryFormPage = () => {
 
   const handleSaveDraft = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    saveToLocalStorage(tags);
+    saveToLocalStorage(tags, imageFile);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleTagChange = (value: string) => {
+    handleTagInputChange(value);
+  };
+
+  const handleRemoveTag = (index: number) => {
+    removeTag(index);
+  };
+
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!selectedEmotionId) {
@@ -163,23 +192,34 @@ const DiaryFormPage = () => {
 
         await supabase.from('diary_hashtags').delete().eq('diary_id', existingDiary.id);
       } else {
-        // 신규 작성 모드
-        const selectedDate = new Date(diaryDate);
+        // 신규 작성 모드 - 새벽 시간대 고려한 처리
+        const selectedDateObj = new Date(diaryDate);
         const now = new Date();
 
-        // 선택된 날짜에 현재 시간을 설정 (한국 시간 기준)
-        const createdAtKST = new Date(
-          selectedDate.getFullYear(),
-          selectedDate.getMonth(),
-          selectedDate.getDate(),
-          now.getHours(),
-          now.getMinutes(),
-          now.getSeconds(),
-          now.getMilliseconds(),
-        );
+        // 선택된 날짜의 년, 월, 일 추출
+        const selectedYear = selectedDateObj.getFullYear();
+        const selectedMonth = selectedDateObj.getMonth();
+        const selectedDay = selectedDateObj.getDate();
 
-        // 한국 시간을 UTC로 변환해서 저장
-        const createdAtUTC = new Date(createdAtKST.getTime() - 9 * 60 * 60 * 1000);
+        let createdAtUTC: Date;
+
+        if (now.getHours() >= 0 && now.getHours() < 6) {
+          // 새벽 0~6시는 정오(12시)로 설정하여 날짜 꼬임 방지
+          const createdAtKST = new Date(selectedYear, selectedMonth, selectedDay, 12, 0, 0, 0);
+          createdAtUTC = new Date(createdAtKST.getTime() - 9 * 60 * 60 * 1000);
+        } else {
+          // 그 외 시간은 현재 시간 사용
+          const createdAtKST = new Date(
+            selectedYear,
+            selectedMonth,
+            selectedDay,
+            now.getHours(),
+            now.getMinutes(),
+            now.getSeconds(),
+            now.getMilliseconds(),
+          );
+          createdAtUTC = new Date(createdAtKST.getTime() - 9 * 60 * 60 * 1000);
+        }
 
         const { data, error } = await supabase
           .from('diaries')
@@ -249,7 +289,7 @@ const DiaryFormPage = () => {
     <main className={S.container}>
       <DiaryWeather />
       <div className={S.inner}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={onSubmit}>
           <h3 className={S.pageTitle}>{isEditMode ? '씨앗 기록 수정' : '새로운 씨앗 기록'}</h3>
           <div className={S.formArea}>
             <EmotionSelector
@@ -361,10 +401,27 @@ const DiaryFormPage = () => {
                 id={tagId}
                 value={tagInput}
                 placeholder="#태그 형식으로 입력해주세요 (예: #일상 #행복 #여행)"
-                onChange={(e) => {
-                  handleTagInputChange(e.target.value);
-                }}
+                onChange={(e) => handleTagChange(e.target.value)}
+                onKeyDown={handleTagInputKeyDown}
               />
+
+              {tags.length > 0 && (
+                <div className={S.tagDisplay}>
+                  {tags.map((tag, index) => (
+                    <span key={index} className={S.tagItem}>
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveTag(index)}
+                        className={S.removeTag}
+                        aria-label={`${tag} 태그 제거`}
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 

@@ -32,6 +32,9 @@
     align-items: stretch;
     gap: var(--space-4);
     padding: var(--space-4);
+    .overlay {
+      background-size: 180px;
+    }
   }
 
   /* 모바일 크기 */

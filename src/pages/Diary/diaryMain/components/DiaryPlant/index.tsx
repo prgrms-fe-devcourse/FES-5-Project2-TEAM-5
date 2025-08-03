@@ -2,31 +2,30 @@ import { useEffect, useState } from 'react';
 import S from './style.module.css';
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import PlantLevel01 from '../../../assets/plant_grow_level1.svg';
-import PlantLevel02 from '../../../assets/plant_grow_level2.svg';
-import PlantLevel03 from '../../../assets/plant_grow_level3.svg';
-import PlantLevel04 from '../../../assets/plant_grow_level4.svg';
 
 interface Props {
   value: number;
   currentPlantLevel: number;
 }
 
+const SUPABASE_STORAGE_URL =
+  'https://ttqedeydfvolnyrivpvg.supabase.co/storage/v1/object/public/assets';
+
 const plantLevels = [
-  { threshold: 0, image: PlantLevel01 }, // 0% ~ 29%
-  { threshold: 30, image: PlantLevel02 }, // 30% ~ 59%
-  { threshold: 60, image: PlantLevel03 }, // 60% ~ 89%
-  { threshold: 90, image: PlantLevel04 }, // 90% 이상
+  { threshold: 0, imageUrl: `${SUPABASE_STORAGE_URL}/plant_grow_level1.svg` }, // 0% ~ 29%
+  { threshold: 30, imageUrl: `${SUPABASE_STORAGE_URL}/plant_grow_level2.svg` }, // 30% ~ 59%
+  { threshold: 60, imageUrl: `${SUPABASE_STORAGE_URL}/plant_grow_level3.svg` }, // 60% ~ 89%
+  { threshold: 90, imageUrl: `${SUPABASE_STORAGE_URL}/plant_grow_level4.svg` }, // 90% 이상
 ];
 
 const DiaryPlant = ({ value }: Props) => {
   const getPlantImage = () => {
     for (let i = plantLevels.length - 1; i >= 0; i--) {
       if (value >= plantLevels[i].threshold) {
-        return plantLevels[i].image;
+        return plantLevels[i].imageUrl;
       }
     }
-    return PlantLevel01; // 기본값
+    return plantLevels[0].imageUrl; // 기본값
   };
 
   const currentPlantImage = getPlantImage();
