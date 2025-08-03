@@ -15,14 +15,30 @@
   }
 }
 
-.noResult {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 80px 0;
+.noDiaryState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   text-align: center;
-  color: var(--gray-200);
-  font-size: var(--text-3xl);
-  font-style: italic;
+
+  min-height: 50vh;
+
+  .noDiaryIcon {
+    width: 73px;
+    height: 78px;
+    margin-bottom: 48px;
+  }
+
+  .noResult {
+    max-width: 1280px;
+    margin: 0 auto;
+    text-align: center;
+    color: var(--gray-900);
+    font-size: var(--text-3xl);
+    font-weight: 600;
+    line-height: var(--space-6);
+  }
 }
 
 .diaryList {
