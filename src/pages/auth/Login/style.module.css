@@ -3,6 +3,7 @@
   font-size: var(--text-5xl);
   display: flex;
   align-items: center;
+  cursor: pointer;
 
   margin-bottom: 30px;
 

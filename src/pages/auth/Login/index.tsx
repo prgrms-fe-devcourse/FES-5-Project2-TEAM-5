@@ -71,9 +71,13 @@ const Login = () => {
     }
   };
 
+  const handleAbout = () => {
+    navigate(PATHS.ABOUT);
+  };
+
   return (
     <AuthLayout>
-      <h1 className={S.logo}>
+      <h1 className={S.logo} onClick={handleAbout}>
         <img src={logo} alt="" /> <span>Seediary</span>
       </h1>
       <form className={S.form} onSubmit={handleSubmit}>

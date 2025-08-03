@@ -11,7 +11,7 @@ export const ProtectedLayout = () => {
   }
 
   if (!isAuth) {
-    return <Navigate to={PATHS.HOME} replace state={{ message: '로그인이 필요합니다.' }} />;
+    return <Navigate to={PATHS.ABOUT} replace state={{ message: '로그인이 필요합니다.' }} />;
   }
 
   return <Outlet />;
