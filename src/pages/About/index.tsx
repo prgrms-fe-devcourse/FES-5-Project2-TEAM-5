@@ -2,10 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import style from './style.module.css';
 import { PATHS } from '@/shared/constants/path';
 import { useUserContext } from '@/shared/context/UserContext';
-import diaryFeatureImg from '@/assets/diary-feature.jpg';
-import aiFeatureImg from '@/assets/ai-feature.jpg';
-import emotionAnalysisFeatureImg from '@/assets/emotionAnalysis-feature.jpg';
-import communityFeatureImg from '@/assets/community-feature.jpg';
 
 const About = () => {
   const navigate = useNavigate();
