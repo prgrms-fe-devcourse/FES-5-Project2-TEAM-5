@@ -40,7 +40,7 @@ export const useUserLoader = (searchTerm: string) => {
 
   const { targetRef, isLoading, hasMore, reset } = useInfiniteScroll(loadUsers, {
     enabled: !initialLoading,
-    rootMargin: '100px',
+    rootMargin: '200px',
   });
 
   // 초기 로드
