@@ -1,0 +1,44 @@
+.scrollTopButton {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f6c915 0%, #e6b800 100%);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(246, 201, 21, 0.3);
+  z-index: 1000;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(100px);
+  opacity: 0;
+  visibility: hidden;
+}
+.visible {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+.hidden {
+  transform: translateY(100px);
+  opacity: 0;
+  visibility: hidden;
+}
+.scrollTopButton:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(246, 201, 21, 0.4);
+  background: linear-gradient(135deg, #e6b800 0%, #f6c915 100%);
+}
+@media (max-width: 768px) {
+  .scrollTopButton {
+    bottom: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+  }
+}
