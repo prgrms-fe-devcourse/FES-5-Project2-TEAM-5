@@ -52,6 +52,7 @@
   font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 700;
   line-height: 1.2;
+  font-family: var(--font-accent);
   margin-bottom: 1rem;
   background: linear-gradient(135deg, #ffffff, #e0e7ff);
   -webkit-background-clip: text;
@@ -63,6 +64,7 @@
   display: block;
   font-weight: 300;
   font-style: italic;
+  font-family: var(--font-accent);
   margin-top: 0.5rem;
 }
 
@@ -125,6 +127,7 @@
 .sectionTitle {
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 700;
+  font-family: var(--font-accent);
   color: white;
   margin-bottom: 1rem;
   background: linear-gradient(135deg, #ffffff, #e0e7ff);
@@ -152,6 +155,7 @@
   width: 100%;
   max-width: 100vw;
 }
+
 /* 스크롤바 디자인 - 전체 테마와 조화 */
 .featureGrid::-webkit-scrollbar {
   height: 6px;
@@ -195,7 +199,6 @@
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 24px;
-  padding: 2.5rem 2rem;
   text-align: center;
   transition: all 0.4s ease;
   position: relative;
@@ -204,44 +207,87 @@
   height: 400px;
   flex-shrink: 0;
   scroll-snap-align: center;
+  cursor: pointer;
 }
 
-.featureTitle {
+.featureCard:hover {
+  transform: translateY(-10px);
+}
+
+.cardImageContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 24px;
+}
+
+.featureImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.imageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  opacity: 1;
+  transition: all 0.4s ease;
+}
+
+.featureCard:hover .imageOverlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 텍스트 콘텐츠 */
+.textContent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.4s ease;
+  z-index: 10;
+}
+
+.featureCard:hover .textContent {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.textContent .featureTitle {
+  color: white;
   font-size: 1.5rem;
   font-weight: 600;
-  color: white;
   margin-bottom: 1.5rem;
   position: relative;
   z-index: 1;
   line-height: 1.3;
 }
 
-.featureDescription {
+.textContent .featureDescription {
+  color: #f8fafc;
   font-size: 1rem;
-  color: var(--gray-200);
   line-height: 1.6;
   position: relative;
   z-index: 1;
-}
-
-/* 스크롤바 스타일링 */
-.featureGrid::-webkit-scrollbar {
-  height: 8px;
-  color: rgba(255, 255, 255, 0.1);
-}
-
-.featureGrid::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-}
-
-.featureGrid::-webkit-scrollbar-thumb {
-  background: rgba(107, 138, 71, 0.7);
-  border-radius: 10px;
-}
-
-.featureGrid::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
 }
 
 /* 반응형 */
@@ -263,7 +309,29 @@
   .featureCard {
     width: 270px;
     height: 350px;
+  }
+
+  .featureCard:active .textContent {
+    opacity: 1;
+    transform: translateY(-100%);
+  }
+
+  .featureCard:active .imageOverlay {
+    opacity: 1;
+    transform: translateY(-100%);
+  }
+
+  .textContent {
     padding: 2rem 1.5rem;
+  }
+
+  .textContent .featureTitle {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .textContent .featureDescription {
+    font-size: 0.9rem;
   }
 }
 
@@ -286,6 +354,9 @@
   .featureCard {
     width: 240px;
     height: 320px;
+  }
+
+  .textContent {
     padding: 1.5rem 1.25rem;
   }
 }
@@ -500,7 +571,6 @@
 @media (max-width: 480px) {
   .footerInfo {
     flex-direction: column;
-
     gap: 1.5rem;
   }
 
