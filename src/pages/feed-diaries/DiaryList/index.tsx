@@ -77,7 +77,7 @@ const DiaryList = () => {
         {isLoading ? (
           <Spinner />
         ) : (
-          <ul className={S.diaryList}>
+          <div role="list" className={S.diaryList}>
             <Masonry
               breakpointCols={breakpointColumns}
               className={S.masonryGrid}
@@ -87,7 +87,7 @@ const DiaryList = () => {
                 const user = users.find((u) => u.id === diary.user_id);
                 if (!user) return null;
                 return (
-                  <li key={diary.id}>
+                  <div role="listitem" key={diary.id}>
                     <DiaryCard
                       currentUser={currentUserId || ''}
                       user={user}
@@ -99,11 +99,11 @@ const DiaryList = () => {
                       isLiked={currentUserLikes.has(diary.id)}
                       onLikeUpdate={handleLikeUpdate}
                     />
-                  </li>
+                  </div>
                 );
               })}
             </Masonry>
-          </ul>
+          </div>
         )}
         {!initialLoading && !isLoading && diaries.length === 0 && searchTerm !== '' && (
           <div className={S.noDiaryState}>

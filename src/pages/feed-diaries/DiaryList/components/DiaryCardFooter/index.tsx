@@ -65,8 +65,17 @@ const DiaryCardFooter = ({
         <span className={S.count}>{commentsCount}</span>
       </div>
       <div className={S.like}>
-        <button className={S.likeButton} onClick={handleLikeClick}>
-          {isLiked ? <FaHeart className={S.likeIconFill} /> : <FaRegHeart className={S.likeIcon} />}
+        <button
+          className={S.likeButton}
+          onClick={handleLikeClick}
+          aria-pressed={currentIsLiked}
+          aria-label={currentIsLiked ? '좋아요 취소' : '좋아요'}
+        >
+          {currentIsLiked ? (
+            <FaHeart className={S.likeIconFill} aria-hidden="true" />
+          ) : (
+            <FaRegHeart className={S.likeIcon} aria-hidden="true" />
+          )}
         </button>
         <span className={S.count}>{likesCount}</span>
       </div>
