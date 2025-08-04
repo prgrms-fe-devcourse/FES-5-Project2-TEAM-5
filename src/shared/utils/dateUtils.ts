@@ -65,7 +65,12 @@ export const getKoreanDateRangeUTC = (date: Date) => {
 // UTC 시간을 한국 시간으로 변환해서 날짜 문자열 반환
 export const getKoreanDateStringFromUTC = (utcDate: string | Date): string => {
   const date = typeof utcDate === 'string' ? new Date(utcDate) : utcDate;
-  // UTC에서 한국 시간으로 변환 (UTC + 9시간)
-  const koreanDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
-  return getLocalDateString(koreanDate);
+
+  //UTC에서 한국 시간으로 변환 (UTC + 9시간)
+  const koreanTime = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+  const year = koreanTime.getUTCFullYear();
+  const month = String(koreanTime.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(koreanTime.getUTCDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
 };
