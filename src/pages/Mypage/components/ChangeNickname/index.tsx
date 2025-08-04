@@ -13,7 +13,7 @@ const ChangeNickname = () => {
   const [error, setError] = useState<string>('');
   const [showModal, setShowModal] = useState(false); // 모달 컨트롤
 
-  const isFormValid = nickname === userInfo?.name && nickname && !error;
+  const isFormValid = nickname && !error;
 
   // 모달 오픈
   const handleOpenModal = () => {
