@@ -2,11 +2,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-left: clamp(16px, 4vw, 40px);
+  padding-right: clamp(16px, 4vw, 40px);
 }
 
 .section03 {
   position: relative;
-  padding: 60px 0;
+  padding: clamp(30px, 8vw, 60px) 0;
+  width: 100%;
+  max-width: 1280px;
 
   .inner {
     flex-direction: column;
@@ -15,8 +19,10 @@
 .inner {
   display: flex;
   gap: var(--space-7);
-  width: 1280px;
+  width: 100%;
+  max-width: 1280px;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .diaryList {
@@ -43,9 +49,9 @@
   text-align: center;
 
   .noDiaryIcon {
-    width: 73px;
-    height: 78px;
-    margin-bottom: 48px;
+    width: clamp(50px, 12vw, 73px);
+    height: clamp(54px, 13vw, 78px);
+    margin-bottom: clamp(24px, 6vw, 48px);
   }
 
   .noResult {
@@ -53,7 +59,7 @@
     margin: 0 auto;
     text-align: center;
     color: var(--gray-900);
-    font-size: var(--text-3xl);
+    font-size: clamp(16px, 4vw, var(--text-3xl));
     font-weight: 600;
     line-height: var(--space-6);
   }

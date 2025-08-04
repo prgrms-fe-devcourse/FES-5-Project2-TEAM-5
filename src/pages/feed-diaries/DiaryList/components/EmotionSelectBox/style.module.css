@@ -1,6 +1,7 @@
 .container {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--space-3);
 }
 
@@ -9,6 +10,7 @@
 }
 
 .selectedList {
+  flex-wrap: wrap;
   display: flex;
   gap: var(--space-4);
 }

@@ -1,5 +1,6 @@
 .searchBox {
-  width: 1280px;
+  width: 100%;
+  max-width: 1280px;
   height: 52px;
   padding: 0 var(--space-4);
   background-color: white;
@@ -14,13 +15,26 @@
   margin-bottom: var(--space-7);
 
   .searchIcon {
-    width: 24px;
-    height: 24px;
+    width: clamp(20px, 5vw, 24px);
+    height: clamp(20px, 5vw, 24px);
+    flex-shrink: 0;
   }
 
   .searchInput {
     border: none;
     flex: 1;
+    min-width: 0;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .searchInput::placeholder {
+    font-size: clamp(12px, 3vw, var(--text-lg));
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .searchInput:focus {
