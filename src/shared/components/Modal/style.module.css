@@ -64,3 +64,8 @@
     border: 1px solid var(--primary);
   }
 }
+
+/* 포커스 아웃라인 삭제 */
+.modal:focus-visible {
+  outline: none;
+}
