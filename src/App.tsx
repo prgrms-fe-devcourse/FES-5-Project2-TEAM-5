@@ -22,6 +22,7 @@ import About from './pages/About';
 import AuthCallback from './pages/auth/AuthCallback';
 import UserDetail from './pages/users/UserDetail';
 import NotFound from './pages/NotFound';
+import { ScrollTopButton } from './shared/components/ScrollTopButton';
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
             <Route path={PATHS.USER_DETAIL} element={<UserDetail />} />
             <Route path={PATHS.NOT_FOUND} element={<NotFound />} />
           </Routes>
+          <ScrollTopButton threshold={200} />
         </BrowserRouter>
       </WeatherProvider>
     </UserProvider>
