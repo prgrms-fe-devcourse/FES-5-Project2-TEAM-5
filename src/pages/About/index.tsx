@@ -1,9 +1,23 @@
 import { useNavigate } from 'react-router-dom';
 import style from './style.module.css';
 import { PATHS } from '@/shared/constants/path';
+import { useUserContext } from '@/shared/context/UserContext';
+import diaryFeatureImg from '@/assets/diary-feature.jpg';
+import aiFeatureImg from '@/assets/ai-feature.jpg';
+import emotionAnalysisFeatureImg from '@/assets/emotionAnalysis-feature.jpg';
+import communityFeatureImg from '@/assets/community-feature.jpg';
 
 const About = () => {
   const navigate = useNavigate();
+  const { isAuth } = useUserContext();
+
+  const handleStartClick = () => {
+    if (isAuth) {
+      navigate(PATHS.HOME);
+    } else {
+      navigate(PATHS.LOGIN);
+    }
+  };
 
   return (
     <div className={style.container}>
@@ -41,32 +55,64 @@ const About = () => {
 
         <div className={style.featureGrid} role="list">
           <article className={style.featureCard} role="listitem" tabIndex={0}>
-            <h3 className={style.featureTitle}>📔 감정 일기</h3>
-            <p className={style.featureDescription}>
-              느낀 감정을 선택하고 오늘의 이야기를 자유롭게 적어보세요. 감정은 마음에 씨앗처럼 심겨
-              일기를 쓰며 자라고, 쌓인 감정은 통계로 나만의 마음 흐름을 보여줍니다.
-            </p>
+            <div className={style.cardImageContainer}>
+              <img src={diaryFeatureImg} alt="감정 일기 기능" className={style.featureImage} />
+              <div className={style.imageOverlay}></div>
+            </div>
+            <div className={style.textContent}>
+              <h3 className={style.featureTitle}>감정 일기</h3>
+              <p className={style.featureDescription}>
+                느낀 감정을 선택하고 오늘의 이야기를 자유롭게 적어보세요. 감정은 마음에 씨앗처럼
+                심어져 일기를 쓰며 자라고, 쌓인 감정은 통계를 통해 나만의 감정 흐름을 보여줍니다.
+              </p>
+            </div>
           </article>
+
           <article className={style.featureCard} role="listitem" tabIndex={0}>
-            <h3 className={style.featureTitle}>🌼 AI 친구 몰리</h3>
-            <p className={style.featureDescription}>
-              따뜻한 AI 챗봇 몰리와 대화하며, 나만을 위한 세심한 조언과 진심 어린 위로를
-              경험해보세요. 몰리는 당신의 감정을 이해하고, 언제나 곁에서 따뜻하게 응원해 줍니다.
-            </p>
+            <div className={style.cardImageContainer}>
+              <img src={aiFeatureImg} alt="AI 친구 몰리 기능" className={style.featureImage} />
+              <div className={style.imageOverlay}></div>
+            </div>
+            <div className={style.textContent}>
+              <h3 className={style.featureTitle}>AI 친구 몰리</h3>
+              <p className={style.featureDescription}>
+                따뜻한 AI 챗봇 몰리와 대화하며, 나만을 위한 세심한 조언과 진심 어린 위로를
+                받아보세요. 매일 50번의 대화 속에서 따뜻한 위로와 조언을 나눌 몰리가 당신을 기다리고
+                있으니, 언제든 편하게 몰리를 찾아주세요.
+              </p>
+            </div>
           </article>
+
           <article className={style.featureCard} role="listitem" tabIndex={0}>
-            <h3 className={style.featureTitle}>🧐 감정 분석</h3>
-            <p className={style.featureDescription}>
-              상세한 감정 선택과 이유 작성 후, AI가 분석한 리포트를 받아보세요. 이를 통해 내 마음의
-              흐름을 깊이 이해하고, 스스로에 대한 새로운 통찰을 얻을 수 있습니다.
-            </p>
+            <div className={style.cardImageContainer}>
+              <img
+                src={emotionAnalysisFeatureImg}
+                alt="감정 분석 기능"
+                className={style.featureImage}
+              />
+              <div className={style.imageOverlay}></div>
+            </div>
+            <div className={style.textContent}>
+              <h3 className={style.featureTitle}>감정 분석</h3>
+              <p className={style.featureDescription}>
+                오늘의 감정을 상세히 선택하고 그 이유를 기록해 보세요. AI가 분석한 리포트가 자신의
+                감정을 더 깊이 이해하고 몰랐던 나를 새롭게 발견하도록 도와줍니다.
+              </p>
+            </div>
           </article>
+
           <article className={style.featureCard} role="listitem" tabIndex={0}>
-            <h3 className={style.featureTitle}>😃 커뮤니티</h3>
-            <p className={style.featureDescription}>
-              커뮤니티는 다른 사람들의 일기를 읽고, 나의 이야기를 공유하는 공간입니다. 비슷한 마음을
-              가진 사람들과 공감하며 따뜻한 연결을 만들어 보세요.
-            </p>
+            <div className={style.cardImageContainer}>
+              <img src={communityFeatureImg} alt="커뮤니티 기능" className={style.featureImage} />
+              <div className={style.imageOverlay}></div>
+            </div>
+            <div className={style.textContent}>
+              <h3 className={style.featureTitle}>커뮤니티</h3>
+              <p className={style.featureDescription}>
+                다른 사람들의 일기에서 따뜻한 위로를 얻고, 나의 이야기는 편안하게 나눠보세요. 함께
+                감정을 나누며, 서로의 하루에 조용한 위로가 되어 주세요.
+              </p>
+            </div>
           </article>
         </div>
       </section>
@@ -79,8 +125,8 @@ const About = () => {
             줄 거예요.
           </p>
           <p className={style.description}>지금 그 여정을 시작해 보세요.</p>
-          <button type="button" className={style.ctaButton} onClick={() => navigate(PATHS.LOGIN)}>
-            시작하기
+          <button type="button" className={style.ctaButton} onClick={handleStartClick}>
+            {isAuth ? '홈으로 가기' : '시작하기'}
           </button>
         </div>
       </section>
