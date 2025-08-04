@@ -1,16 +1,19 @@
 .tab {
   display: flex;
   align-items: center;
-  gap: 80px;
-  height: 80px;
+  justify-content: center;
+  gap: clamp(20px, 8vw, 80px);
+  height: clamp(60px, 15vw, 80px);
   font: var(--font-accent);
   font-weight: 400;
-  font-size: var(--text-lg);
+  font-size: clamp(14px, 3.5vw, var(--text-lg));
+  width: 100%;
+  max-width: 1280px;
 }
 
 .tabButtons {
-  width: 132px;
-  height: 44px;
+  width: clamp(100px, 25vw, 132px);
+  height: clamp(36px, 9vw, 44px);
   border-radius: var(--radius-6);
   background-color: var(--secondary);
   cursor: pointer;
