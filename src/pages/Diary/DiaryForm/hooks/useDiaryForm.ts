@@ -26,6 +26,11 @@ export interface DraftData {
   lastSaved: number;
 }
 
+const areTagsEqual = (tags1: string[] = [], tags2: string[] = []): boolean => {
+  if (tags1.length !== tags2.length) return false;
+  return tags1.every((tag, index) => tag === tags2[index]);
+};
+
 export const useDiaryForm = () => {
   const { user } = useUserContext();
   const navigate = useNavigate();
@@ -35,14 +40,16 @@ export const useDiaryForm = () => {
   const existingDiary = location.state?.diary;
   const isEditMode = !!existingDiary?.id;
 
-  // 먼저 diaryDate 초기값 계산
   const initialDiaryDate: string = (() => {
     // 수정 모드면 해당 일기 날짜 사용
     if (isEditMode && existingDiary) {
-      return existingDiary.created_at?.split('T')[0] || new Date().toISOString().split('T')[0];
+      const result =
+        existingDiary.created_at?.split('T')[0] || new Date().toISOString().split('T')[0];
+      return result;
     }
     // 신규면 달력에서 온 날짜(state) 아니면 오늘
-    return dateInState || new Date().toISOString().split('T')[0];
+    const result = dateInState || new Date().toISOString().split('T')[0];
+    return result;
   })();
 
   // 임시저장 관련 - 신규 작성은 날짜별로, 수정 모드는 일기 ID별로
@@ -134,7 +141,7 @@ export const useDiaryForm = () => {
   }, []);
 
   const saveToLocalStorage = useCallback(
-    (currentTags?: string[]) => {
+    (currentTags?: string[], imageFile?: File | null, currentImagePreviewUrl?: string | null) => {
       if (!hasUnsavedChanges) {
         toastUtils.info({
           title: '알림',
@@ -151,7 +158,7 @@ export const useDiaryForm = () => {
         tags: currentTags || formData.tags || [],
         selectedEmotionId: selectedEmotionId,
         diaryDate: diaryDate,
-        imagePreviewUrl: imagePreviewUrl,
+        imagePreviewUrl: currentImagePreviewUrl || imagePreviewUrl,
         lastSaved: Date.now(),
       };
 
@@ -159,12 +166,28 @@ export const useDiaryForm = () => {
       setLastSavedTime(new Date());
       setHasUnsavedChanges(false);
 
-      toastUtils.success({
-        title: '임시저장 완료',
-        message: isEditMode
-          ? '수정 내용이 임시 저장되었습니다.'
-          : '작성 내용이 임시 저장되었습니다.',
-      });
+      const originalImageUrl = existingDiary?.diary_image || null;
+      const currentImageUrl = currentImagePreviewUrl || imagePreviewUrl;
+
+      const hasNewImageFile = !!imageFile;
+      const hasImageUrlChanged = currentImageUrl !== originalImageUrl;
+      const hasImageChanges = hasNewImageFile || hasImageUrlChanged;
+
+      if (hasImageChanges) {
+        toastUtils.info({
+          title: '안내',
+          message: isEditMode
+            ? '이미지 변경사항은 실제 저장 시에만 반영됩니다.'
+            : '이미지는 실제 저장 시에만 업로드됩니다.',
+        });
+      } else {
+        toastUtils.success({
+          title: '임시저장 완료',
+          message: isEditMode
+            ? '수정 내용이 임시 저장되었습니다.'
+            : '작성 내용이 임시 저장되었습니다.',
+        });
+      }
     },
     [
       hasUnsavedChanges,
@@ -174,6 +197,7 @@ export const useDiaryForm = () => {
       imagePreviewUrl,
       saveDraft,
       isEditMode,
+      existingDiary,
     ],
   );
 
@@ -202,17 +226,28 @@ export const useDiaryForm = () => {
     });
   }, [draftData]);
 
-  // 신규 작성과 수정 모드 모두에서 변경사항 체크
   useEffect(() => {
     let hasChanges: boolean = false;
 
     if (isEditMode) {
       // 수정 모드: 기존 일기와 비교
+      const existingTags =
+        (existingDiary?.diary_hashtags as Array<{ hashtags: { name: string } }> | undefined)?.map(
+          (h) => `#${h.hashtags.name}`,
+        ) || [];
+
+      // 이미지 변경 감지 추가
+      const originalImageUrl = existingDiary?.diary_image || null;
+      const currentImageUrl = imagePreviewUrl;
+      const hasImageChanged = currentImageUrl !== originalImageUrl;
+
       hasChanges =
         formData.title !== (existingDiary?.title || '') ||
         formData.content !== (existingDiary?.content || '') ||
         formData.isPublic !== (existingDiary?.is_public ?? true) ||
-        selectedEmotionId !== (existingDiary?.emotion_main_id || null);
+        selectedEmotionId !== (existingDiary?.emotion_main_id || null) ||
+        !areTagsEqual(formData.tags || [], existingTags) ||
+        hasImageChanged;
     } else {
       // 신규 작성: 빈 상태와 비교
       hasChanges =
@@ -220,11 +255,27 @@ export const useDiaryForm = () => {
         formData.content.trim() !== '' ||
         formData.isPublic !== true ||
         selectedEmotionId !== null ||
-        Boolean(formData.tags && formData.tags.length > 0);
+        Boolean(formData.tags && formData.tags.length > 0) ||
+        Boolean(imagePreviewUrl);
     }
 
     setHasUnsavedChanges(hasChanges);
-  }, [formData, selectedEmotionId, isEditMode, existingDiary]);
+  }, [
+    // 의존성 배열을 구체적으로 명시
+    formData.title,
+    formData.content,
+    formData.isPublic,
+    formData.tags,
+    selectedEmotionId,
+    imagePreviewUrl,
+    isEditMode,
+    existingDiary?.title,
+    existingDiary?.content,
+    existingDiary?.is_public,
+    existingDiary?.emotion_main_id,
+    existingDiary?.diary_hashtags,
+    existingDiary?.diary_image,
+  ]);
 
   const [showRestoreDialog, setShowRestoreDialog] = useState(false);
   const [hasCheckedDraft, setHasCheckedDraft] = useState(false);
@@ -234,18 +285,25 @@ export const useDiaryForm = () => {
     (draft: DraftData): boolean => {
       if (isEditMode) {
         // 수정 모드: 기존 일기와 비교
+        const existingTags =
+          (existingDiary?.diary_hashtags as Array<{ hashtags: { name: string } }> | undefined)?.map(
+            (h) => `#${h.hashtags.name}`,
+          ) || [];
+
         const currentData = {
           title: existingDiary?.title || '',
           content: existingDiary?.content || '',
           isPublic: existingDiary?.is_public ?? true,
           selectedEmotionId: existingDiary?.emotion_main_id || null,
+          tags: existingTags,
         };
 
         return (
           draft.title !== currentData.title ||
           draft.content !== currentData.content ||
           draft.isPublic !== currentData.isPublic ||
-          draft.selectedEmotionId !== currentData.selectedEmotionId
+          draft.selectedEmotionId !== currentData.selectedEmotionId ||
+          !areTagsEqual(draft.tags || [], currentData.tags)
         );
       } else {
         // 신규 작성: 빈 상태와 비교

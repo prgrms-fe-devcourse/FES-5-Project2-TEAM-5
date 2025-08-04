@@ -13,7 +13,7 @@ export const processHashtags = async (tagStrings: string[]) => {
         .from('hashtags')
         .select('id')
         .eq('name', tagName)
-        .single();
+        .maybeSingle();
 
       if (selectError && selectError.code !== 'PGRST116') {
         console.error('해시태그 조회 실패:', selectError);
@@ -27,7 +27,7 @@ export const processHashtags = async (tagStrings: string[]) => {
           .from('hashtags')
           .insert({ name: tagName })
           .select('id')
-          .single();
+          .maybeSingle();
 
         if (insertError) {
           console.error('해시태그 생성 실패:', insertError);

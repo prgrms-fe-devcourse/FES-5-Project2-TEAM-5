@@ -6,7 +6,11 @@ import DiaryCompleted from '../../../assets/diary_completed.svg';
 import DiaryEmpty from '../../../assets/diary_empty.svg';
 import { useCallback } from 'react';
 import { toastUtils } from '@/shared/components/Toast';
-import { getLocalDateString, isFutureDate } from '@/shared/utils/dateUtils';
+import {
+  getKoreanDateStringFromUTC,
+  getLocalDateString,
+  isFutureDate,
+} from '@/shared/utils/dateUtils';
 
 type DiaryEntry = {
   created_at: string;
@@ -75,10 +79,8 @@ const DiaryCalendar = ({ date, onDateChange, entries, onMonthChange, loading }: 
       // 일기 작성 여부에 따른 스타일 추가
       if (tileDateStr <= todayStr) {
         const hasEntry = entries.some((e) => {
-          // 한국 시간대로 변환
-          const entryDateUTC = new Date(e.created_at);
-          const entryDateKST = new Date(entryDateUTC.getTime() + 9 * 60 * 60 * 1000);
-          const entryDateStr = getLocalDateString(entryDateKST);
+          // UTC 시간을 한국 시간으로 변환해서 비교
+          const entryDateStr = getKoreanDateStringFromUTC(e.created_at);
 
           return entryDateStr === tileDateStr;
         });
@@ -104,8 +106,8 @@ const DiaryCalendar = ({ date, onDateChange, entries, onMonthChange, loading }: 
       if (loading) return null;
 
       const hasEntry = entries.some((e) => {
-        const entryDate = new Date(e.created_at);
-        const entryDateStr = getLocalDateString(entryDate);
+        // UTC 시간을 한국 시간으로 변환해서 비교
+        const entryDateStr = getKoreanDateStringFromUTC(e.created_at);
         return entryDateStr === tileDateStr;
       });
 
