@@ -1,0 +1,25 @@
+.nextPage{
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+
+    border: none;
+    border-radius: var(--radius-2);
+    background: var(--primary);
+    color: white;
+    font-size: var(--text-lg);
+    font-weight: 400;
+    padding: 8px 15px 8px 20px;
+    user-select: none;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    background-color: var(--secondary);
+    cursor: default;
+  }
+}

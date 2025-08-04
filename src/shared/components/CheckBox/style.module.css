@@ -1,0 +1,8 @@
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+}
+
+.checkbox {
+  accent-color: var(--primary);
+}

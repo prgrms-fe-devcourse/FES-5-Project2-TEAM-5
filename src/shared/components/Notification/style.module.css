@@ -1,0 +1,142 @@
+.container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  > svg {
+    stroke-width: 1.2; /* 더 얇게 */
+    cursor: pointer;
+  }
+}
+
+.bellButton {
+  display: flex;
+  align-items: center;
+
+  .notificationBadge {
+    position: absolute;
+    background-color: var(--point);
+    top: 5px;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  > svg:hover {
+    color: var(--point) !important;
+    stroke-width: 2.3;
+  }
+  &:focus-visible > svg {
+    color: var(--point) !important;
+    stroke-width: 2.3;
+  }
+}
+
+/* 툴팁  */
+.bellButton::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  background-color: var(--gray-50);
+  top: 100%;
+  right: 50%;
+  transform: translateX(50%);
+  border-radius: var(--radius-1);
+  padding: 4px 12px;
+  white-space: nowrap;
+  transition: opacity 0.5s ease;
+  visibility: hidden;
+  font-size: var(--text-sm);
+  opacity: 0;
+}
+
+.bellButton:hover::after {
+  visibility: visible;
+  opacity: 1;
+}
+
+.notificationWrapper {
+  position: absolute;
+  top: 100%;
+  right: 50%;
+  transform: translateX(50%);
+  border-radius: var(--radius-2);
+  background-color: var(--gray-10);
+  border: 1px solid var(--border);
+  padding: var(--space-4) var(--space-2) var(--space-2) var(--space-2);
+
+  @media (max-width: 1024px) {
+    right: 0;
+    transform: translateX(30%);
+  }
+
+  .notificationList {
+    min-width: 100px;
+    width: 300px;
+    overflow-y: auto;
+
+    overflow-x: hidden;
+    max-height: 300px;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .emptyNotification {
+      padding: var(--space-6);
+      white-space: nowrap;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: var(--text-sm);
+    }
+  }
+
+  .buttonGroup {
+    display: flex;
+    gap: var(--space-2);
+    border-top: 1px solid var(--border);
+    padding-top: var(--space-1);
+
+    > button {
+      border-radius: var(--radius-2);
+      white-space: nowrap;
+      padding: 8px 4px 4px;
+      width: 100%;
+      font-size: var(--text-sm);
+      color: var(--gray-300);
+      cursor: pointer;
+
+      &:hover {
+        color: var(--gray-700);
+      }
+
+      &:active {
+        background-color: var(--gray-100);
+      }
+    }
+  }
+}
+
+.spinnerWrapper {
+  padding: 30px;
+}
+
+.spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: 20px;
+  height: 20px;
+  border: 4px solid var(--gray-100);
+  border-top: 4px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

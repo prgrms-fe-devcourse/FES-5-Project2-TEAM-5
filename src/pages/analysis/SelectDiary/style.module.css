@@ -1,0 +1,95 @@
+
+
+.container{
+  max-width: 896px;
+  margin: 0 auto;
+  padding-top: 80px; /* 헤더 높이 */
+  padding-inline: 20px;
+}
+
+.intro{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 40px;     /* 헤더와 추가 간격 */
+  margin-bottom: 40px;
+
+  h2{
+    color: var(--gray-900);
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    line-height: 36px;
+    margin-bottom: var(--space-2);
+  }
+
+  p{
+    color: var(--gray-700);
+    font-size: var(--text-lg);
+    font-weight: 400;
+    line-height: 24px;
+  }
+}
+
+.listWrapper {
+  margin-bottom: var(--space-8)
+}
+
+.loadMore {
+  align-self: center;
+  border: none;
+  border-radius: var(--radius-2);
+  background: var(--gray-100);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  padding: var(--space-3) var(--space-6);
+  cursor: pointer;
+  margin: 0 auto 50px;
+  line-height: 24px;
+  user-select: none;
+  display: block;
+}
+
+.noDiaryState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+
+  min-height: 85vh;
+  
+
+  .noDiaryIcon {
+    width: 73px;
+    height: 78px;
+    margin-bottom: 48px;
+  }
+}
+
+.noDiaryMessage {
+  margin-bottom: 110px;
+}
+
+.noDiaryMain {
+  color: var(--gray-900);
+  font-size: var(--text-3xl);
+  font-weight: 600;
+  line-height: var(--space-6);
+  margin-bottom: var(--space-6);
+}
+
+.noDiarySub {
+  color: var(--gray-500);
+  font-weight: 500;
+  line-height: var(--space-6);
+}
+
+.stickyBtn {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: end;
+  background: var(--background);
+  padding: 10px 0;
+}

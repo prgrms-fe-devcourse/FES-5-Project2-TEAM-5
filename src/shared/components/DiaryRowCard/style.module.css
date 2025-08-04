@@ -1,0 +1,189 @@
+.rowCard {
+  position: relative;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-4);
+  background-color: white;
+  cursor: pointer;
+
+  .overlay {
+    width: 100%;
+    position: absolute;
+    inset: 0;
+    background-image: url('https://ttqedeydfvolnyrivpvg.supabase.co/storage/v1/object/public/assets//stamp-large-tilted.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  /* 1000px 이하에서 레이아웃 조정 시작 */
+  @media (max-width: 1000px) {
+    padding: var(--space-5);
+    gap: var(--space-4);
+  }
+
+  /* 800px 이하에서 세로 배치로 변경 */
+  @media (max-width: 800px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    .overlay {
+      background-size: 180px;
+    }
+  }
+
+  /* 모바일 크기 */
+  @media (max-width: 480px) {
+    padding: var(--space-3);
+    gap: var(--space-3);
+  }
+}
+
+.diaryContents {
+  flex: 1;
+  min-width: 0;
+  color: var(--gray-900);
+
+  > span {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-lg);
+
+    img {
+      width: 26px;
+    }
+  }
+
+  .title {
+    padding: var(--space-3) 0;
+    font-size: var(--text-xl);
+    font-weight: 500;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  /* 800px 이하에서 텍스트 크기 조정 */
+  @media (max-width: 800px) {
+    > span {
+      font-size: var(--text-base);
+
+      img {
+        width: 22px;
+      }
+    }
+
+    .title {
+      padding: var(--space-2) 0;
+      font-size: var(--text-lg);
+    }
+  }
+
+  /* 모바일에서 더 작게 */
+  @media (max-width: 480px) {
+    > span {
+      font-size: var(--text-sm);
+
+      img {
+        width: 20px;
+      }
+    }
+
+    .title {
+      font-size: var(--text-base);
+      padding: var(--space-2) 0;
+    }
+  }
+}
+
+.tagList {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-1);
+  gap: var(--space-2);
+  flex-wrap: wrap; /* 태그가 많을 때 줄바꿈 */
+
+  li {
+    font-size: var(--text-lg);
+  }
+
+  /* 800px 이하에서 태그 크기 조정 */
+  @media (max-width: 800px) {
+    gap: var(--space-1);
+
+    li {
+      font-size: var(--text-base);
+    }
+  }
+
+  /* 모바일에서 더 작게 */
+  @media (max-width: 480px) {
+    li {
+      font-size: var(--text-sm);
+    }
+  }
+}
+
+.empathy {
+  font-size: var(--text-base);
+  color: var(--gray-300);
+  margin-bottom: var(--space-3);
+
+  /* 800px 이하에서 크기 조정 */
+  @media (max-width: 800px) {
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-2);
+  }
+}
+
+.date {
+  font-size: var(--text-base);
+  color: var(--gray-300);
+
+  /* 800px 이하에서 크기 조정 */
+  @media (max-width: 800px) {
+    font-size: var(--text-sm);
+  }
+}
+
+.thumbImage {
+  width: 220px;
+  height: 132px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: var(--radius-3);
+  flex-shrink: 0; /* 이미지 크기 고정 */
+
+  /* 1000px 이하에서 이미지 크기 조정 */
+  @media (max-width: 1000px) {
+    width: 180px;
+    height: 108px;
+  }
+
+  /* 800px 이하에서 전체 너비로 변경 */
+  @media (max-width: 800px) {
+    width: 100%;
+    height: 200px;
+    order: -1; /* 이미지를 맨 위로 이동 */
+  }
+
+  /* 모바일에서 높이 조정 */
+  @media (max-width: 480px) {
+    height: 160px;
+  }
+}
+
+/* figure 요소도 함께 조정 */
+figure {
+  flex-shrink: 0;
+
+  @media (max-width: 800px) {
+    width: 100%;
+    order: -1; /* figure도 맨 위로 이동 */
+  }
+}

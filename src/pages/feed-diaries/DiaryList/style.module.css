@@ -1,0 +1,63 @@
+.container {
+  padding-top: 80px;
+  font-family: var(--font-main);
+  color: #303030;
+  padding-left: clamp(16px, 4vw, 40px);
+  padding-right: clamp(16px, 4vw, 40px);
+}
+
+.searchSection {
+  max-width: 1280px;
+  margin: 0 auto var(--space-7) auto;
+  padding-top: var(--space-5);
+
+  .filterBox {
+    width: 104px;
+    height: 44px;
+  }
+}
+
+.noDiaryState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+
+  min-height: 50vh;
+
+  .noDiaryIcon {
+    width: clamp(50px, 12vw, 73px);
+    height: clamp(54px, 13vw, 78px);
+    margin-bottom: clamp(24px, 6vw, 48px);
+  }
+
+  .noResult {
+    max-width: 1280px;
+    margin: 0 auto;
+    text-align: center;
+    color: var(--gray-900);
+    font-size: clamp(16px, 4vw, var(--text-3xl));
+    font-weight: 600;
+    line-height: var(--space-6);
+  }
+}
+
+.diaryList {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.masonryGrid {
+  display: flex;
+  margin-left: -40px;
+  width: auto;
+}
+
+.masonryColumn {
+  padding-left: 40px;
+}
+
+.masonryColumn > * {
+  margin-bottom: 40px;
+}

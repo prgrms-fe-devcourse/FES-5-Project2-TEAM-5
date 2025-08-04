@@ -1,0 +1,17 @@
+export const PATHS = {
+  HOME: '/home',
+  LOGIN: '/login',
+  REGISTER: '/register',
+  ANALYSIS_SELECT: '/analysis/select-diary',
+  ANALYSIS_QUEST: '/analysis/emotion-and-quest',
+  COMMUNITY: '/community',
+  MYPAGE: '/mypage',
+  DIARY: '/diary',
+  DIARY_DETAIL: '/diary/:id',
+  DIARY_FORM: '/diary/form',
+  USER: '/users',
+  USER_DETAIL: '/users/:slug',
+  ABOUT: '/about',
+  AUTH_CALLBACK: '/auth/callback',
+  NOT_FOUND: '*',
+} as const;

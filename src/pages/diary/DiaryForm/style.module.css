@@ -1,0 +1,247 @@
+.container {
+  background-color: var(--background);
+  color: var(--gray-900);
+  input[type='text'].customInput,
+  textarea.customTextarea {
+    width: 100%;
+    min-height: 50px;
+    background-color: white;
+    border: 1px solid var(--gray-100);
+    border-radius: var(--radius-2);
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-lg);
+    font-family: var(--font-main);
+    box-sizing: border-box;
+  }
+  textarea.customTextarea {
+    resize: vertical;
+  }
+  input[type='text'].customInput::placeholder {
+    color: var(--gray-200);
+  }
+  textarea.customInput::placeholder {
+    color: var(--gray-200);
+  }
+  .inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 60px 0;
+  }
+}
+.pageTitle {
+  position: relative;
+  margin-bottom: 60px;
+  font-size: var(--text-4xl);
+  font-weight: 500;
+  text-align: center;
+}
+.pageTitle::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -12px;
+  display: block;
+  width: 50px;
+  height: 2px;
+  background-color: var(--primary);
+}
+.formArea {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .itemTitle {
+    font-size: var(--text-xl);
+    font-weight: 500;
+  }
+  .required {
+    display: inline-block;
+    position: relative;
+    right: -2px;
+    top: -10px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: var(--point);
+  }
+}
+.emotionGroup {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-1);
+    min-width: 100px;
+    height: 44px;
+    border-radius: var(--radius-6);
+    border: 1px solid var(--gray-100);
+    font-size: var(--text-lg);
+    color: var(--gray-300);
+    background-color: white;
+    cursor: pointer;
+  }
+  .active {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: white;
+  }
+}
+.radioArea {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+  }
+  input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .active {
+    color: var(--primary);
+  }
+  .unactive {
+    color: var(--gray-100);
+  }
+}
+.fileAttachBox {
+  position: relative;
+  height: 50px;
+  background-color: white;
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-2);
+  .uploadButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 35px;
+    margin: 6px 0 0 18px;
+    background-color: var(--primary);
+    border-radius: var(--radius-2);
+    color: white;
+    cursor: pointer;
+  }
+  .placeholderText {
+    color: var(--gray-200);
+    position: absolute;
+    left: 127px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .fileInfo {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 127px;
+    top: 50%;
+    transform: translateY(-50%);
+    > button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+  }
+  .fileNameBox {
+    display: flex;
+    width: calc(100% - 140px);
+    align-items: center;
+    gap: var(--space-1);
+    position: absolute;
+    left: 130px;
+    top: 50%;
+    transform: translateY(-50%);
+    p {
+      height: 17px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .deleteButton {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+  }
+}
+.buttonGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-top: var(--space-4);
+  margin-top: 50px;
+  border-top: 1px solid var(--gray-100);
+  button {
+    min-width: 110px;
+    height: 44px;
+    border-radius: var(--radius-2);
+    font-size: var(--text-xl);
+    cursor: pointer;
+  }
+}
+.bgGrayBtn {
+  margin-right: auto;
+  background-color: var(--gray-100);
+  color: var(--gray-900);
+}
+.lineBtn {
+  background-color: white;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+.bgPrimaryBtn {
+  background-color: var(--primary);
+  color: white;
+}
+.tagDisplay {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-4);
+  button {
+    cursor: pointer;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .container {
+    .inner {
+      padding: 60px var(--space-8);
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    .inner {
+      padding: 40px var(--space-5);
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .buttonGroup {
+    flex-direction: column;
+    button {
+      flex: initial;
+      min-width: 100%;
+    }
+  }
+}

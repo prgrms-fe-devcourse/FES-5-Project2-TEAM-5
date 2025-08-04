@@ -62,9 +62,15 @@
   --text-5xl: 2rem; /* 32px */
 }
 
+*:focus-visible {
+  outline: 2px solid var(--point);
+}
+
 /*  전역 설정 */
 body {
   font-family: var(--font-main);
+  color: var(--gray-900);
+  background-color: #f9fafb;
 }
 
 /* sr-only 클래스 (변수 없이 직접 정의) */

@@ -1,0 +1,40 @@
+.searchBox {
+  width: 100%;
+  min-width: clamp(200px, 50vw, 340px);
+  max-width: 340px;
+  height: clamp(40px, 10vw, 48px);
+  padding: 0 var(--space-4);
+  background-color: white;
+  border: 1px solid var(--gray-100);
+  color: var(--gray-200);
+  border-radius: var(--radius-3);
+  font-size: clamp(14px, 3.5vw, var(--text-lg));
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.searchIcon {
+  width: 24px;
+  height: 24px;
+}
+
+.searchInput {
+  border: none;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.searchInput::placeholder {
+  font-size: clamp(12px, 3vw, var(--text-lg));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.searchInput:focus {
+  outline: none;
+}

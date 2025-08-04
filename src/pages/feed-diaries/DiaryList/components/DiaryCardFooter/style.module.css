@@ -1,0 +1,54 @@
+.interaction {
+  margin: var(--space-4) 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.comment,
+.like {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 20px;
+}
+
+.commentIcon {
+  color: var(--gray-300);
+  width: 20px;
+  height: 20px;
+  padding-right: var(--space-1);
+}
+
+.likeIconFill {
+  color: red;
+  width: 20px;
+  height: 20px;
+}
+
+.likeIcon {
+  color: var(--gray-300);
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.likeButton {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2) var(--space-1) var(--space-2) var(--space-2);
+}
+
+.likeIcon:hover {
+  transform: scale(1.2);
+}
+
+.count {
+  font-size: var(--text-base);
+  color: var(--gray-300);
+  font-weight: 700;
+}

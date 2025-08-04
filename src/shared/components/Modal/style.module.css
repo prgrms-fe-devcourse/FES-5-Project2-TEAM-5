@@ -1,0 +1,71 @@
+/* 오버레이 */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* 모달 */
+.modal {
+  position: fixed;
+  top: 35vh;
+  background-color: white;
+  padding: var(--space-8);
+  border-radius: var(--radius-2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 420px;
+
+  .title {
+    margin-bottom: var(--space-6);
+    font-size: var(--text-3xl);
+    font-weight: 600;
+  }
+
+  .message {
+    margin-bottom: 50px;
+    font-size: var(--text-lg);
+    color: var(--gray-900);
+    line-height: var(--text-3xl);
+
+    white-space: pre-line;
+  }
+}
+
+/* 버튼 */
+.buttons {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: center;
+
+  .button {
+    min-width: 110px;
+    height: 44px;
+    border-radius: var(--radius-2);
+    font-size: var(--text-xl);
+    cursor: pointer;
+  }
+
+  .cancel {
+    background-color: white;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+  }
+
+  .confirm {
+    background-color: var(--primary);
+    color: white;
+    border: 1px solid var(--primary);
+  }
+}
+
+/* 포커스 아웃라인 삭제 */
+.modal:focus-visible {
+  outline: none;
+}

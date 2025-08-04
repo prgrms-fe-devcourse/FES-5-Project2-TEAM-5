@@ -1,0 +1,61 @@
+.header {
+  margin: var(--space-4) 60px;
+  display: flex;
+  align-items: center;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.userProfile {
+  width: 40px;
+  height: 40px;
+  margin-right: var(--space-3);
+  border-radius: 50%;
+}
+
+.userName {
+  font-size: var(--text-lg);
+  font-weight: 500;
+  margin-right: var(--space-3);
+}
+
+.diaryInfoSub {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.emotion {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.emotionImg {
+  width: 28px;
+  height: 28px;
+}
+
+.emotionLabel {
+  font-size: var(--text-lg);
+  font-weight: 400;
+}
+
+.diaryInfo {
+  display: flex;
+  flex-direction: column;
+  margin: 0 60px;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.date {
+  font-size: var(--text-base);
+  color: var(--gray-300);
+  font-weight: 400;
+}

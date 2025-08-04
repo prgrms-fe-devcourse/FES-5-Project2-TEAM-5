@@ -1,0 +1,46 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  margin: 0 60px;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+
+  .imageContainer {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--space-5);
+  }
+
+  .diaryImage {
+    width: auto;
+    height: 300px;
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: var(--space-1);
+  }
+
+  .title {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    margin-bottom: var(--space-3);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: keep-all;
+  }
+
+  .hashtags {
+    margin-bottom: var(--space-4);
+    font-weight: 400;
+    font-size: var(--text-lg);
+  }
+
+  .tag {
+    margin-right: var(--space-1);
+  }
+  .contentText {
+    font-size: var(--text-lg);
+    font-weight: 500;
+    line-height: 24px;
+  }
+}

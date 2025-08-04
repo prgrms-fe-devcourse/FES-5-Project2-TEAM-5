@@ -1,0 +1,50 @@
+.notificationItem {
+  padding: var(--space-2);
+  cursor: pointer;
+  border: 1px solid var(--border);
+  margin-bottom: var(--space-1);
+  border-radius: var(--radius-2);
+  display: flex;
+  gap: var(--space-2);
+  position: relative;
+  width: 300px;
+
+  &:hover {
+    background-color: var(--gray-50);
+  }
+
+  .icon {
+    padding: var(--space-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-2);
+  }
+
+  .notificationContents {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-1);
+
+    > span {
+      white-space: nowrap;
+    }
+    .notificationTitle {
+      font-size: var(--text-base);
+      color: var(--gray-800);
+      font-weight: 700;
+    }
+    .notificationMessage {
+      font-size: var(--text-sm);
+      color: var(--gray-600);
+    }
+  }
+  .notificationBadge {
+    position: absolute;
+    background-color: var(--point);
+    top: 5px;
+    right: 5px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+}

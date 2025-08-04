@@ -1,0 +1,54 @@
+.container {
+  padding-top: 80px;
+  font-family: var(--font-main);
+  color: #303030;
+  padding-left: clamp(16px, 4vw, 40px);
+  padding-right: clamp(16px, 4vw, 40px);
+}
+
+.header {
+  max-width: 1280px;
+  margin: 40px auto 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .title {
+    font-size: clamp(20px, 5vw, var(--text-3xl));
+    flex-shrink: 0;
+    font-weight: 700;
+  }
+}
+
+.noDiaryState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+
+  min-height: 50vh;
+
+  .noDiaryIcon {
+    width: clamp(50px, 12vw, 73px);
+    height: clamp(54px, 13vw, 78px);
+    margin-bottom: clamp(24px, 6vw, 48px);
+  }
+
+  .noResult {
+    max-width: 1280px;
+    margin: 0 auto;
+    text-align: center;
+    color: var(--gray-900);
+    font-size: clamp(16px, 4vw, var(--text-3xl));
+    font-weight: 600;
+    line-height: var(--space-6);
+  }
+}
+
+.loadingSpinner {
+  height: 30vh;
+  margin: 10vh 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,0 +1,44 @@
+.section01 {
+  width: 100%;
+  position: relative;
+  h2 {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: var(--space-3) var(--space-4) 0;
+    font-size: 3.75rem;
+    font-family: var(--font-accent);
+    font-weight: 700;
+    color: transparent;
+    -webkit-text-stroke: 1px white;
+    text-align: center;
+    z-index: 2;
+  }
+  figure {
+    position: relative;
+    width: 100%;
+    height: 350px;
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .section01 {
+    figure {
+      height: 200px;
+    }
+    h2 {
+      font-size: var(--text-5xl);
+    }
+  }
+}
