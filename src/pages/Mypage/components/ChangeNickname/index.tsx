@@ -13,7 +13,7 @@ const ChangeNickname = () => {
   const [error, setError] = useState<string>('');
   const [showModal, setShowModal] = useState(false); // 모달 컨트롤
 
-  const isFormValid = nickname && !error;
+  const isFormValid = nickname === userInfo?.name && nickname && !error;
 
   // 모달 오픈
   const handleOpenModal = () => {
@@ -22,10 +22,14 @@ const ChangeNickname = () => {
 
   // 인풋 change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const value = e.target.value.trim();
 
     setNickname(value);
 
+    if (value === userInfo?.name) {
+      setError('사용하고 있는 닉네임으로 변경할 수 없습니다.');
+      return;
+    }
     const errorMessage = nameValidator(value);
     setError(errorMessage || '');
   };
