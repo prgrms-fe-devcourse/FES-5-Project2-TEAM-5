@@ -44,3 +44,11 @@
     line-height: var(--space-6);
   }
 }
+
+.loadingSpinner {
+  height: 30vh;
+  margin: 10vh 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

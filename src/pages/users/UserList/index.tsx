@@ -31,7 +31,7 @@ const UserPage = () => {
         <h2 className={S.title}>함께하는 사람들</h2>
         <SearchBox onSearch={handleSearch} />
       </header>
-      <UserList users={users} isLoading={isLoading} />
+      <UserList users={users} />
       {!initialLoading && !isLoading && users.length === 0 && searchTerm !== '' && (
         <div className={S.noDiaryState}>
           <img

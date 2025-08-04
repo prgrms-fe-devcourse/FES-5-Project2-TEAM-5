@@ -66,7 +66,6 @@
 }
 
 .loadingSpinner {
-  height: 200px;
   height: 20vh;
   margin: 8vh 0;
   display: flex;
