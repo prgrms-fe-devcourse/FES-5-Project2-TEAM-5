@@ -46,6 +46,7 @@ export const useUserLoader = (searchTerm: string) => {
   // 초기 로드
   useEffect(() => {
     const initialLoad = async () => {
+      await loadUsers(1);
       setInitialLoading(false);
     };
     initialLoad();
