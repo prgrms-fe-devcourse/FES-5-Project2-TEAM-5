@@ -43,10 +43,13 @@ export const useDiaryForm = () => {
   const initialDiaryDate: string = (() => {
     // 수정 모드면 해당 일기 날짜 사용
     if (isEditMode && existingDiary) {
-      return existingDiary.created_at?.split('T')[0] || new Date().toISOString().split('T')[0];
+      const result =
+        existingDiary.created_at?.split('T')[0] || new Date().toISOString().split('T')[0];
+      return result;
     }
     // 신규면 달력에서 온 날짜(state) 아니면 오늘
-    return dateInState || new Date().toISOString().split('T')[0];
+    const result = dateInState || new Date().toISOString().split('T')[0];
+    return result;
   })();
 
   // 임시저장 관련 - 신규 작성은 날짜별로, 수정 모드는 일기 ID별로
@@ -258,7 +261,7 @@ export const useDiaryForm = () => {
 
     setHasUnsavedChanges(hasChanges);
   }, [
-    // 의존성 배열을 구체적으로 명시 (무한 루프 방지)
+    // 의존성 배열을 구체적으로 명시
     formData.title,
     formData.content,
     formData.isPublic,
