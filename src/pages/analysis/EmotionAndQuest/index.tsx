@@ -119,7 +119,7 @@ function EmotionAndQuest() {
 
       toastUtils.success({ title: '성공', message: '분석이 저장되었습니다.' });
 
-      navigate('/', { replace: true });
+      navigate('/home', { replace: true });
     } catch (err) {
       console.error('저장 중 오류 발생:', err);
     }

@@ -17,6 +17,13 @@ function AnalysisResult({ diaryId, isAuthor }: Props) {
   if (loading || !analysis) return null; // 로딩 중이거나 감정 분석 안 했으면 렌더 x
   if (!isAuthor && !analysis.is_public) return null; // 작성자가 아니고 비공개면 렌더 x
 
+  const hasAIAnalysis =
+  analysis.empathy &&
+  analysis.emotionalTriggers &&
+  analysis.emotionInterpretation &&
+  analysis.reminderMessage &&
+  analysis.selfReflectionSuggestion;
+
   return (
     <div className={S.divider}>
       <div className={S.container}>
@@ -30,21 +37,50 @@ function AnalysisResult({ diaryId, isAuthor }: Props) {
 
         {isOpen && (
           <div className={S.analysisResult}>
-            <section className={S.emotionSection}>
-              <h4>감정</h4>
-              <div className={S.emotions}>
-                {analysis.emotions.map((emotion) => (
-                  <span key={emotion.id} className={S.emotionTag}>
-                    {emotion.name}
-                  </span>
-                ))}
+            <section className={S.selfSection}>
+              <h4>내가 기록한 감정과 이유</h4>
+              <div className={S.analysisBox}>
+                <div className={S.analysisItem}>
+                  <p>[내가 느낀 감정들]</p>
+                  <div className={S.emotions}>
+                    {analysis.emotions.map((emotion) => (
+                      <span key={emotion.id} className={S.emotionTag}>
+                        {emotion.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className={S.analysisItem}>
+                  <p>[그렇게 느낀 이유]</p>
+                  <span>{analysis.reason}</span>
+                </div>
               </div>
             </section>
 
-            <section className={S.reasonSection}>
-              <h4>이유</h4>
-              <p>{analysis.reason}</p>
-            </section>
+            {hasAIAnalysis && (
+              <section className={S.aiSection}>
+                <h4>몰리의 감정 분석 결과</h4>
+                <div className={S.analysisBox}>
+                  <p className={S.empathy}>{analysis.empathy}</p>
+                  <div className={S.analysisItem}>
+                    <p>[감정 유발 요인]</p>
+                    <span>{analysis.emotionalTriggers}</span>
+                  </div>
+                  <div className={S.analysisItem}>
+                    <p>[감정 해석]</p>
+                    <span>{analysis.emotionInterpretation}</span>
+                  </div>
+                  <div className={S.analysisItem}>
+                    <p>[리마인드]</p>
+                    <span>{analysis.reminderMessage}</span>
+                  </div>
+                  <div className={S.analysisItem}>
+                    <p>[자기성찰]</p>
+                    <span>{analysis.selfReflectionSuggestion}</span>
+                  </div>
+                </div>
+              </section>
+            )}
           </div>
         )}
       </div>

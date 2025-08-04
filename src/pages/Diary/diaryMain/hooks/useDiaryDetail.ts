@@ -5,7 +5,7 @@ import supabase from '@/shared/api/supabase/client';
 import { type DiaryDetailEntity, type DisplayComment } from '@/shared/types/diary';
 import { toastUtils } from '@/shared/components/Toast';
 import { useUserContext } from '@/shared/context/UserContext';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { postCommentNotification } from '@/shared/api/comment';
 
 export const useDiaryDetail = (diaryId: string | undefined) => {
@@ -18,6 +18,12 @@ export const useDiaryDetail = (diaryId: string | undefined) => {
   const [author, setAuthor] = useState<{ name: string } | null>(null);
 
   const { userInfo } = useUserContext();
+
+  const hasFetched = useRef(false);
+
+  useEffect(() => {
+    hasFetched.current = false;
+  }, [diaryId]);
 
   const fetchComments = useCallback(async (diaryId: string) => {
     try {
@@ -71,6 +77,8 @@ export const useDiaryDetail = (diaryId: string | undefined) => {
       return;
     }
 
+    if (hasFetched.current) return;
+
     setLoading(true);
     setError(null);
 
@@ -92,6 +100,8 @@ export const useDiaryDetail = (diaryId: string | undefined) => {
         setAuthor(authorData);
       }
       await fetchComments(diaryId);
+
+      hasFetched.current = true;
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.';
