@@ -1,5 +1,5 @@
 import S from './style.module.css';
-import default_profile from '../../assets/default_profile.svg';
+import default_profile from '@/defaultProfile.svg';
 import { GrFormNextLink } from 'react-icons/gr';
 import { useNavigate } from 'react-router-dom';
 import type { DbUser } from '@/shared/types/dbUser';

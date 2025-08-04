@@ -56,7 +56,13 @@ const About = () => {
         <div className={style.featureGrid} role="list">
           <article className={style.featureCard} role="listitem" tabIndex={0}>
             <div className={style.cardImageContainer}>
-              <img src={diaryFeatureImg} alt="감정 일기 기능" className={style.featureImage} />
+              <img
+                src={
+                  'https://ttqedeydfvolnyrivpvg.supabase.co/storage/v1/object/public/assets//diary-feature.jpg'
+                }
+                alt="감정 일기 기능"
+                className={style.featureImage}
+              />
               <div className={style.imageOverlay}></div>
             </div>
             <div className={style.textContent}>
@@ -70,7 +76,13 @@ const About = () => {
 
           <article className={style.featureCard} role="listitem" tabIndex={0}>
             <div className={style.cardImageContainer}>
-              <img src={aiFeatureImg} alt="AI 친구 몰리 기능" className={style.featureImage} />
+              <img
+                src={
+                  'https://ttqedeydfvolnyrivpvg.supabase.co/storage/v1/object/public/assets//ai-feature.jpg'
+                }
+                alt="AI 친구 몰리 기능"
+                className={style.featureImage}
+              />
               <div className={style.imageOverlay}></div>
             </div>
             <div className={style.textContent}>
@@ -86,7 +98,9 @@ const About = () => {
           <article className={style.featureCard} role="listitem" tabIndex={0}>
             <div className={style.cardImageContainer}>
               <img
-                src={emotionAnalysisFeatureImg}
+                src={
+                  'https://ttqedeydfvolnyrivpvg.supabase.co/storage/v1/object/public/assets//emotionAnalysis-feature.jpg'
+                }
                 alt="감정 분석 기능"
                 className={style.featureImage}
               />
@@ -103,7 +117,13 @@ const About = () => {
 
           <article className={style.featureCard} role="listitem" tabIndex={0}>
             <div className={style.cardImageContainer}>
-              <img src={communityFeatureImg} alt="커뮤니티 기능" className={style.featureImage} />
+              <img
+                src={
+                  'https://ttqedeydfvolnyrivpvg.supabase.co/storage/v1/object/public/assets//community-feature.jpg'
+                }
+                alt="커뮤니티 기능"
+                className={style.featureImage}
+              />
               <div className={style.imageOverlay}></div>
             </div>
             <div className={style.textContent}>
