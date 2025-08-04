@@ -34,7 +34,7 @@ export function useDiaries(userId?: string, isAuth?: boolean) {
         .order('created_at', { ascending: false });
 
       const loadTime = Date.now() - start;
-      const minDelay = 700; // 스피너 최소 시간
+      const minDelay = 500; // 스피너 최소 시간
       const delay = loadTime < minDelay ? (minDelay - loadTime) : 0;
 
       setTimeout(() => {

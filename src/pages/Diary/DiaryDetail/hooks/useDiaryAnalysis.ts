@@ -9,6 +9,11 @@ export function useDiaryAnalysis(diaryId: string) {
     reason: string | null;
     emotions: EmotionSub[];
     is_public: boolean;
+    empathy?: string | null;
+    emotionalTriggers?: string | null;
+    emotionInterpretation?: string | null;
+    reminderMessage?: string | null;
+    selfReflectionSuggestion?: string | null;
   } | null>(null);
 
   const [loading, setLoading] = useState(true);
@@ -21,6 +26,11 @@ export function useDiaryAnalysis(diaryId: string) {
         .select(`
           reason_text,
           is_public,
+          empathy,
+          emotionalTriggers,
+          emotionInterpretation,
+          reminderMessage,
+          selfReflectionSuggestion,
           user_selected_emotions (
             emotion_subs (*)
           )
@@ -41,6 +51,11 @@ export function useDiaryAnalysis(diaryId: string) {
         reason: data.reason_text, // 분석 이유 저장
         emotions: emotions ?? [], // 감정 저장
         is_public: data.is_public, // 공개 여부 저장
+        empathy: data.empathy, // 공감 메시지 저장
+        emotionalTriggers: data.emotionalTriggers, // 감정 유발 요인 저장
+        emotionInterpretation: data.emotionInterpretation, // 감정 해석 저장
+        reminderMessage: data.reminderMessage, // 리마인드 저장
+        selfReflectionSuggestion: data.selfReflectionSuggestion, // 자기성찰 저장
       });
 
       setLoading(false);

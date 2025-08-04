@@ -4,6 +4,7 @@
   max-width: 896px;
   margin: 0 auto;
   padding-top: 80px; /* 헤더 높이 */
+  padding-inline: 20px;
 
   h3{
     color: var(--gray-900, #303030);
