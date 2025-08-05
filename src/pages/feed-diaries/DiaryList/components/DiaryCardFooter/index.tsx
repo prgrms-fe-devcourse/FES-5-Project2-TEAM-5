@@ -29,10 +29,17 @@ const DiaryCardFooter = ({
 }: Props) => {
   const [currentLikesCount, setCurrentLikesCount] = useState(likesCount);
   const [currentIsLiked, setCurrentIsLiked] = useState(isLiked);
+  const [isLoading, setIsLoading] = useState(false);
   const { userInfo } = useUserContext();
 
   const handleLikeClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
+
+    // 이미 처리 중이면 무시
+    if (isLoading) return;
+
+    setIsLoading(true);
+
     try {
       if (!currentIsLiked) {
         await postLikeToDiary(currentUser, diaryId);
@@ -55,6 +62,8 @@ const DiaryCardFooter = ({
       if (error instanceof Error) {
         toastUtils.error({ title: '좋아요 실패', message: error.message });
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -68,6 +77,7 @@ const DiaryCardFooter = ({
         <button
           className={S.likeButton}
           onClick={handleLikeClick}
+          disabled={isLoading}
           aria-pressed={currentIsLiked}
           aria-label={currentIsLiked ? '좋아요 취소' : '좋아요'}
         >
@@ -77,7 +87,7 @@ const DiaryCardFooter = ({
             <FaRegHeart className={S.likeIcon} aria-hidden="true" />
           )}
         </button>
-        <span className={S.count}>{likesCount}</span>
+        <span className={S.count}>{currentLikesCount}</span>
       </div>
     </footer>
   );
