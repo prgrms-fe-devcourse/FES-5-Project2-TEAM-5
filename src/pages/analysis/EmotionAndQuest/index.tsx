@@ -52,9 +52,7 @@ function EmotionAndQuest() {
     setAiAnalysis(analysis);
   }, []);
 
-
   const handleSubmit = async () => {
-    console.log('선택된 감정:', emotionSelection.selected);
     if (!user || !diaryId) return alert('로그인이 필요합니다.');
 
     try {
@@ -150,6 +148,7 @@ function EmotionAndQuest() {
       <AnalysisFromAI
         content={diary.content}
         emotions={emotionSubs}
+        selected={emotionSelection.selected}
         reason={reason}
         mainEmotionId={diary.emotion_main_id}
         setAnalysis={handleAiAnalysis}

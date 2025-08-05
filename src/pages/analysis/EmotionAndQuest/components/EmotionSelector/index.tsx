@@ -12,7 +12,9 @@ interface Props {
 function EmotionSelector({ emotions, selected, onToggle }: Props) {
   return (
     <section className={S.emotionSection}>
-      <h3>당시 느꼈던 감정들을 자유롭게 선택해보세요</h3>
+      <h3>
+        당시 느꼈던 감정들을 자유롭게 선택해보세요 <span className={S.required}>*</span>
+      </h3>
       <ul className={S.emotionList}>
         {emotions.map((emotion) => (
           <li key={emotion.id}>
