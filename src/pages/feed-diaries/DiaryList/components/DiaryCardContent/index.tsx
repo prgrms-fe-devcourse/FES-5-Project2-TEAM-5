@@ -28,7 +28,7 @@ const DiaryCardContent = ({ diary, hashtags }: Props) => {
             ))}
           </div>
         )}
-        <p className={S.contentText}>{truncateText(content, 500)}</p>
+        <p className={S.contentText}>{truncateText(content, 100)}</p>
       </section>
     </div>
   );
