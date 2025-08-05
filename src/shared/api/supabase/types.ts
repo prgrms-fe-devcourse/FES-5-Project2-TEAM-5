@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instanciate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: "12.2.12 (cd3cf9e)"
   }
   public: {
     Tables: {
@@ -19,6 +19,7 @@ export type Database = {
           content: string
           created_at: string
           id: string
+          is_system: string
           role: Database["public"]["Enums"]["chat_role"]
           user_id: string
         }
@@ -26,6 +27,7 @@ export type Database = {
           content: string
           created_at?: string
           id?: string
+          is_system?: string
           role: Database["public"]["Enums"]["chat_role"]
           user_id: string
         }
@@ -33,6 +35,7 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
+          is_system?: string
           role?: Database["public"]["Enums"]["chat_role"]
           user_id?: string
         }
@@ -416,47 +419,6 @@ export type Database = {
             columns: ["quest_id"]
             isOneToOne: false
             referencedRelation: "quests"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_chat_session: {
-        Row: {
-          created_at: string
-          daily_limit: number
-          last_reset_date: string
-          message_count: number
-          selected_message_pair_id: number
-          user_id: string
-          warning_sent: boolean
-          warning_threshold: number
-        }
-        Insert: {
-          created_at?: string
-          daily_limit?: number
-          last_reset_date: string
-          message_count?: number
-          selected_message_pair_id?: number
-          user_id?: string
-          warning_sent?: boolean
-          warning_threshold?: number
-        }
-        Update: {
-          created_at?: string
-          daily_limit?: number
-          last_reset_date?: string
-          message_count?: number
-          selected_message_pair_id?: number
-          user_id?: string
-          warning_sent?: boolean
-          warning_threshold?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_chat_session_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]

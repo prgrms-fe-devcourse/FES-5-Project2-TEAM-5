@@ -9,7 +9,7 @@ interface Props {
 }
 
 const SUPABASE_STORAGE_URL =
-  'https://ttqedeydfvolnyrivpvg.supabase.co/storage/v1/object/public/assets';
+  'https://cwfprztpicrpmlfmuemw.supabase.co/storage/v1/object/public/assets';
 
 const plantLevels = [
   { threshold: 0, imageUrl: `${SUPABASE_STORAGE_URL}/plant_grow_level1.svg` }, // 0% ~ 29%

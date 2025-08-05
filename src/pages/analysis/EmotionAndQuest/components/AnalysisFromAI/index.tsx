@@ -9,6 +9,7 @@ type EmotionSub = Database['public']['Tables']['emotion_subs']['Row'];
 
 interface Props {
   emotions: EmotionSub[];
+  selected: number[];
   reason: string;
   content: string;
   mainEmotionId: number;
@@ -18,6 +19,7 @@ interface Props {
 
 const AnalysisFromAI = ({
   emotions,
+  selected,
   reason,
   content,
   mainEmotionId,
@@ -27,13 +29,16 @@ const AnalysisFromAI = ({
   const [isPending, startTransition] = useTransition();
   const [hasAnalyzed, setHasAnalyzed] = useState(false);
 
+  // 선택된 emotions 추출
+  const subEmotions = emotions.filter((emotion) => selected.some((id) => id === emotion.id));
+
   const handleAnalysis = useCallback(() => {
     startTransition(async () => {
       const { data, error } = await supabase.functions.invoke('analysis_emotion', {
         body: {
           diaryContent: content,
           reason: reason,
-          emotions: emotions.map((emotion) => emotion.name),
+          emotions: subEmotions.map((emotion) => emotion.name),
           mainEmotion: mainEmotionId,
         },
       });
@@ -45,7 +50,10 @@ const AnalysisFromAI = ({
       setAnalysis(data.data);
       setHasAnalyzed(true);
     });
-  }, [content, reason, emotions, mainEmotionId, setAnalysis]);
+  }, [content, reason, subEmotions, mainEmotionId, setAnalysis]);
+
+  // 버튼 비활성화
+  const isDisabled = !reason.trim() || subEmotions.length === 0 || isPending || hasAnalyzed;
 
   return (
     <section className={style.analysisSection}>
@@ -55,7 +63,7 @@ const AnalysisFromAI = ({
           type="button"
           aria-label="감정 감정"
           className={style.analysisButton}
-          disabled={isPending || hasAnalyzed}
+          disabled={isDisabled}
           onClick={handleAnalysis}
         >
           {isPending ? '분석 중...' : '분석'}
