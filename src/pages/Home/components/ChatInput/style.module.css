@@ -1,14 +1,19 @@
 .form {
   position: relative;
+  width: 100%;
+  max-width: 500px;
+
   .chat {
     color: #fff;
-    width: 500px;
+    width: 100%;
     height: 50px;
     border-radius: var(--radius-2);
     padding: var(--space-5);
+    padding-right: 50px;
     border: 1px solid #fff;
     background: rgba(217, 217, 217, 0);
-    /* background: var(--gray-500); */
+    box-sizing: border-box;
+
     &::placeholder {
       color: #fff;
     }
