@@ -104,7 +104,7 @@ export const loginWithGithub = async (): Promise<void> => {
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'github',
     options: {
-      redirectTo: 'http://localhost:5173/auth/callback',
+      redirectTo: 'https://seediary.vercel.app/auth/callback',
     },
   });
 
