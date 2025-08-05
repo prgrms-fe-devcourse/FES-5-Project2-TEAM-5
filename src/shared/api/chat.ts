@@ -1,8 +1,7 @@
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import supabase from './supabase/client';
 import type { Tables } from './supabase/types';
-import { formatUTCToKorean, getLocalDateString } from '../utils/dateUtils';
-import { limitMessages } from '../constants/chat';
+import { formatUTCToKorean } from '../utils/dateUtils';
 
 /**
  * 채팅 입력 api
@@ -79,95 +78,5 @@ export const requestAiResponse = async (userId: string, name: string): Promise<v
 
   if (error) {
     throw new Error('잠시후에 다시 채팅해주세요.');
-  }
-};
-
-/**
- * 첫 로그인 시 chat_session 데이터 생성
- * AI와 대화 메시지 리미트를 위한 설정
- */
-export const createChatSession = async (userId: string): Promise<void> => {
-  const today = getLocalDateString(new Date());
-  const randomPairId = Math.floor(Math.random() * limitMessages.length) + 1; // 메시지 페어는 4가지
-
-  const { error } = await supabase.from('user_chat_session').upsert({
-    user_id: userId,
-    last_reset_date: today,
-    message_count: 0,
-    daily_limit: 50,
-    warning_threshold: 45,
-    selected_message_pair_id: randomPairId,
-    warning_sent: false,
-  });
-
-  if (error) {
-    throw new Error('user_chat_session 생성 에러');
-  }
-};
-
-/**
- * 메세지 카운트
- */
-export const getTodayMessageCount = async (userId: string) => {
-  const { data: limit, error: selectError } = await supabase
-    .from('user_chat_session')
-    .select('message_count, daily_limit')
-    .eq('user_id', userId)
-    .single();
-  if (selectError || !limit) {
-    throw new Error('daily limit selectError 발생');
-  }
-
-  return limit;
-};
-
-/**
- * 사용자가 chat insert 성공시 daily_limit + 1 업데이트
- */
-export const updateMessageCount = async (userId: string) => {
-  const limit = await getTodayMessageCount(userId);
-
-  const { error: updateError } = await supabase
-    .from('user_chat_session')
-    .update({ message_count: limit.message_count + 1 })
-    .eq('user_id', userId);
-
-  if (updateError) {
-    throw new Error('daily limit updateError 발생');
-  }
-};
-
-/**
- * 마지막 채팅 세션 업데이트 날짜 가져오기
- */
-export const getLastChatSessionDate = async (userId: string): Promise<string | null> => {
-  const { data, error } = await supabase
-    .from('user_chat_session')
-    .select('last_reset_date')
-    .eq('user_id', userId)
-    .maybeSingle();
-
-  if (error) {
-    throw new Error('user_chat_session 마지막 업데이트 날짜 불러오기 에러');
-  }
-
-  return data?.last_reset_date ?? null;
-};
-
-/**
- * 마지막 세션 업데이트 날짜로 세션 초기화
- */
-export const initializedChatSession = async (userId: string): Promise<void> => {
-  try {
-    const today = getLocalDateString(new Date());
-    const lastUpdateData = await getLastChatSessionDate(userId);
-
-    if (!lastUpdateData || lastUpdateData < today) {
-      await createChatSession(userId);
-    }
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    }
   }
 };
