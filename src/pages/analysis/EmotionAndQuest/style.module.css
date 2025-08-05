@@ -1,30 +1,33 @@
-
-
-.container{
+.container {
   max-width: 896px;
   margin: 0 auto;
   padding-top: 80px; /* 헤더 높이 */
   padding-inline: 20px;
 
-  h3{
+  h3 {
     color: var(--gray-900, #303030);
     font-size: var(--text-3xl);
     font-weight: 700;
     line-height: var(--space-8);
   }
+}
 
+.required {
+  width: 8px;
+  height: 8px;
+  color: red;
 }
 
 /* 선택한 일기 영역 */
-.diarySection{
+.diarySection {
   margin-top: 60px; /* 헤더와 추가 간격 */
   margin-bottom: 60px;
 
-  h3{
+  h3 {
     margin-bottom: var(--space-4);
   }
 
-  .diaryBox{
+  .diaryBox {
     width: 100%;
     min-height: 160px;
     max-height: 300px;
@@ -49,20 +52,20 @@
 }
 
 /* 감정 선택 영역 */
-.emotionSection{
+.emotionSection {
   margin-bottom: 60px;
 
-  h3{
+  h3 {
     margin-bottom: var(--space-4);
   }
 
-  .emotionList{
+  .emotionList {
     display: flex;
     gap: var(--space-3);
     flex-wrap: wrap;
   }
 
-  .subEmotionBtn{
+  .subEmotionBtn {
     user-select: none;
     padding: 8px 16px;
     border: none;
@@ -74,25 +77,24 @@
     font-size: var(--text-base);
     font-weight: 500;
     line-height: var(--space-5);
-    
+
     transition: background-color 0.1s ease;
   }
 
-  .subEmotionBtn.selected{
+  .subEmotionBtn.selected {
     background-color: var(--primary);
   }
-  
 }
 
 /* 감정 이유 영역 */
-.reasonSection{
+.reasonSection {
   margin-bottom: 60px;
 
-  h3{
+  h3 {
     margin-bottom: var(--space-4);
   }
 
-  .emotionReason{
+  .emotionReason {
     width: 100%;
     min-height: 160px;
     box-sizing: border-box;
@@ -111,15 +113,15 @@
 }
 
 /* 퀘스트 수락 여부 */
-.decisionSection{
+.decisionSection {
   text-align: center;
   margin-bottom: 60px;
 
-  h3{
+  h3 {
     margin-bottom: var(--space-8);
   }
-  
-  .buttons{
+
+  .buttons {
     display: flex;
     user-select: none;
     gap: var(--space-6);
@@ -127,7 +129,7 @@
     justify-content: center;
     align-items: center;
 
-    button{
+    button {
       flex: 1;
       max-width: 100px;
       padding: 12px 0px;
@@ -138,13 +140,13 @@
       cursor: pointer;
     }
 
-    .reject{
+    .reject {
       border: 1px solid var(--primary);
       background-color: #fff;
       color: var(--primary);
     }
 
-    .accept{
+    .accept {
       border: 1px solid var(--primary);
       background-color: var(--primary);
       color: #fff;
@@ -153,13 +155,13 @@
 }
 
 /* 완료 버튼 */
-.submitSection{
+.submitSection {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   margin-bottom: 60px;
 
-  button{
+  button {
     /* max-width: 100px; */
     padding: 12px 32px;
     border-radius: var(--radius-2);
@@ -169,7 +171,7 @@
     cursor: pointer;
   }
 
-  .submit{
+  .submit {
     border: 1px solid var(--primary);
     background-color: var(--primary);
     color: #fff;
@@ -177,7 +179,7 @@
     transition: all 0.2s ease;
   }
 
-  .submit:disabled{
+  .submit:disabled {
     border: 1px solid var(--secondary);
     background-color: var(--secondary);
     cursor: default;
@@ -185,20 +187,20 @@
 }
 
 /* 퀘스트 목록 영역 */
-.questSection{
+.questSection {
   margin-bottom: 60px;
 
-  h3{
+  h3 {
     margin-bottom: var(--space-4);
   }
 
-  .questList{
+  .questList {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: var(--space-6);
   }
 
-  .questCard{
+  .questCard {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -206,13 +208,12 @@
     height: 200px;
     box-sizing: border-box;
 
-
     padding: var(--space-6);
     border: 1px solid var(--gray-100);
     border-radius: var(--radius-2);
     background-color: #fff;
 
-    h4{
+    h4 {
       margin-bottom: var(--space-2);
       color: var(--gray-900, #303030);
       font-size: var(--text-xl);
@@ -220,7 +221,7 @@
       line-height: var(--space-7);
     }
 
-    p{
+    p {
       margin-bottom: var(--space-4);
       color: var(--gray-700);
       font-size: var(--text-base);
@@ -238,11 +239,9 @@
       object-fit: cover;
     } */
   }
-
 }
 
-.cardButton{
-
+.cardButton {
   align-self: flex-end;
   max-width: 78px;
   font-size: var(--text-lg);
@@ -258,6 +257,6 @@
   transition: background-color 0.1s ease;
 }
 
-.cardButton.selected{
+.cardButton.selected {
   background-color: var(--primary);
 }

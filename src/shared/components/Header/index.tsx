@@ -21,6 +21,14 @@ const Header = ({ cssOption }: { cssOption: CSSProperties }) => {
 
   const { color, border } = cssOption;
 
+  // 경로 하이라이트
+  const isActiveMenu = (menuPath: string) => {
+    if (menuPath === '/analysis/select-diary') {
+      return location.pathname.startsWith('/analysis');
+    }
+    return location.pathname.startsWith(menuPath);
+  };
+
   // 홈으로
   const handleHome = () => {
     navigate(PATHS.HOME);
@@ -81,8 +89,8 @@ const Header = ({ cssOption }: { cssOption: CSSProperties }) => {
                 to={menu.path}
                 aria-label={menu.label}
                 style={{
-                  color: menu.path === pathname ? '#f6c915' : '',
-                  fontWeight: menu.path === pathname ? '700' : '400',
+                  color: isActiveMenu(menu.path) ? '#f6c915' : '',
+                  fontWeight: isActiveMenu(menu.path) ? '700' : '400',
                 }}
                 onClick={handleLinkClick(menu.requireAuth)}
                 className={menu.requireAuth && !isAuth ? style.disabled : ''}
