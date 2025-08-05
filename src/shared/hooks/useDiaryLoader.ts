@@ -1,12 +1,13 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { type DiaryRowEntity } from '@/shared/types/diary';
 import { toastUtils } from '@/shared/components/Toast';
 import { getUserDiaries } from '@/shared/api/diary';
 import { useInfiniteScroll } from '@/shared/hooks/useInfiniteScroll';
 import type { DbUser } from '../types/dbUser';
 
-export const useDiaryLoader = (userInfo: DbUser | null, isPending: boolean) => {
+export const useDiaryLoader = (userInfo: DbUser | null) => {
   const [diaries, setDiaries] = useState<DiaryRowEntity[]>([]);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   const loadDiaries = useCallback(
     async (page: number) => {
@@ -41,10 +42,21 @@ export const useDiaryLoader = (userInfo: DbUser | null, isPending: boolean) => {
     [userInfo],
   );
 
+  useEffect(() => {
+    if (!userInfo || !initialLoading) return;
+
+    const initLoad = async () => {
+      await loadDiaries(0);
+      setInitialLoading(false);
+    };
+
+    initLoad();
+  }, [userInfo]);
+
   const { targetRef, isLoading, hasMore } = useInfiniteScroll(loadDiaries, {
-    enabled: !isPending && !!userInfo,
+    enabled: !!userInfo && !initialLoading,
     rootMargin: '100px',
   });
 
-  return { diaries, loadDiaries, targetRef, isLoading, hasMore };
+  return { diaries, targetRef, isLoading, hasMore, initialLoading };
 };

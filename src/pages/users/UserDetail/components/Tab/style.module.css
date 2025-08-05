@@ -9,6 +9,8 @@
   font-size: clamp(14px, 3.5vw, var(--text-lg));
   width: 100%;
   max-width: 1280px;
+  padding-left: clamp(16px, 4vw, 40px);
+  padding-right: clamp(16px, 4vw, 40px);
 }
 
 .tabButtons {

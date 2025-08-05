@@ -1,7 +1,5 @@
 import S from './style.module.css';
 import DiaryRowCard from '@/shared/components/DiaryRowCard';
-import { useEffect, useTransition } from 'react';
-import { toastUtils } from '@/shared/components/Toast';
 import { useUserContext } from '@/shared/context/UserContext';
 import Spinner from '@/shared/components/Spinner';
 import { Link } from 'react-router-dom';
@@ -10,32 +8,16 @@ import { useDiaryLoader } from '@/shared/hooks/useDiaryLoader';
 
 const DiarySection = () => {
   const { userInfo } = useUserContext();
-  const [isPending, startTransition] = useTransition();
 
-  const { diaries, loadDiaries, targetRef, isLoading, hasMore } = useDiaryLoader(
-    userInfo,
-    isPending,
-  );
-
-  useEffect(() => {
-    startTransition(async () => {
-      if (!userInfo) return;
-      try {
-        await loadDiaries(0);
-      } catch (error) {
-        if (error instanceof Error) {
-          toastUtils.error({ title: '실패', message: error.message });
-        }
-      }
-    });
-  }, [userInfo]);
-
-  if (isPending) {
+  const { diaries, targetRef, isLoading, hasMore, initialLoading } = useDiaryLoader(userInfo);
+  if (initialLoading) {
     return (
       <section className={S.contents}>
         <h2 className="sr-only">작성한 일기 목록</h2>
         <ul className={S.diaryList}>
-          <Spinner />
+          <div className={S.loadingSpinner}>
+            <Spinner />
+          </div>
         </ul>
       </section>
     );
@@ -50,7 +32,7 @@ const DiarySection = () => {
             {diaries.map((diary) => (
               <DiaryRowCard {...diary} key={diary.id} />
             ))}
-            {isLoading && hasMore && (
+            {isLoading && hasMore && !initialLoading && (
               <div className={S.loadingSpinner}>
                 <Spinner />
               </div>

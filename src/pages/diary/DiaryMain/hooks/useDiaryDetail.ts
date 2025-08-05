@@ -71,9 +71,13 @@ export const useDiaryDetail = (diaryId: string | undefined) => {
   }, []);
 
   const fetchDiaryDetail = useCallback(async () => {
-    if (!diaryId || !userInfo) {
-      setError('일기 ID 또는 사용자 정보가 제공되지 않았습니다.');
+    if (!diaryId) {
+      setError('일기 ID가 제공되지 않았습니다.');
       setLoading(false);
+      return;
+    }
+
+    if (!userInfo) {
       return;
     }
 
