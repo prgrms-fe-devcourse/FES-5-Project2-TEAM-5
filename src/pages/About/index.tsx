@@ -2,10 +2,42 @@ import { useNavigate } from 'react-router-dom';
 import style from './style.module.css';
 import { PATHS } from '@/shared/constants/path';
 import { useUserContext } from '@/shared/context/UserContext';
+import { useEffect, useRef } from 'react';
 
 const About = () => {
   const navigate = useNavigate();
   const { isAuth } = useUserContext();
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  const forceVideoPlay = async () => {
+    if (videoRef?.current) {
+      try {
+        await videoRef.current.play();
+      } catch (error) {
+        const handleUserInteraction = async () => {
+          if (videoRef.current) {
+            try {
+              await videoRef.current.play();
+              document.removeEventListener('click', handleUserInteraction);
+            } catch (retryError) {
+              console.error('Video play retry failed:', retryError);
+            }
+          }
+        };
+
+        document.addEventListener('touchstart', handleUserInteraction, { once: true });
+        document.addEventListener('click', handleUserInteraction, { once: true });
+      }
+    }
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      forceVideoPlay();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [forceVideoPlay]);
 
   const handleStartClick = () => {
     if (isAuth) {
@@ -24,6 +56,7 @@ const About = () => {
         muted
         loop
         playsInline
+        preload="auto"
       />
 
       {/* 그라데이션 오버레이 */}
@@ -54,7 +87,7 @@ const About = () => {
             <div className={style.cardImageContainer}>
               <img
                 src={
-                  'https://ttqedeydfvolnyrivpvg.supabase.co/storage/v1/object/public/assets//diary-feature.jpg'
+                  'https://cwfprztpicrpmlfmuemw.supabase.co/storage/v1/object/public/assets//diary-feature.jpg'
                 }
                 alt="감정 일기 기능"
                 className={style.featureImage}
@@ -74,7 +107,7 @@ const About = () => {
             <div className={style.cardImageContainer}>
               <img
                 src={
-                  'https://ttqedeydfvolnyrivpvg.supabase.co/storage/v1/object/public/assets//ai-feature.jpg'
+                  'https://cwfprztpicrpmlfmuemw.supabase.co/storage/v1/object/public/assets//ai-feature.jpg'
                 }
                 alt="AI 친구 몰리 기능"
                 className={style.featureImage}
@@ -95,7 +128,7 @@ const About = () => {
             <div className={style.cardImageContainer}>
               <img
                 src={
-                  'https://ttqedeydfvolnyrivpvg.supabase.co/storage/v1/object/public/assets//emotionAnalysis-feature.jpg'
+                  'https://cwfprztpicrpmlfmuemw.supabase.co/storage/v1/object/public/assets//emotionAnalysis-feature.jpg'
                 }
                 alt="감정 분석 기능"
                 className={style.featureImage}
@@ -115,7 +148,7 @@ const About = () => {
             <div className={style.cardImageContainer}>
               <img
                 src={
-                  'https://ttqedeydfvolnyrivpvg.supabase.co/storage/v1/object/public/assets//community-feature.jpg'
+                  'https://cwfprztpicrpmlfmuemw.supabase.co/storage/v1/object/public/assets//community-feature.jpg'
                 }
                 alt="커뮤니티 기능"
                 className={style.featureImage}

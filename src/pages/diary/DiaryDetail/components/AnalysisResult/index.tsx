@@ -18,18 +18,21 @@ function AnalysisResult({ diaryId, isAuthor }: Props) {
   if (!isAuthor && !analysis.is_public) return null; // 작성자가 아니고 비공개면 렌더 x
 
   const hasAIAnalysis =
-  analysis.empathy &&
-  analysis.emotionalTriggers &&
-  analysis.emotionInterpretation &&
-  analysis.reminderMessage &&
-  analysis.selfReflectionSuggestion;
+    analysis.empathy &&
+    analysis.emotionalTriggers &&
+    analysis.emotionInterpretation &&
+    analysis.reminderMessage &&
+    analysis.selfReflectionSuggestion;
 
   return (
     <div className={S.divider}>
       <div className={S.container}>
         <button className={S.header} onClick={() => setIsOpen((prev) => !prev)}>
           <div className={S.headerLeft}>
-            <img src="https://ttqedeydfvolnyrivpvg.supabase.co/storage/v1/object/public/assets//stamp-small.svg" alt="감정 분석 완료 도장" />
+            <img
+              src="https://cwfprztpicrpmlfmuemw.supabase.co/storage/v1/object/public/assets/stamp-small.svg"
+              alt="감정 분석 완료 도장"
+            />
             <span>감정 분석 결과</span>
           </div>
           {isOpen ? <IoChevronUp size={24} /> : <IoChevronDown size={24} />}
@@ -87,4 +90,4 @@ function AnalysisResult({ diaryId, isAuthor }: Props) {
     </div>
   );
 }
-export default AnalysisResult
+export default AnalysisResult;

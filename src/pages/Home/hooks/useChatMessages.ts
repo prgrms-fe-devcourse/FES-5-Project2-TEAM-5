@@ -57,8 +57,9 @@ export const useChatMessages = () => {
     }>,
   ) => {
     if (!userInfo?.id) return;
-    const { content, created_at, id, role, user_id } = payload.new as Tables<'chat_messages'>;
-    setMessages((prev) => [...prev, { id, created_at, content, user_id, role }]);
+    const { content, created_at, id, role, user_id, is_system } =
+      payload.new as Tables<'chat_messages'>;
+    setMessages((prev) => [...prev, { id, created_at, content, user_id, role, is_system }]);
 
     // 유저 메시지 insert 감지
     if (role === 'user') {
