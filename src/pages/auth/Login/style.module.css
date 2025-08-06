@@ -72,6 +72,7 @@
 
     .loginButton {
       background-color: var(--primary);
+      cursor: pointer;
     }
 
     .githubButton {
@@ -80,6 +81,7 @@
       align-items: center;
       gap: var(--space-3);
       background-color: #000;
+      cursor: pointer;
     }
   }
 }
