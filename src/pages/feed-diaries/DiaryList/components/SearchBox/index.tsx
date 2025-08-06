@@ -16,7 +16,6 @@ const SearchBox = ({ onSearch }: Props) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !isComposing) {
       e.preventDefault();
-      e.currentTarget.blur();
       const searchTerm = e.currentTarget.value.trim();
       onSearch(searchTerm);
     }
