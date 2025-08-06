@@ -1,4 +1,4 @@
-import { memo, useId } from 'react';
+import { memo, useId, useState } from 'react';
 import { IoSearch } from 'react-icons/io5';
 import S from './style.module.css';
 
@@ -8,9 +8,13 @@ interface Props {
 
 const SearchBox = ({ onSearch }: Props) => {
   const searchId = useId();
+  const [isComposing, setIsComposing] = useState(false);
 
+  const handleCompositionStart = () => setIsComposing(true);
+
+  const handleCompositionEnd = () => setIsComposing(false);
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !isComposing) {
       e.preventDefault();
       e.currentTarget.blur();
       const searchTerm = e.currentTarget.value.trim();
@@ -38,6 +42,8 @@ const SearchBox = ({ onSearch }: Props) => {
         placeholder="일기 제목이나 태그를 검색해보세요"
         onKeyDown={handleKeyDown}
         onInput={handleInput}
+        onCompositionStart={handleCompositionStart}
+        onCompositionEnd={handleCompositionEnd}
       />
     </div>
   );

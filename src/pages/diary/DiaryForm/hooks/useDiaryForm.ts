@@ -40,6 +40,9 @@ export const useDiaryForm = () => {
   const existingDiary = location.state?.diary;
   const isEditMode = !!existingDiary?.id;
 
+  // 로딩 상태 추가
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const initialDiaryDate: string = (() => {
     // 수정 모드면 해당 일기 날짜 사용
     if (isEditMode && existingDiary) {
@@ -106,12 +109,21 @@ export const useDiaryForm = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
 
   const handleCancel = useCallback(() => {
+    // 저장 중일 때는 취소 불가
+    if (isSubmitting) {
+      toastUtils.info({
+        title: '알림',
+        message: '저장 중입니다. 잠시만 기다려주세요.',
+      });
+      return;
+    }
+
     if (hasUnsavedChanges) {
       setShowCancelModal(true);
     } else {
       navigate(-1);
     }
-  }, [hasUnsavedChanges, navigate]);
+  }, [hasUnsavedChanges, navigate, isSubmitting]);
 
   const handleCancelConfirm = useCallback(() => {
     setShowCancelModal(false);
@@ -128,10 +140,13 @@ export const useDiaryForm = () => {
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      // 저장 중일 때는 입력 변경 불가
+      if (isSubmitting) return;
+
       const { name, value } = e.target;
       setFormData((prev) => ({ ...prev, [name]: value }));
     },
-    [],
+    [isSubmitting],
   );
 
   const handleEmotionSelect = useCallback((id: number, emotions: EmotionMain[]) => {
@@ -142,6 +157,15 @@ export const useDiaryForm = () => {
 
   const saveToLocalStorage = useCallback(
     (currentTags?: string[], imageFile?: File | null, currentImagePreviewUrl?: string | null) => {
+      // 저장 중일 때는 임시저장 불가
+      if (isSubmitting) {
+        toastUtils.info({
+          title: '알림',
+          message: '저장 중입니다. 잠시만 기다려주세요.',
+        });
+        return;
+      }
+
       if (!hasUnsavedChanges) {
         toastUtils.info({
           title: '알림',
@@ -198,6 +222,7 @@ export const useDiaryForm = () => {
       saveDraft,
       isEditMode,
       existingDiary,
+      isSubmitting,
     ],
   );
 
@@ -261,7 +286,6 @@ export const useDiaryForm = () => {
 
     setHasUnsavedChanges(hasChanges);
   }, [
-    // 의존성 배열을 구체적으로 명시
     formData.title,
     formData.content,
     formData.isPublic,
@@ -383,5 +407,9 @@ export const useDiaryForm = () => {
     handleCancelConfirm,
     handleCancelModalCancel,
     restoreTrigger,
+
+    // 새로 추가된 로딩 상태
+    isSubmitting,
+    setIsSubmitting,
   };
 };

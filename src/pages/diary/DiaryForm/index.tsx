@@ -39,6 +39,9 @@ const DiaryFormPage = () => {
     handleCancelConfirm,
     handleCancelModalCancel,
     restoreTrigger,
+    // 로딩 상태 추가
+    isSubmitting,
+    setIsSubmitting,
   } = useDiaryForm();
 
   const { emotions, isLoadingEmotions } = useEmotions();
@@ -154,6 +157,15 @@ const DiaryFormPage = () => {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // 이미 저장 중이면 무시
+    if (isSubmitting) {
+      toastUtils.info({
+        title: '알림',
+        message: '이미 저장 중입니다. 잠시만 기다려주세요.',
+      });
+      return;
+    }
+
     if (!selectedEmotionId) {
       toastUtils.error({ title: '실패', message: '감정을 선택해 주세요' });
       scrollToElement(emotionSectionRef.current);
@@ -181,6 +193,9 @@ const DiaryFormPage = () => {
       });
       return;
     }
+
+    // 저장 시작
+    setIsSubmitting(true);
 
     try {
       let imageUrl: string | null = null;
@@ -317,7 +332,6 @@ const DiaryFormPage = () => {
       }
 
       clearDraft();
-
       toastUtils.success({ title: '성공', message: '일기가 저장되었습니다.' });
       navigate('/diary');
     } catch (error) {
@@ -326,6 +340,9 @@ const DiaryFormPage = () => {
         error instanceof Error ? error.message : '일기 저장 중 오류가 발생했습니다.';
       toastUtils.error({ title: '실패', message: '일기 저장 중 오류가 발생했습니다.' });
       console.error('일기 저장 중 오류:', errorMessage);
+    } finally {
+      // 저장 완료
+      setIsSubmitting(false);
     }
   };
 
@@ -471,14 +488,36 @@ const DiaryFormPage = () => {
           </div>
 
           <div className={S.buttonGroup}>
-            <button type="button" className={S.bgGrayBtn} onClick={handleCancel}>
+            <button
+              type="button"
+              className={S.bgGrayBtn}
+              onClick={handleCancel}
+              disabled={isSubmitting} // 저장 중일 때 비활성화
+            >
               취소
             </button>
-            <button type="button" className={S.lineBtn} onClick={handleSaveDraft}>
+
+            <button
+              type="button"
+              className={S.lineBtn}
+              onClick={handleSaveDraft}
+              disabled={isSubmitting} // 저장 중일 때 비활성화
+            >
               임시 저장
             </button>
-            <button type="submit" className={S.bgPrimaryBtn}>
-              저장
+
+            <button
+              type="submit"
+              className={S.bgPrimaryBtn}
+              disabled={isSubmitting} // 저장 중일 때 비활성화
+            >
+              {isSubmitting ? (
+                <div className={S.loadingContent}>
+                  <Spinner />
+                </div>
+              ) : (
+                '저장'
+              )}
             </button>
           </div>
         </form>
