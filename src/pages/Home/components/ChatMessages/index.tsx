@@ -54,8 +54,8 @@ const ChatMessages = ({ onClose, messages, isLoading, ref, isAiTyping, userProfi
         ) : (
           // message 내역 없음
           <div className={style.emptyMessage} role="status" aria-live="polite">
-            <span>오늘 몰리와 대화를 하지 않았어요.</span>
-            <span> 몰리에게 말을 건내보세요!</span>
+            <span>채팅 씹힘이 있을 수 있습니다..</span>
+            <span>🥹</span>
           </div>
         )}
         {/* AI 타이핑 애니메이션 */}
