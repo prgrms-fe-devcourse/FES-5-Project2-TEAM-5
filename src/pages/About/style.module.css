@@ -139,7 +139,6 @@
 .sectionSubtitle {
   font-size: 1.2rem;
   color: var(--gray-50);
-  font-style: italic;
 }
 
 /* 가로 스크롤 컨테이너 */
@@ -288,6 +287,7 @@
   line-height: 1.6;
   position: relative;
   z-index: 1;
+  word-break: keep-all;
 }
 
 /* 반응형 */
