@@ -43,14 +43,12 @@ export const useChatMessages = () => {
 
       const fallback = setTimeout(() => {
         if (!isRealtimeReady) {
-          console.warn('[Fallback] setting isRealtimeReady');
           setIsRealtimeReady(true);
         }
       }, 2000);
 
       channel.on('system' as any, {} as any, (msg: any) => {
         if (msg.extension === 'postgres_changes' && msg.status === 'ok') {
-          console.log('[system]', msg);
           setIsRealtimeReady(true);
           clearTimeout(fallback);
         }
