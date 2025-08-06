@@ -44,7 +44,7 @@ const UserPage = () => {
           </p>
         </div>
       )}
-      {isLoading && hasMore && (
+      {isLoading && hasMore && !initialLoading && (
         <div className={S.loadingSpinner}>
           <Spinner />
         </div>
