@@ -15,6 +15,7 @@ export const useChatMessages = () => {
   const [isAiTyping, setIsAiTyping] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string>('');
+  const [isRealtimeReady, setIsRealtimeReady] = useState(false);
   const MAX_MESSAGE_COUNT = 102;
 
   // 초기 메시지 fetch
@@ -38,10 +39,18 @@ export const useChatMessages = () => {
   useEffect(() => {
     if (!userInfo?.id) return;
     try {
-      const subscription = createMessageSubscription(userInfo.id, handleNewMessage);
+      const channel = createMessageSubscription(userInfo.id, handleNewMessage);
+
+      channel.on('system', { event: 'error' }, (error) => {
+        console.error('Realtime error:', error);
+      });
+
+      channel.on('system', { event: 'connected' }, () => {
+        setIsRealtimeReady(true);
+      });
 
       return () => {
-        subscription.unsubscribe();
+        channel.unsubscribe();
       };
     } catch (error) {
       if (error instanceof Error) {
@@ -83,5 +92,6 @@ export const useChatMessages = () => {
     ref: ref,
     userProfileUrl: userInfo?.profile_image,
     isMessageExceeded: messages.length >= MAX_MESSAGE_COUNT,
+    isReady: isRealtimeReady,
   };
 };

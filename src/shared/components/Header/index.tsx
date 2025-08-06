@@ -90,7 +90,7 @@ const Header = ({ cssOption }: { cssOption: CSSProperties }) => {
                 aria-label={menu.label}
                 style={{
                   color: isActiveMenu(menu.path) ? '#f6c915' : '',
-                  fontWeight: isActiveMenu(menu.path) ? '700' : '400',
+                  textShadow: isActiveMenu(menu.path) ? ' 0.5px 0 0 currentColor' : '',
                 }}
                 onClick={handleLinkClick(menu.requireAuth)}
                 className={menu.requireAuth && !isAuth ? style.disabled : ''}

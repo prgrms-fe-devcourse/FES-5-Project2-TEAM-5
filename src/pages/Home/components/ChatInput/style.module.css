@@ -23,6 +23,18 @@
     }
   }
 
+  .prepareChat {
+    color: #fff;
+    width: 100%;
+    height: 50px;
+    border-radius: var(--radius-2);
+    padding: var(--space-5);
+    padding-right: 50px;
+    border: 1px solid #fff;
+    background: rgba(217, 217, 217, 0);
+    box-sizing: border-box;
+  }
+
   .submitButton {
     position: absolute;
     right: 5px;
