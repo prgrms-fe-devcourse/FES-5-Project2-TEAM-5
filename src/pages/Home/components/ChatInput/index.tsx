@@ -10,9 +10,10 @@ interface Props {
   onOpenChat: () => void;
   disabled: boolean;
   isMessageExceeded: boolean;
+  isReady: boolean;
 }
 
-const ChatInput = ({ onOpenChat, disabled, isMessageExceeded }: Props) => {
+const ChatInput = ({ onOpenChat, disabled, isMessageExceeded, isReady }: Props) => {
   const messageRef = useRef<HTMLInputElement | null>(null);
   const { userInfo } = useUserContext();
   const chatId = useId();
@@ -53,6 +54,24 @@ const ChatInput = ({ onOpenChat, disabled, isMessageExceeded }: Props) => {
     messageRef.current!.value = '';
     messageRef.current!.focus();
   };
+
+  if (!isReady) {
+    return (
+      <form className={style.form} onSubmit={handleSubmit}>
+        <label htmlFor={chatId} className="sr-only">
+          AI와 채팅
+        </label>
+        <div className={style.prepareChat}>몰리는 당신과의 대화를 준비중이예요.</div>
+        <button
+          type="submit"
+          className={style.submitButton}
+          disabled={disabled || isMessageExceeded}
+        >
+          <IoArrowUpCircleOutline size={24} />
+        </button>
+      </form>
+    );
+  }
 
   return (
     <form className={style.form} onSubmit={handleSubmit}>
